@@ -25,7 +25,7 @@
 TARGET = EXE
 !ENDIF
 PROJECT = nawk
-!include <..\..\NMAKEcommon.inc>
+!include <..\xtool\NMAKEcommon.inc>
 
 !IF !DEFINED(SRCDIR) || "$(SRCDIR)" == ""
 SRCDIR = .

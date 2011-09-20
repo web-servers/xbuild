@@ -1347,7 +1347,7 @@ static char *getcygdrive(int *drive, int back)
         return posixroot;
     if ((posixroot = x_getenv("CYGWIN_ROOT"))) {
         /* Presume the evironment var is correctly set.
-         * XXX: Do need validity check here? 
+         * XXX: Do need validity check here?
          */
         return posixroot;
     }
@@ -1371,37 +1371,6 @@ static char *getcygdrive(int *drive, int back)
                 posixroot = NULL;
             }
         }
-    }
-    return posixroot;
-}
-
-static char *getsuadrive(int *drive, int back)
-{
-    char *sr;
-    if (posixroot)
-        return posixroot;
-
-    if ((sr = x_getenv("SUA_ROOT"))) {
-        if (strstr(sr, "/dev/fs/")) {
-            char *r;
-            char d[3] = { '\0', ':', '\0' };
-
-            d[0] = *(sr + 8);
-            posixroot = x_strvcat(d, sr + 9, NULL);
-            r = posixroot;
-            while (*r) {
-                if (*r == '/')
-                    *r = '\\';
-                r++;
-            }
-            if (*(r - 1) == '\\')
-                *(r - 1) = '\0';
-            if (drive)
-                *drive = d[0];
-            if (!back)
-                x_forwardslash(posixroot);
-        }
-        x_free(sr);
     }
     return posixroot;
 }
@@ -4322,7 +4291,6 @@ static int prog_exec(int argc, const char **argv, const char **env)
     int aidx    = 0;
     int drive   = 0;
     int cygwin  = 0;
-    int suawin  = 0;
     int keepenv = 0;
     int relpath = 0;
     int back    = 1;
@@ -4365,9 +4333,6 @@ static int prog_exec(int argc, const char **argv, const char **env)
             break;
             case 'c':
                 cygwin  = 1;
-            break;
-            case 's':
-                suawin  = 1;
             break;
             case 'e':
                 keepenv = 1;
@@ -4464,18 +4429,12 @@ static int prog_exec(int argc, const char **argv, const char **env)
             goto cleanup;
         }
     }
-    else if (suawin) {
-        if (!(posixroot = getsuadrive(&drive, back))) {
-            rv = x_perror(ENOENT, "Posix drive");
-            goto cleanup;
-        }
-    }
     windrive[0] = drive;
     wmainargv = w_alloc(argc + shell);
     if (shell) {
         char *pp = NULL;
         relpath = 1;
-        if (cygwin || suawin)
+        if (cygwin)
             pp = posix2win(wcpath, back);
         else {
             pp = x_strdup(wcpath);
@@ -4496,7 +4455,7 @@ static int prog_exec(int argc, const char **argv, const char **env)
     }
     for (i = 0; i < argc; i++, aidx++) {
         char *pp = NULL;
-        if (cygwin || suawin)
+        if (cygwin)
             pp = posix2win(argv[i], back);
         else {
             pp = x_strdup(argv[i]);
@@ -4528,7 +4487,7 @@ static int prog_exec(int argc, const char **argv, const char **env)
             if (keepenv)
                 pp = x_strdup(env[l]);
             else {
-                if (cygwin || suawin)
+                if (cygwin)
                     pp = posix2win(env[l], back);
                 else {
                     pp = x_strdup(env[l]);
@@ -4742,8 +4701,8 @@ static char *qresinfo(void *data, DWORD lang, const char *info)
 static int img_status_long = 0;
 
 static BOOL CALLBACK img_status_routine(IMAGEHLP_STATUS_REASON Reason,
-                                        PSTR ImageName,
-                                        PSTR DllName,
+                                        PCSTR ImageName,
+                                        PCSTR DllName,
                                         ULONG_PTR Va,
                                         ULONG_PTR Parameter)
 {
@@ -4785,7 +4744,7 @@ static int prog_image(int argc, const char **argv, const char **env)
     char *dllpath = NULL;
     int  prall    = 0;
     BOOL dotdll   = FALSE;
-    LOADED_IMAGE     img;
+    LOADED_IMAGE  img;
     DWORD infosiz = 0;
     void  *pidata = NULL;
     VS_FIXEDFILEINFO *fvi = NULL;
