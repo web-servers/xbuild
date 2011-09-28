@@ -1,0 +1,124 @@
+#!/bin/sh
+# Copyright(c) 2011 Red Hat, Inc.
+#
+# This is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library in the file COPYING.LIB;
+# if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+#
+# @author Mladen Turk
+#
+# Contains all default variables
+#
+
+__tar=`getgnutool tar`
+__gzip=`getgnutool tar`
+__bzip2=`getgnutool bzip2`
+__xz=`which xz 2>/dev/null || type xz 2>/dev/null || echo :`
+__awk=`getgnutool awk`
+export __tar __gzip __bzip2 __awk
+
+m=`uname -m 2>/dev/null | tr '[A-Z]' '[a-z]'` || m="unknown"
+s=`uname -s 2>/dev/null | tr '[A-Z]' '[a-z]'` || s="unknown"
+r=`uname -r 2>/dev/null | tr '[A-Z]' '[a-z]'` || r="unknown"
+n=x86
+case "$s" in
+    linux   )
+        r="`echo $r | sed 's/\.//' | sed 's/\..*//'`"
+        d="`rpm -E %{dist}`"
+        p=linux
+    ;;
+    cygwin* )
+        r="`echo $s | sed 's/cygwin_nt-\([0-9]\).*/\1/'`"
+        p=windows
+        d=.win
+    ;;
+    sunos   )
+        r="`echo $r | sed 's/5.//'`"
+        p=solaris
+    ;;
+    darwin  )
+        r="`echo $r | sed 's/\.//g'`"
+        p=darwin
+    ;;
+    *       )
+        p=$s
+    ;;
+esac
+
+test ".$_host_os" = .  && _host_os=$p
+test ".$_host_cpu" = . && _host_cpu=$m
+test ".$_os" = .   && _os=$p
+test ".$_arch" = . && _arch=$m
+
+case "$_arch" in
+    amd64    )
+        _arch=x86_64
+    ;;
+    i[3-7]86 )
+        _arch=i386
+    ;;
+    i86pc    )
+        _arch=i386
+    ;;
+    sun4*    )
+        _arch=`/bin/isainfo -n`
+        n=sparc
+    ;;
+esac
+case "$_arch" in
+    sparc*   )
+        b=`/bin/isainfo -b`
+    ;;
+    *64      )
+        b=64
+    ;;
+    i386|ppc )
+        b=32
+    ;;
+esac
+test ".$__isa_bits" = . && __isa_bits=$b
+test ".$__isa_name" = . && __isa_name=$n
+test ".$__isa" = . && __isa=$__isa_name-$__isa_bits
+test ".$_host" = . && _host=$_host_cpu-pc-$_host_os
+
+if [ ".$dist" = . ]; then
+    case "$_arch" in
+        linux   )
+            d="`rpm -E %{?dist}`"
+            test ".$d" = . && d=.gnu
+        ;;
+        windows )
+            d=.win$__isa_bits
+        ;;
+        sunos   )
+            d=.sun$r
+        ;;
+        darwin  )
+            d=.osx$r
+        ;;
+        *       )
+            d=disable
+        ;;
+    esac
+fi
+test ".$dist" != .disable && export dist
+export __isa __isa_name __isa_bits
+export _host _host_os _host_cpu
+export _arch _os
+
+# XXX: Do we need to set the language?
+LANG=C
+export LANG
+export __year __month __mday
+export __tab __lf __ifs

@@ -1,0 +1,102 @@
+#!/bin/sh
+# Copyright(c) 2011 Red Hat, Inc.
+#
+# This is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library in the file COPYING.LIB;
+# if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+#
+# @author Mladen Turk
+#
+# This is the configuration file to treate the CA certificate of the
+# _DEMONSTRATION ONLY_ 'Tequila' Certificate Authority.
+# This CA is used to sign the localhost.crt and user.crt
+# because self-signed server certificates are not accepted by all browsers.
+# NEVER USE THIS CA YOURSELF FOR REAL LIFE! INSTEAD EITHER USE A PUBLICALLY
+# KNOWN CA OR CREATE YOUR OWN CA!
+#
+# Downloads entries from sources file
+# in the current directory and uncopresses them to the
+# RPM_SOURCE_DIR.
+#
+
+downladsources()
+{
+    sIFS=$IFS; IFS=$XB_LF
+    s=`cat sources 2>/dev/null`
+    if [ ".$s" = "." ]; then
+        $ERROR "empty sources file"
+        return 1
+    fi
+    cd "$RPM_SOURCE_DIR"
+    for i in $s
+    do
+        IFS=$sIFS
+        h=`echo $i | $__awk '{print $1}'`
+        p=`echo $i | $__awk '{print $2}'`
+        u=http://cvs.devel.redhat.com/repo/dist/$RPM_PACKAGE_NAME/$p/$h/$p
+        $ECHO "Getting: \`$u'"
+        rm -f $p >/dev/null 1>&2 || true
+        wget --tries=0 --quiet $u
+        if [ $? -ne 0 ]; then
+            $ERROR "failed to download redhat module \`$u'" 1>&2
+            return 1
+        fi
+        case "$p" in
+            *.tar.gz|*.tgz )
+                d=$__gzip
+            ;;
+            *.tar.bz2 )
+                d=$__bzip
+            ;;
+            *.tar.lzma|*.xz )
+                d=$__xz
+            ;;
+            * )
+                $ERROR "cannot determine compression algorithm for \`$p'" 1>&2
+                return 1
+            ;;
+        esac
+        $ECHO "$d -cd "$p" | $__tar -xvvf -"
+        $d -cd "$p" | $__tar -xvvf -
+        if [ $? -ne 0 ]; then
+            $ERROR "uncompressing \`$p'" 1>&2
+            return 1
+        fi
+    done
+    return 0
+}
+
+sources_prepare()
+{
+    $INFO "Preparing sources task"
+    if [ ! -f sources ]; then
+        $ERROR "cannot find sources file" 1>&2
+        return 1
+    fi
+    return 0
+}
+
+sources_execute()
+{
+    $ECHO "Executing sources task"
+
+    return 0
+}
+
+sources_cleanup()
+{
+    $ECHO "Cleanup sources task"
+
+    return 0
+}

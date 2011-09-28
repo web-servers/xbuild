@@ -1,0 +1,53 @@
+#!/bin/sh
+# Copyright(c) 2011 Red Hat, Inc.
+#
+# This is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library in the file COPYING.LIB;
+# if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+#
+# @author Mladen Turk
+#
+# Contains all default variables
+#
+
+XB_VERSION=2.0.0
+ECHO=:
+INFO=:
+ERROR="echo ERROR: "
+# String constants
+__tab="	"
+__lf="
+"
+__ifs=$IFS
+has_maintainer_mode=no
+dist=
+name=
+version=
+release=
+_bindir=
+_libdir=
+_os=
+_arch=
+__isa=
+__isa_bits=
+__isa_name=
+_host=
+_host_os=
+_host_cpu=
+__year=`date +%Y`
+__month=`date +%m`
+__mday=`date +%d`
+__cwd="`pwd`"
+__cwd_base=`basename "$__cwd"`
+specfile=$__cwd_base.spec

@@ -1,0 +1,117 @@
+#!/bin/sh
+# Copyright(c) 2011 Red Hat, Inc.
+#
+# This is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library in the file COPYING.LIB;
+# if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+#
+# @author Mladen Turk
+
+varadds()
+{
+    p=$1 ; shift
+    if [ ".$p" = ".::" ]; then
+        eval "$p=\"\""
+    elif [ ".$1" != . ]; then
+        eval e="\$$p"
+        if [ ".$e" = . ]; then
+            eval "$p=\"$@\""
+        else
+            for v in $@
+            do
+                a=true
+                for i in $e
+                do
+                    if [ ".$v" = ".$i" ]; then
+                        a=false
+                        break
+                    fi
+                done
+                test $a && e="$e $v"
+            done
+            eval "$p=\"$e\""
+        fi
+    fi
+}
+
+findgnutool()
+{
+    r=""
+    sIFS=$IFS; IFS=": "
+    for p in `echo $PATH`
+    do
+        if [ -x "$p/$1" ]; then
+            $p/$1 --help 2>/dev/null | grep -i gnu 1>/dev/null
+            if [ $? -eq 0 ]; then
+                r="$p/$1"
+                break
+            fi
+        fi
+    done
+    IFS=$sIFS
+    echo "$r"
+}
+
+getgnutool()
+{
+    r="`findgnutool $1`"
+    if [ ".$r" = . ]; then
+        e="`which $1 2>/dev/null || type $1 2>/dev/null || echo $1`"
+        if [ -x "$e" ]; then
+            r="$e"
+        fi
+    fi
+    echo "$r"
+}
+
+getmstool()
+{
+    sIFS=$IFS ; IFS=:
+    for p in $PATH
+    do
+        if [ -x "$p/$1.exe" ]; then
+            if [ ".`$p/$1.exe -version 2>/dev/null | head -1 | grep Microsoft`" != . ]; then
+                if [ ".$has_cygwin" = .yes ]; then
+                    cygpath -w "$p/$1.exe" | sed 's;\\;\\\\;g'
+                else
+                    echo "`echo "$p/$1.exe" | sed 's;^/\([c-zC-Z]\)/;\1\:/;'`" | sed 's;/;\\\\;g'
+                fi
+                return
+            fi
+        fi
+    done
+    echo $1.exe
+}
+
+toupper()
+{
+    echo "$1" | tr '[a-z]' '[A-Z]'
+}
+
+tolower()
+{
+    echo "$1" | tr '[A-Z]' '[a-z]'
+}
+
+loginfo()
+{
+    echo "[INFO]  `date -R`: $@"
+}
+
+logerror()
+{
+    echo "[ERROR] `date -R`: $@" 1>&2
+}
+
+export toupper tolower varadds loginfo logerror

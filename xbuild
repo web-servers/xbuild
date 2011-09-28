@@ -1,0 +1,240 @@
+#!/bin/sh
+# Copyright(c) 2011 Red Hat, Inc.
+#
+# This is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library in the file COPYING.LIB;
+# if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+#
+# @author Mladen Turk
+#
+# Main xbuild file
+# You will almost sure wish to call this file
+#
+# This is a bash script, which works with any reasonable sh.
+# Solaris sh is not, so we have to start bash, and call ourselves again.
+#
+test "x$1" != "x__running_xb_in_bash_shell@" && \
+(
+    `which sh` -c "__bash_a=(_A _B); echo \${__bash_a[*]}" >/dev/null 2>&1
+    __need_bash=$?
+    test "x$__need_bash" != "x0" && bash $0 __running_xb_in_bash_shell@ "$@"
+    test "x$__need_bash"  = "x0" && sh   $0 __running_xb_in_bash_shell@ "$@"
+)
+if [ "x$1" != "x__running_xb_in_bash_shell@" ]; then
+    exit 8
+fi
+shift
+set +x
+
+xb_prognam=`basename $0`
+xb_dirname=`dirname $0`
+
+include()
+{
+    . $xb_dirname/share/$1
+}
+
+usetask()
+{
+    . $xb_dirname/tasks/$1
+}
+export include usetask
+include stddefs
+
+for o
+do
+    case "$o" in
+    --enable-*)
+        a=`echo "$o" | sed -e 's/--enable-//' -e 's/-/_/'`
+        case "$a" in
+            *=* )
+                v=`echo "$a" | sed 's/^[_a-zA-Z0-9]*=//'`
+                a=`echo "$a" | sed 's/=.*//'`
+            ;;
+            *   )
+                v='yes'
+            ;;
+        esac
+        eval has_${a}=$v
+        eval has_${a}_set=yes
+        shift
+        continue
+    ;;
+    --disable-*)
+        a=`echo "$o" | sed -e 's/--disable-//' -e 's/-/_/'`
+        case "$a" in
+            *=* )
+                a=`echo "$a" | sed 's/=.*//'`
+            ;;
+        esac
+        eval has_${a}=no
+        eval has_${a}_set=yes
+        shift
+        continue
+    ;;
+    *=*) a=`echo "$o" | sed 's/^[-_a-zA-Z0-9]*=//'`
+    ;;
+    *  ) a=''
+    ;;
+    esac
+    case "$o" in
+        --verbose|-v )
+            ECHO=echo
+            ERROR=logerror
+            INFO=loginfo
+            shift
+        ;;
+        --debug      )
+            has_maintainer_mode=yes
+            shift
+        ;;
+        --name=*     )
+            name="$a"
+            shift
+        ;;
+        --version=*  )
+            version="$a"
+            shift
+        ;;
+        --release=*  )
+            release="$a"
+            shift
+        ;;
+        --specfile=* )
+            specfile="$a"
+            shift
+        ;;
+        --libdir=*  )
+            _libdir="$a"
+            shift
+        ;;
+        --bindir=*  )
+            _bindir="$a"
+            shift
+        ;;
+        --arch=*    )
+            _arch="$a"
+        ;;
+        --os=*      )
+            _os="$a"
+        ;;
+        --dist=*    )
+            dist="$a"
+        ;;
+        --host-os=* )
+            _host_os="$a"
+        ;;
+        --host-cpu=*)
+            _host_cpu="$a"
+        ;;
+        --host=*)
+            _host="$a"
+        ;;
+        --help|-* )
+        cat 1>&2 << EOH
+XBuild version $XB_VERSION
+Copyright (C) $__year Red Hat, Inc.
+
+EOH
+        if [ $o != --help ]; then
+            echo "Error: unknown option \`$o'" 1>&2
+        fi
+        cat 1>&2 << EOH
+Options are
+  --help                           this screen
+  -v, --verbose                    turn on verbosity
+  --debug                          turn on maintenance mode for this shell
+                                   Note that this will produce huge amount
+                                   of data on output stream.
+  --dist=<.suffix|disable>         set distribution name suffix. disable
+                                   will disable dist suffix.
+  --name=<name>                    set package name
+  --release=<release>              set release number
+  --version=<version>              set package version
+
+
+EOH
+        exit 1
+        ;;
+        * )
+            break
+        ;;
+    esac
+done
+test .$has_maintainer_mode = .yes && set -x
+export xb_dirname xb_prognam ECHO INFO
+include system
+include setup
+export ECHO INFO
+
+task=$1
+shift
+# Parse tasks
+case ".$task" in
+    .check      )
+        usetask check
+    ;;
+    .sources    )
+        usetask sources
+    ;;
+    .version    )
+        cat << EOH
+XBuild $XB_VERSION
+Copyright (C) $__year Red Hat, Inc.
+This program may be freely redistributed under the terms of the GNU LGPL
+
+Written by Mladen Turk
+EOH
+        exit 0
+    ;;
+    *           )
+        cat 1>&2 << EOH
+XBuild version $XB_VERSION
+Copyright (C) $__year Red Hat, Inc.
+
+EOH
+        if [ ".$1" = . ]; then
+            echo "Usage: xbuild [OPTION]... task" 1>&2
+        else
+            echo "Error: \`$task' is an invalid task." 1>&2
+        fi
+        cat 1>&2 << EOH
+Standard tasks
+  version                          display XBuild version info
+  sources                          check out package sources
+  check                            make a dry run
+
+EOH
+        exit 1
+    ;;
+esac
+$INFO "XBuild started: $task"
+
+xbexit()
+{
+    e=$1; shift;
+    $ERROR "$@"
+    exit $e
+}
+
+eval ${task}_prepare "$@"
+test .$? != .0 && xbexit 1 "prepare"
+eval ${task}_execute
+test .$? != .0 && xbexit 1 "execute"
+eval ${task}_cleanup
+test .$? != .0 && xbexit 1 "cleanup"
+
+
+$INFO "XBuild finished"
+exit 0
