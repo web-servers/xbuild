@@ -18,38 +18,20 @@
 #
 # @author Mladen Turk
 #
-# Contains all default variables
+# Windows specific setup
 #
 
-XB_VERSION=2.0.0
-ECHO=:
-INFO=:
-ERROR="echo ERROR: "
-# String constants
-__tab="	"
-__lf="
-"
-__ifs=$IFS
-has_maintainer_mode=no
-dist=
-name=
-version=
-release=
-_bindir=
-_libdir=
-_os=
-_arch=
-__isa=
-__isa_bits=
-__isa_name=
-_host=
-_host_os=
-_host_cpu=
-__year=`date +%Y`
-__month=`date +%m`
-__mday=`date +%d`
-__cwd="`pwd`"
-__tag_name=`basename "$__cwd"`
-u="`dirname $__cwd`"
-name=`basename "$u"`
-specfile=$name.spec
+cmscbasedir=/cygdrive/c/cmsc
+WINUEXECC="$xb_dirname/tools/windows/bin/x86/xtool.exe exec -c"
+WINMKLINK="$xb_dirname/tools/windows/bin/x86/xtool.exe mklink"
+export WINUEXECC WINMKLINK
+
+msvcdir=$cmscbasedir/msvc
+BUILD_CPU=i386
+test $__isa_bits = 64 && BUILD_CPU=amd64
+PATH="$msvcdir/bin/$BUILD_CPU:$msvcdir/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools:$cmscbasedir/tools/$BUILD_CPU:$PATH"
+LIB=$msvcdir/lib/$BUILD_CPU
+INCLUDE=$msvcdir/include/crt:$msvcdir/include:$msvcdir/include/mfc:$msvcdir/include/atl
+EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
+
+export BUILD_CPU PATH LIB INCLUDE EXTRA_LIBS

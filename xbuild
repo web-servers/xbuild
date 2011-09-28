@@ -43,7 +43,9 @@ xb_dirname="`cd \"$xb_dirname\" && pwd`"
 
 include()
 {
-    . $xb_dirname/share/$1
+    if [ -r $xb_dirname/share/$1 ]; then
+        . $xb_dirname/share/$1
+    fi
 }
 
 usetask()
@@ -182,7 +184,7 @@ test .$has_maintainer_mode = .yes && set -x
 export xb_dirname xb_prognam ECHO INFO
 include system
 include setup
-export ECHO INFO
+include setup.$_os
 
 task=$1
 shift

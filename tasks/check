@@ -65,12 +65,18 @@ _sbin           $_sbin
 Environment:
 __cwd           $__cwd
 __tag_name      $__tag_name
-__top_name      $__top_name
 
 hostname        `hostname`
 PATH            $PATH
 
 EOH
+if [ "$_os" = windows ]; then
+    cat << EOH
+Windows envronment:
+WINUEXECC cmd.exe /C set
+
+EOH
+fi
     return 0
 }
 
