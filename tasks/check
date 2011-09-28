@@ -18,36 +18,56 @@
 #
 # @author Mladen Turk
 #
-# This is the configuration file to treate the CA certificate of the
-# _DEMONSTRATION ONLY_ 'Tequila' Certificate Authority.
-# This CA is used to sign the localhost.crt and user.crt
-# because self-signed server certificates are not accepted by all browsers.
-# NEVER USE THIS CA YOURSELF FOR REAL LIFE! INSTEAD EITHER USE A PUBLICALLY
-# KNOWN CA OR CREATE YOUR OWN CA!
 #
-# Downloads entries from sources file
-# in the current directory and uncopresses them to the
-# RPM_SOURCE_DIR.
-#
-
 check_prepare()
 {
-    $ECHO "Preparing check task"
-    for o
-    do
-        echo "check option $o"
-    done
+    $INFO "Check task started"
+    echo "Dumping environment ..."
+    return 0
 }
 
 check_execute()
 {
-    $ECHO "Executing check task"
+    cat << EOH
+XBuild:
+program         $xb_prognam
+version         $XB_VERSION
+root            $xb_dirname
+
+Specfile definitions:
+name            $name
+specfile        $specfile
+release         $release
+dist            $dist
+
+Host info:
+_os             $_os
+_arch           $_arch
+__isa_bits      $__isa_bits
+__isa_name      $__isa_name
+__isa           $__isa
+_host_cpu       $_host_cpu
+_host_os        $_host_os
+_host           $_host
+
+Tools
+__awk           $__awk
+__tar           $__tar
+__gzip          $__gzip
+__bzip2         $__bzip2
+__xz            $__xz
+
+Environment:
+__cwd           $__cwd
+__cwd_base      $__cwd_base
+
+EOH
     return 0
 }
 
 check_cleanup()
 {
-    $ECHO "Cleanup check task"
+    $INFO "Check task finsihed"
     return 0
 }
 

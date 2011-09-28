@@ -50,4 +50,5 @@ __month=`date +%m`
 __mday=`date +%d`
 __cwd="`pwd`"
 __cwd_base=`basename "$__cwd"`
-specfile=$__cwd_base.spec
+name=$__cwd_base
+specfile=$name.spec

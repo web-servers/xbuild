@@ -22,7 +22,7 @@
 #
 
 __tar=`getgnutool tar`
-__gzip=`getgnutool tar`
+__gzip=`getgnutool gzip`
 __bzip2=`getgnutool bzip2`
 __xz=`which xz 2>/dev/null || type xz 2>/dev/null || echo :`
 __awk=`getgnutool awk`
@@ -93,22 +93,22 @@ test ".$__isa" = . && __isa=$__isa_name-$__isa_bits
 test ".$_host" = . && _host=$_host_cpu-pc-$_host_os
 
 if [ ".$dist" = . ]; then
-    case "$_arch" in
+    case "$_host_os" in
         linux   )
-            d="`rpm -E %{?dist}`"
-            test ".$d" = . && d=.gnu
+            dist="`rpm -E %{?dist}`"
+            test ".$dist" = . && dist=.gnu
         ;;
         windows )
-            d=.win$__isa_bits
+            dist=.win$__isa_bits
         ;;
         sunos   )
-            d=.sun$r
+            dist=.sun$r
         ;;
         darwin  )
-            d=.osx$r
+            dist=.osx$r
         ;;
         *       )
-            d=disable
+            dist=disable
         ;;
     esac
 fi

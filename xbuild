@@ -39,6 +39,7 @@ set +x
 
 xb_prognam=`basename $0`
 xb_dirname=`dirname $0`
+xb_dirname="`cd \"$xb_dirname\" && pwd`"
 
 include()
 {
@@ -125,21 +126,26 @@ do
         ;;
         --arch=*    )
             _arch="$a"
+            shift
         ;;
         --os=*      )
             _os="$a"
+            shift
         ;;
         --dist=*    )
             dist="$a"
+            shift
         ;;
         --host-os=* )
             _host_os="$a"
+            shift
         ;;
         --host-cpu=*)
             _host_cpu="$a"
         ;;
         --host=*)
             _host="$a"
+            shift
         ;;
         --help|-* )
         cat 1>&2 << EOH
@@ -234,7 +240,6 @@ eval ${task}_execute
 test .$? != .0 && xbexit 1 "execute"
 eval ${task}_cleanup
 test .$? != .0 && xbexit 1 "cleanup"
-
 
 $INFO "XBuild finished"
 exit 0
