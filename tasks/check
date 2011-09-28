@@ -73,9 +73,16 @@ EOH
 if [ "$_os" = windows ]; then
     cat << EOH
 Windows envronment:
-WINUEXECC cmd.exe /C set
-
+`$WINUEXECC cmd.exe /C set`
+Checking MSVC environment ...
 EOH
+    $__make /? >/dev/null
+    test ".$?" != .0 && echo "NMAKE FAILED"
+    touch /tmp/cc.$$
+    $WINUEXECC cl.exe /EP /tmp/cc.$$ >/dev/null
+    test ".$?" != .0 && echo "MSVC FAILED"
+    rm /tmp/cc.$$
+    $__perl --version
 fi
     return 0
 }

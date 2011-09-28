@@ -29,9 +29,10 @@ export WINUEXECC WINMKLINK
 msvcdir=$cmscbasedir/msvc
 BUILD_CPU=i386
 test $__isa_bits = 64 && BUILD_CPU=amd64
-PATH="$msvcdir/bin/$BUILD_CPU:$msvcdir/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools:$cmscbasedir/tools/$BUILD_CPU:$PATH"
+PATH="$msvcdir/bin/$BUILD_CPU:$msvcdir/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$BUILD_CPU:$PATH"
 LIB=$msvcdir/lib/$BUILD_CPU
 INCLUDE=$msvcdir/include/crt:$msvcdir/include:$msvcdir/include/mfc:$msvcdir/include/atl
 EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
-
-export BUILD_CPU PATH LIB INCLUDE EXTRA_LIBS
+__make="$WINUEXECC nmake.exe"
+__perl="$WINUEXECC perlw.exe"
+export BUILD_CPU PATH LIB INCLUDE EXTRA_LIBS __make __perl
