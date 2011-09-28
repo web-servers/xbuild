@@ -52,5 +52,5 @@ __cwd="`pwd`"
 __tag_name=`basename "$__cwd"`
 u="`cd $__cwd/../ && pwd`"
 __top_name=`basename "$u"`
-name=$__tag_name
+name=$__top_name
 specfile=$name.spec
