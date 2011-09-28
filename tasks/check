@@ -64,7 +64,7 @@ _sbin           $_sbin
 
 Environment:
 __cwd           $__cwd
-__tag_base      $__tag_base
+__tag_name      $__tag_name
 __top_name      $__top_name
 
 hostname        `hostname`
