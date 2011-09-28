@@ -61,6 +61,9 @@ Environment:
 __cwd           $__cwd
 __cwd_base      $__cwd_base
 
+hostname        `hostname`
+PATH            $PATH
+
 EOH
     return 0
 }
