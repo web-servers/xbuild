@@ -50,16 +50,22 @@ _host_cpu       $_host_cpu
 _host_os        $_host_os
 _host           $_host
 
-Tools
+Tools:
 __awk           $__awk
 __tar           $__tar
 __gzip          $__gzip
 __bzip2         $__bzip2
 __xz            $__xz
 
+Build:
+_bin            $_bin
+_lib            $_lib
+_sbin           $_sbin
+
 Environment:
 __cwd           $__cwd
-__cwd_base      $__cwd_base
+__tag_base      $__tag_base
+__top_name      $__top_name
 
 hostname        `hostname`
 PATH            $PATH
