@@ -27,12 +27,12 @@ WINMKLINK="$xb_dirname/tools/windows/bin/x86/xtool.exe mklink"
 export WINUEXECC WINMKLINK
 
 msvcdir=$cmscbasedir/msvc
-a=i386
-test ".$__isa_bits" = .64 && a=amd64
-PATH="$msvcdir/bin/$a:$msvcdir/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$a:$PATH"
-LIB=$msvcdir/lib/$a
+_arch_msvc=i386
+test ".$__isa_bits" = .64 && _arch_msvc=amd64
+PATH="$msvcdir/bin/$_arch_msvc:$msvcdir/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$_arch_msvc:$PATH"
+LIB=$msvcdir/lib/$_arch_msvc
 INCLUDE=$msvcdir/include/crt:$msvcdir/include:$msvcdir/include/mfc:$msvcdir/include/atl
 EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
 __make="$WINUEXECC nmake.exe"
 __perl="$WINUEXECC perlw.exe"
-export PATH LIB INCLUDE EXTRA_LIBS __make __perl
+export PATH LIB INCLUDE EXTRA_LIBS __make __perl _arch_msvc
