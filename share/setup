@@ -139,4 +139,5 @@ test ".$_topdir" = . && _topdir=/tmp/xbuild
 _sourcedir=$_topdir/SOURCES
 _builddir=$_topdir/BUILD
 _buildrootdir=$_topdir/BUILDROOT
+_buildreqs=/tmp/build/buildreqs
 export _topdir _sourcedir _builddir _buildrootdir
