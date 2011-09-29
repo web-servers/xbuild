@@ -23,6 +23,7 @@
 
 # First check if we have a specfile at all
 #
+test ".$specfile" = . && xbexit 1 "no specfile defined"
 test -r $specfile || xbexit 1 "cannot find specfile: \`$specfile'"
 
 speceval()

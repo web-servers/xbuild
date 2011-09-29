@@ -21,20 +21,6 @@
 # Main xbuild file
 # You will almost sure wish to call this file
 #
-# This is a bash script, which works with any reasonable sh.
-# Solaris sh is not, so we have to start bash, and call ourselves again.
-#
-test "x$1" != "x__running_xb_in_bash_shell@" && \
-(
-    `which sh` -c "__bash_a=(_A _B); echo \${__bash_a[*]}" >/dev/null 2>&1
-    __need_bash=$?
-    test "x$__need_bash" != "x0" && bash $0 __running_xb_in_bash_shell@ "$@"
-    test "x$__need_bash"  = "x0" && sh   $0 __running_xb_in_bash_shell@ "$@"
-)
-if [ "x$1" != "x__running_xb_in_bash_shell@" ]; then
-    exit 8
-fi
-shift
 set +x
 
 xb_prognam=`basename $0`
