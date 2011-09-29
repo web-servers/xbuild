@@ -68,9 +68,7 @@ getgnutool()
     r="`findgnutool $1`"
     if [ ".$r" = . ]; then
         e="`which $1 2>/dev/null || type $1 2>/dev/null || echo $1`"
-        if [ -x "$e" ]; then
-            r="$e"
-        fi
+        test -x "$e" && r="$e"
     fi
     echo "$r"
 }
@@ -101,4 +99,76 @@ logerror()
     echo "[ERROR] `date -R`: $@" 1>&2
 }
 
-export toupper tolower varadds loginfo logerror
+xbexit()
+{
+    e=$1; shift;
+    $ERROR "$@"
+    exit $e
+}
+
+newdir()
+{
+    rm -rf "$1" >/dev/null 2>&1 || true
+    mkdir -p "$1" >/dev/null 2>&1
+    e=$?
+    if [ $e -ne 0 ]; then
+        $ERROR "failed to create directory \`$1'"
+        exit $e
+    fi
+}
+
+copypdir()
+{
+    install -m 755 -d "$2"
+    if [ -d "$1" ]; then
+    (
+        cd "$1"
+        $_tar -cf "$2/x.tar" .
+        cd "$2"
+        $_tar -xf x.tar
+        rm -f x.tar 2>/dev/null || true
+    )
+    fi
+}
+
+chownmod()
+{
+    chmod $1 "$4" 2>/dev/null || true
+    chown $2:$3 "$4" 2>/dev/null || true
+}
+
+makelink()
+{
+    rm -rf $2 >/dev/null 2>&1 || true
+    ln -sf "$1" $2
+}
+
+makedir()
+{
+    if [ ! -d "$1" ]; then
+    (
+        umask 022
+        mkdir -p "$1" >/dev/null 2>&1
+    )
+    fi
+}
+
+filecopy()
+{
+    m=$3
+    test ".$m" = . && m=0644
+    rm -f "$2" >/dev/null 2>&1 || true
+    cp -p "$1" "$2" >/dev/null 2>&1 || true
+    chmod $m "$2" >/dev/null 2>&1 || true
+}
+
+xbexport()
+{
+    for o
+    do
+        eval v="\$$o"
+        test ".$v" != . && export $o
+    done
+}
+
+export toupper tolower varadds loginfo logerror xbexit

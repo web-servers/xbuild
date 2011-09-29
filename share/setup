@@ -123,14 +123,18 @@ export __isa __isa_name __isa_bits
 export _host _host_os _host_cpu
 export _arch _os
 
-_bin=bin
-_sbin=sbin
 _lib=lib
 test ".$__isa_bits" = .64 && _lib=lib64
-export _bin _lib _sbin
+export _lib
 
 # XXX: Do we need to set the language?
 LANG=C
 export LANG
 export __year __month __mday
 export __tab __lf __ifs
+
+test ".$_topdir" = . && _topdir=/tmp/xbuild
+_sourcedir=$_topdir/SOURCES
+_builddir=$_topdir/BUILD
+_buildrootdir=$_topdir/BUILDROOT
+export _topdir _sourcedir _builddir _buildrootdir

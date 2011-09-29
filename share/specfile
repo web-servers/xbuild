@@ -1,0 +1,105 @@
+#!/bin/sh
+# Copyright(c) 2011 Red Hat, Inc.
+#
+# This is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library in the file COPYING.LIB;
+# if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+#
+# @author Mladen Turk
+#
+# Contains specfile parsing
+#
+
+# First check if we have a specfile at all
+#
+test -r $specfile || xbexit 1 "cannot find specfile: \`$specfile'"
+
+speceval()
+{
+    if [ ".$1" != "." ]; then
+        x=`echo "$1" | sed 's/%{[?]*\(\w*\)}/${\L\1\E}/g'`
+        eval echo "$x"
+    fi
+}
+
+specparam()
+{
+    v=`grep -m 1 -i ^$1':\ *' $specfile | sed 's/.*:[[:blank:]]*//'`
+    speceval "$v"
+}
+
+specsetupname()
+{
+    IFS=$__lf
+    n=`grep -i '^%setup .* \-n ' $specfile | sed -e 's/.*-n //' -e 's/[[:blank:]]*//'`
+    test ".$n" = "." && n="%{name}-%{version}"
+    echo "$n"
+}
+
+changelog()
+{
+    s=$IFS; IFS=$__lf
+    b=false
+    n=0
+    c=
+    r=`grep -i '^%changelog$' -A 100 $specfile`
+    if [ ".$r" != . ]; then
+        for i in $r
+        do
+            IFS=$s
+            if $b; then
+                case "$i" in
+                    \** )
+                        let n=n+1
+                        test $n -gt $1 && return
+                        test $n -gt 1 && echo ""
+                        echo "$i"
+                    ;;
+                    %*  )
+                        r=""
+                    ;;
+                    *   )
+                        echo $i
+                    ;;
+                esac
+            else
+                b=true
+            fi
+        done
+    fi
+}
+
+test ".$name" = . && name="`specparam name`"
+test ".$version" = . && version="`specparam version`"
+test ".$release" = . && release="`specparam release`"
+summary="`specparam summary`"
+group="`specparam group`"
+setupname="`specsetupname`"
+setupname_ex="`speceval $setupname`"
+test ".$_bindir" = . && _bindir="$_prefix/bin"
+test ".$_libdir" = . && _libdir="$_prefix/$_lib"
+test ".$_sbindir" = . && _sbindir="$_prefix/sbin"
+export _bindir _libdir _sbindir
+
+buildroot="$_buildrootdir/$name-$version-$release.$_arch"
+RPM_BUILD_ROOT="$buildroot"
+RPM_SOURCE_DIR="$_sourcedir"
+RPM_BUILD_DIR="$_builddir"
+RPM_ARCH="$_arch"
+RPM_OS="$_os"
+export RPM_SOURCE_DIR RPM_BUILD_DIR RPM_ARCH RPM_OS
+RPM_PACKAGE_NAME="$name"
+RPM_PACKAGE_VERSION="$version"
+RPM_PACKAGE_RELEASE="$release"
+export RPM_PACKAGE_NAME RPM_PACKAGE_VERSION RPM_PACKAGE_RELEASE

@@ -126,6 +126,14 @@ do
             _bindir="$a"
             shift
         ;;
+        --sbindir=*  )
+            _sbindir="$a"
+            shift
+        ;;
+        --prefix=*  )
+            _prefix="$a"
+            shift
+        ;;
         --arch=*    )
             _arch="$a"
             shift
@@ -228,13 +236,7 @@ EOH
     ;;
 esac
 $INFO "XBuild started: $task"
-
-xbexit()
-{
-    e=$1; shift;
-    $ERROR "$@"
-    exit $e
-}
+include specfile
 
 eval ${task}_prepare "$@"
 test .$? != .0 && xbexit 1 "prepare"

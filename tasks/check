@@ -36,9 +36,13 @@ root            $xb_dirname
 
 Specfile definitions:
 name            $name
+summary         $summary
+group           $group
 specfile        $specfile
 release         $release
 dist            $dist
+version         $version
+setupname       $setupname : $setupname_ex
 
 Host info:
 _os             $_os
@@ -58,9 +62,10 @@ __bzip2         $__bzip2
 __xz            $__xz
 
 Build:
-_bin            $_bin
-_lib            $_lib
-_sbin           $_sbin
+_prefix         $_prefix
+_bindir         $_bindir
+_libdir         $_libdir
+_sbindir        $_sbindir
 
 Environment:
 __cwd           $__cwd
@@ -84,6 +89,40 @@ EOH
     rm /tmp/cc.$$
     $__perl --version
 fi
+
+    cat << EOH
+RPM envronment:
+
+RPM_BUILD_ROOT      $buildroot
+RPM_SOURCE_DIR      $_sourcedir
+RPM_BUILD_DIR       $_builddir
+RPM_ARCH            $_arch
+RPM_OS              $_os
+RPM_PACKAGE_NAME    $name
+RPM_PACKAGE_VERSION $version
+RPM_PACKAGE_RELEASE $release
+
+Package sources:
+EOH
+    r="http://cvs.devel.redhat.com/repo/dist"
+    IFS=$__lf
+    s=`cat sources 2>/dev/null`    
+    for i in $s
+    do
+        IFS=$__ifs
+        h=`echo $i | $__awk '{print $1}'`
+        p=`echo $i | $__awk '{print $2}'`
+        echo "wget : \`$r/$name/$p/$h/$p'"
+    done
+    IFS=$__lf
+    s=`grep -i '^Source[0-9]*:' $specfile | sed 's/\w*:[[:blank:]]*//'`
+    for i in $s
+    do
+        IFS=$__ifs
+        e="`speceval $i`"
+        b="`basename $e`"
+        echo "copy : $b"
+    done
     return 0
 }
 
