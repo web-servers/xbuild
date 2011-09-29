@@ -44,7 +44,7 @@ case "$s" in
         p=linux
     ;;
     cygwin* )
-        r="`echo $s | sed 's/cygwin_nt-\([0-9]\).*/\1/'`"
+        r="`echo $s | sed -e 's/.*-//' -e 's/-.*//' -e 's/\.//'`"
         p=windows
         d=.win
     ;;
@@ -104,6 +104,8 @@ if [ ".$dist" = . ]; then
             test ".$dist" = . && dist=.gnu$r
         ;;
         windows )
+            test ".$r" = ".51" && r=5
+            test ".$r" = ".61" && r=6
             dist=.win$r
         ;;
         sunos   )

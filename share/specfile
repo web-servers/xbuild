@@ -30,7 +30,7 @@ speceval()
 {
     if [ ".$1" != "." ]; then
         x=`echo "$1" | sed 's/%{[?]*\(\w*\)}/${\L\1\E}/g'`
-        eval echo "$x"
+        eval "echo \"$x\""
     fi
 }
 
@@ -43,7 +43,7 @@ specparam()
 specsetupname()
 {
     IFS=$__lf
-    n=`grep -i '^%setup .* \-n ' $specfile | sed -e 's/.*-n //' -e 's/[[:blank:]]*//'`
+    n=`grep -i '^%setup .* -n ' $specfile | sed -e 's/.*-n //' -e 's/\([^[:blank:]]*\).*/\1/'`
     test ".$n" = "." && n="%{name}-%{version}"
     echo "$n"
 }
