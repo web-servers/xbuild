@@ -104,7 +104,7 @@ if [ ".$dist" = . ]; then
             test ".$dist" = . && dist=.gnu$r
         ;;
         windows )
-            dist=.win$__isa_bits
+            dist=.win$r
         ;;
         sunos   )
             dist=.sun$r
