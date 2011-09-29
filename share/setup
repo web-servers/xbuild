@@ -44,7 +44,7 @@ case "$s" in
         p=linux
     ;;
     cygwin* )
-        r="`echo $s | sed -e 's/.*-//' -e 's/-.*//' -e 's/\.//'`"
+        r="`echo $s | sed -e 's/\w*-//' -e 's/-.*//' -e 's/\.//'`"
         p=windows
         d=.win
     ;;
