@@ -81,28 +81,18 @@ findoptexec()
 
 toupper()
 {
-    echo "$1" | tr '[a-z]' '[A-Z]'
+    echo "$1" | tr '[[:lower:]]' '[[:upper:]]'
 }
 
 tolower()
 {
-    echo "$1" | tr '[A-Z]' '[a-z]'
-}
-
-loginfo()
-{
-    echo "[INFO]  `date -R`: $@"
-}
-
-logerror()
-{
-    echo "[ERROR] `date -R`: $@" 1>&2
+    echo "$1" | tr '[[:upper:]]' '[[:lower:]]'
 }
 
 xbexit()
 {
     e=$1; shift;
-    $ERROR "$@"
+    echo "$@" 1>&2
     exit $e
 }
 
@@ -112,7 +102,7 @@ newdir()
     mkdir -p "$1" >/dev/null 2>&1
     e=$?
     if [ $e -ne 0 ]; then
-        $ERROR "failed to create directory \`$1'"
+        echo "failed to create directory \`$1'" 1>&2
         exit $e
     fi
 }
@@ -170,5 +160,3 @@ xbexport()
         test ".$v" != . && export $o
     done
 }
-
-export toupper tolower varadds loginfo logerror xbexit

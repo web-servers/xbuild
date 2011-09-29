@@ -35,7 +35,7 @@ downladsources()
     sIFS=$IFS; IFS=$XB_LF
     s=`cat sources 2>/dev/null`
     if [ ".$s" = "." ]; then
-        $ERROR "empty sources file"
+        echo "empty sources file" 1>&2
         return 1
     fi
     cd "$RPM_SOURCE_DIR"
@@ -49,7 +49,7 @@ downladsources()
         rm -f $p >/dev/null 1>&2 || true
         wget --tries=0 --quiet $u
         if [ $? -ne 0 ]; then
-            $ERROR "failed to download redhat module \`$u'" 1>&2
+            echo "failed to download redhat module \`$u'" 1>&2
             return 1
         fi
         case "$p" in
@@ -63,14 +63,14 @@ downladsources()
                 d=$__xz
             ;;
             * )
-                $ERROR "cannot determine compression algorithm for \`$p'" 1>&2
+                echo "cannot determine compression algorithm for \`$p'" 1>&2
                 return 1
             ;;
         esac
         $ECHO "$d -cd "$p" | $__tar -xvvf -"
         $d -cd "$p" | $__tar -xvvf -
         if [ $? -ne 0 ]; then
-            $ERROR "uncompressing \`$p'" 1>&2
+            echo "failed to uncompress \`$p'" 1>&2
             return 1
         fi
     done
@@ -79,9 +79,9 @@ downladsources()
 
 sources_prepare()
 {
-    $INFO "Preparing sources task"
+    $ECHO "Preparing sources task"
     if [ ! -f sources ]; then
-        $ERROR "cannot find sources file" 1>&2
+        echo "cannot find sources file" 1>&2
         return 1
     fi
     return 0

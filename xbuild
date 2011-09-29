@@ -26,11 +26,11 @@ set +x
 xb_prognam=`basename $0`
 xb_dirname=`dirname $0`
 xb_dirname="`cd \"$xb_dirname\" && pwd`"
-
+xb_libpath="$xb_dirname/share"
 include()
 {
-    if [ -r $xb_dirname/share/$1 ]; then
-        . $xb_dirname/share/$1
+    if [ -r $xb_libpath/$1 ]; then
+        . $xb_libpath/$1
     fi
 }
 
@@ -38,7 +38,6 @@ usetask()
 {
     . $xb_dirname/tasks/$1
 }
-export include usetask
 include stddefs
 
 for o
@@ -80,8 +79,7 @@ do
     case "$o" in
         --verbose|-v )
             ECHO=echo
-            ERROR=logerror
-            INFO=loginfo
+            has_verbose=yes
             shift
         ;;
         --debug      )
@@ -143,6 +141,10 @@ do
             _host="$a"
             shift
         ;;
+        --with-java=*)
+            JAVA_HOME="$a"
+            shift
+        ;;
         --help|-* )
         cat 1>&2 << EOH
 XBuild version $XB_VERSION
@@ -175,7 +177,8 @@ EOH
     esac
 done
 test .$has_maintainer_mode = .yes && set -x
-export xb_dirname xb_prognam ECHO INFO
+export xb_dirname xb_prognam xb_libpath
+export has_maintainer_mode has_verbose ECHO
 include system
 include setup
 include setup.$_os
@@ -221,7 +224,7 @@ EOH
         exit 1
     ;;
 esac
-$INFO "XBuild started: $task"
+$ECHO "XBuild started: $task"
 include specfile
 
 eval ${task}_prepare "$@"
@@ -231,5 +234,5 @@ test .$? != .0 && xbexit 1 "execute"
 eval ${task}_cleanup
 test .$? != .0 && xbexit 1 "cleanup"
 
-$INFO "XBuild finished"
+$ECHO "XBuild finished"
 exit 0

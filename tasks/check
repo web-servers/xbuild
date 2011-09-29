@@ -21,7 +21,7 @@
 #
 check_prepare()
 {
-    $INFO "Check task started"
+    $ECHO "Check task started"
     echo "Dumping environment ..."
     return 0
 }
@@ -60,6 +60,7 @@ __tar           $__tar
 __gzip          $__gzip
 __bzip2         $__bzip2
 __xz            $__xz
+__java          $__java
 
 Build:
 _prefix         $_prefix
@@ -88,6 +89,7 @@ EOH
     test ".$?" != .0 && echo "MSVC FAILED"
     rm /tmp/cc.$$
     $__perl --version
+    $__java --version
 fi
 
     cat << EOH
@@ -129,7 +131,7 @@ EOH
 
 check_cleanup()
 {
-    $INFO "Check task finsihed"
+    $ECHO "Check task finsihed"
     return 0
 }
 
