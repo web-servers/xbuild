@@ -36,6 +36,7 @@ EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
 __make="$WINUEXECC nmake.exe"
 __perl="$WINUEXECC perlw.exe"
 export PATH LIB INCLUDE EXTRA_LIBS __make __perl _arch_msvc
-JAVA_HOME="`$xb_dirname/tools/windows/bin/x86/xtool.exe jdk`"
+JAVA_HOME="`$xb_dirname/tools/windows/bin/x86/xtool.exe jdk 2>/dev/null`"
+test ".$JAVA_HOME" = . && JAVA_HOME="`$xb_dirname/tools/windows/bin/x86/xtool.exe jdk -r 64 2>/dev/null`"
 __java="$WINUEXECC java"
 export JAVA_HOME __java
