@@ -75,23 +75,10 @@ getgnutool()
     echo "$r"
 }
 
-getmstool()
+findoptexec()
 {
-    sIFS=$IFS ; IFS=:
-    for p in $PATH
-    do
-        if [ -x "$p/$1.exe" ]; then
-            if [ ".`$p/$1.exe -version 2>/dev/null | head -1 | grep Microsoft`" != . ]; then
-                if [ ".$has_cygwin" = .yes ]; then
-                    cygpath -w "$p/$1.exe" | sed 's;\\;\\\\;g'
-                else
-                    echo "`echo "$p/$1.exe" | sed 's;^/\([c-zC-Z]\)/;\1\:/;'`" | sed 's;/;\\\\;g'
-                fi
-                return
-            fi
-        fi
-    done
-    echo $1.exe
+    r="`which $1 2>/dev/null || type $1 2>/dev/null || echo :`"
+    echo $r
 }
 
 toupper()
