@@ -22,7 +22,7 @@
 #
 
 cmscbasedir=/cygdrive/c/cmsc
-WINUEXECC="$xb_dirname/tools/tool.exe exec -c"
+WINUEXECC="$xb_dirname/tools/xtool.exe exec -c"
 WINMKLINK="$xb_dirname/tools/xtool.exe mklink"
 export WINUEXECC WINMKLINK
 
