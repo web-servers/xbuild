@@ -89,7 +89,8 @@ EOH
     test ".$?" != .0 && echo "MSVC FAILED"
     rm /tmp/cc.$$
     $__perl --version
-    $__java --version
+    echo "JAVA_HOME=$JAVA_HOME"
+    $__java -version
 fi
 
     cat << EOH

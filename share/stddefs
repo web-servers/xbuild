@@ -52,4 +52,4 @@ __mday=`date +%d`
 __cwd="`pwd`"
 __tag_name=`basename "$__cwd"`
 specfile="`ls -1 *.spec 2>/dev/null | head -1`"
-test ".$JAVA_HOME" = . && JAVA_HOME="/cygdrive/c/Java/jdk1.6.0/
+test ".$JAVA_HOME" = . && JAVA_HOME="/cygdrive/c/Java/jdk1.6.0"
