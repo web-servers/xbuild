@@ -37,5 +37,5 @@ __make="$WINUEXECC nmake.exe"
 __perl="$WINUEXECC perlw.exe"
 export PATH LIB INCLUDE EXTRA_LIBS __make __perl _arch_msvc
 JAVA_HOME="/cygdrive/c/Java/jdk1.6.0"
-__java="$JAVA_HOME/bin/java.exe"
+__java="$WINUEXECC $JAVA_HOME/bin/java.exe"
 export JAVA_HOME __java
