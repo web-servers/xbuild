@@ -133,6 +133,8 @@ EOH
         b="`basename $e`"
         echo "copy : $b"
     done
+    echo "Two section changelog:"
+    changelog 2
     cat << EOH
 
 Build requirements:

@@ -36,7 +36,7 @@ speceval()
 
 specparam()
 {
-    v=`grep -m 1 -i ^$1':\ *' $specfile | sed 's/.*:[[:blank:]]*//'`
+    v=`grep -i "^$1:\ " $specfile | head -1 | sed 's/.*:[[:blank:]]*//'`
     speceval "$v"
 }
 
