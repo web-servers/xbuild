@@ -78,18 +78,30 @@ downloadsources()
 
 copysources()
 {
+    c="f"
+    test ".$has_verbose" = .yes && c="v$c"
     IFS=$__lf
     s=`grep -i -e '^Source[0-9]*:' $specfile | sed 's/\w*:[[:blank:]]*//'`
     for i in $s
     do
         IFS=$__ifs
         e="`speceval $i`"
-        test -e "$e" || e="`basename $e`"
-        test -e "$e" || continue
-        c="f"
-        test ".$has_verbose" = .yes && c="v$c"
-        test -d "$e" && c="R$c"
-        cp -$c "$e" "$_sourcedir/" 2>/dev/null || true
+        d="`dirname $e`"
+        b="`basename $e`"
+        test -e "$b" || continue
+        case "$d" in
+            http*://* )
+                d=.
+            ;;
+        esac
+        if [ -d "$b" ]; then
+            test "$d"  = . && d=""
+            cp -R$c "$b" "$_sourcedir/$d" 2>/dev/null || true
+        else
+            test "$d" != . && mkdir -p "$_sourcedir/$d" 2>/dev/null || true
+            test "$d"  = . && d=""
+            cp -$c "$b" "$_sourcedir/$d" 2>/dev/null || true
+        fi
     done
 }
 
@@ -110,7 +122,7 @@ applypatches()
             r="`echo $r | sed 's/-b \(\.\S*\)/-b -z \1/'`"
             case "$v" in
                 http*://* )
-                    v=`echo $v | sed 's;.*/;;'`
+                    v=`basename "$v"`
                 ;;
             esac
             if [ -f "$RPM_ROOT_DIR/$v" ]; then
