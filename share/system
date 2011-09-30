@@ -47,10 +47,25 @@ varadds()
 
 findgnutool()
 {
+    r="`which g$1 2>/dev/null`"
+    if [ ".$r" != . ]; then
+        echo "$r"
+        return
+    fi
+    r="`which $1 2>/dev/null`"
+    if [ ".$r" != . ]; then
+        $r </dev/null --help 2>/dev/null | grep -i gnu 1>/dev/null
+        if [ $? -eq 0 ]; then
+            echo "$r"
+            return
+        fi
+    fi
     r=""
-    sIFS=$IFS; IFS=": "
+    (
+    IFS=":"
     for p in `echo $PATH`
     do
+        IFS=$__ifs
         if [ -x "$p/g$1" ]; then
             $p/g$1 </dev/null --help 2>/dev/null | grep -i gnu 1>/dev/null
             if [ $? -eq 0 ]; then
@@ -66,8 +81,8 @@ findgnutool()
             fi
         fi
     done
-    IFS=$sIFS
     echo "$r"
+    )
 }
 
 getgnutool()
