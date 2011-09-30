@@ -28,6 +28,12 @@
 # Downloads entries from sources file
 # in the current directory and uncopresses them to the
 # RPM_SOURCE_DIR.
+# Problems:
+# 1. what to do with misssing %patchNN rule for PatchNN: file?
+#
+# Added:
+# If Source points to directoy this dircetory is copied to
+# recursively to the source directory.
 #
 
 downloadsources()
@@ -78,14 +84,12 @@ copysources()
     do
         IFS=$__ifs
         e="`speceval $i`"
-        b="`basename $e`"
-        c="-f"
-        if [ -d "$e" ]; then
-            cp -Rf "$e" "$_sourcedir/$_source" 2>/dev/null || true
-        elif [ -e "$b" ]; then
-            $ECHO "cp -f $b"
-            cp -f "$b" "$_sourcedir/" 2>/dev/null || true
-        fi
+        test -e "$e" || e="`basename $e`"
+        test -e "$e" || continue
+        c="f"
+        test ".$has_verbose" = .yes && c="v$c"
+        test -d "$e" && c="R$c"
+        cp -$c "$e" "$_sourcedir/" 2>/dev/null || true
     done
 }
 
