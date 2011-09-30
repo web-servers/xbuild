@@ -26,11 +26,11 @@ set +x
 xb_prognam=`basename $0`
 xb_dirname=`dirname $0`
 xb_dirname="`cd \"$xb_dirname\" && pwd`"
-xb_libpath="$xb_dirname/share"
+XB_LIBPATH="$xb_dirname/share"
 include()
 {
-    if [ -r $xb_libpath/$1 ]; then
-        . $xb_libpath/$1
+    if [ -r $XB_LIBPATH/$1 ]; then
+        . $XB_LIBPATH/$1
     fi
 }
 
@@ -177,7 +177,7 @@ EOH
     esac
 done
 test .$has_maintainer_mode = .yes && set -x
-export xb_dirname xb_prognam xb_libpath
+export xb_dirname xb_prognam XB_LIBPATH
 export has_maintainer_mode has_verbose ECHO
 include system
 include setup

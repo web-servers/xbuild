@@ -71,13 +71,17 @@ _sbindir        $_sbindir
 Environment:
 __cwd           $__cwd
 __tag_name      $__tag_name
-
 hostname        `hostname`
 PATH            $PATH
-
+JAVA_HOME       $JAVA_HOME
 EOH
+
+$__perl --version
+$__java -version
+
 if [ "$_os" = windows ]; then
     cat << EOH
+
 Windows envronment:
 `$WINUEXECC cmd.exe /C set`
 Checking MSVC environment ...
@@ -88,12 +92,10 @@ EOH
     $WINUEXECC cl.exe /EP /tmp/cc.$$ >/dev/null
     test ".$?" != .0 && echo "MSVC FAILED"
     rm /tmp/cc.$$
-    $__perl --version
-    echo "JAVA_HOME=$JAVA_HOME"
-    $__java -version
 fi
 
     cat << EOH
+
 RPM envronment:
 
 RPM_BUILD_ROOT      $buildroot
