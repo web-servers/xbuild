@@ -28,8 +28,6 @@
 # Downloads entries from sources file
 # in the current directory and uncopresses them to the
 # RPM_SOURCE_DIR.
-# Problems:
-# 1. what to do with misssing %patchNN rule for PatchNN: file?
 #
 # Added:
 # If Source points to directoy this dircetory is copied to
@@ -116,10 +114,9 @@ applypatches()
         p=`echo "$i" | sed 's/[pP]atch\([0-9]*\).*/\1/'`
         v=`echo "$i" | sed 's/\w*:[[:blank:]]*//'`
         r=`grep -i '^%patch'$p' ' $specfile | sed 's/%\w*[[:blank:]]*//'`
-        if [ ".$r" = "." ]; then
-            $ECHO "%patch$p rule not found in specfile for \`$v'"
-        else
-            r="`echo $r | sed 's/-b \(\.\S*\)/-b -z \1/'`"
+        if [ ".$r" != "." ]; then
+            r="`echo $r | sed 's/\(.*\)\(\..*\)/\1 -z \2/'`"
+            test ".$has_verbose" = .no && r="-s $r"
             case "$v" in
                 http*://* )
                     v=`basename "$v"`
@@ -128,7 +125,7 @@ applypatches()
             if [ -f "$RPM_ROOT_DIR/$v" ]; then
             (
                 cd "$_sourcedir/$_source"
-                patch $r -s < "$RPM_ROOT_DIR/$v"
+                patch $r < "$RPM_ROOT_DIR/$v"
             )
             else
                 $ECHO "missing patch: \`$v'"
@@ -137,7 +134,7 @@ applypatches()
     done
 }
 
-
+# Execute hooks
 sources_prepare()
 {
     $ECHO "Preparing sources task"
