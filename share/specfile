@@ -29,21 +29,21 @@ test -r $specfile || xbexit 1 "cannot find specfile: \`$specfile'"
 speceval()
 {
     if [ ".$1" != "." ]; then
-        x=`echo "$1" | sed 's/%{[?]*\(\w*\)}/${\L\1\E}/g'`
+        x=`echo "$1" | $__sed 's/%{[?]*\(\w*\)}/${\L\1\E}/g'`
         eval "echo \"$x\""
     fi
 }
 
 specparam()
 {
-    v=`grep -i "^$1:\ " $specfile | head -1 | sed 's/.*:[[:blank:]]*//'`
+    v=`$__grep -i "^$1:\ " $specfile | head -1 | $__sed 's/.*:[[:blank:]]*//'`
     speceval "$v"
 }
 
 specsetupname()
 {
     IFS=$__lf
-    n=`grep -i '^%setup .* -n ' $specfile | sed -e 's/.*-n //' -e 's/\([^[:blank:]]*\).*/\1/'`
+    n=`$__grep -i '^%setup .* -n ' $specfile | $__sed -e 's/.*-n //' -e 's/\([^[:blank:]]*\).*/\1/'`
     test ".$n" = "." && n="%{name}-%{version}"
     echo "$n"
 }
@@ -54,7 +54,7 @@ changelog()
     b=false
     n=0
     c=
-    r=`grep -i '^%changelog$' -A 100 $specfile`
+    r=`$__grep -i '^%changelog$' -A 100 $specfile`
     if [ ".$r" != . ]; then
         for i in $r
         do

@@ -79,7 +79,7 @@ copysources()
     c="f"
     test ".$has_verbose" = .yes && c="v$c"
     IFS=$__lf
-    s=`grep -i -e '^Source[0-9]*:' $specfile | sed 's/\w*:[[:blank:]]*//'`
+    s=`$__grep -i '^Source[0-9]*:' $specfile | $__sed 's/\w*:[[:blank:]]*//'`
     for i in $s
     do
         IFS=$__ifs
@@ -111,9 +111,9 @@ applypatches()
     for i in $c
     do
         IFS=$__ifs
-        p=`echo "$i" | sed 's/[pP]atch\([0-9]*\).*/\1/'`
-        v=`echo "$i" | sed 's/\w*:[[:blank:]]*//'`
-        r=`grep -i '^%patch'$p' ' $specfile | sed 's/%\w*[[:blank:]]*//'`
+        p=`echo "$i" | $__sed 's/[pP]atch\([0-9]*\).*/\1/'`
+        v=`echo "$i" | $__sed 's/\w*:[[:blank:]]*//'`
+        r=`$__grep -i '^%patch'$p' ' $specfile | $__sed 's/%\w*[[:blank:]]*//'`
         if [ ".$r" != "." ]; then
             r="`echo $r | sed 's/\(.*\)\(\..*\)/\1 -z \2/'`"
             test ".$has_verbose" = .no && r="-s $r"

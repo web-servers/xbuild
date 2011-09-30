@@ -125,7 +125,7 @@ EOH
         echo "wget : \`$r/$name/$p/$h/$p'"
     done
     IFS=$__lf
-    s=`grep -i -e '^Source[0-9]*:' -e '^Patch[0-9]*:' $specfile | sed 's/\w*:[[:blank:]]*//'`
+    s=`$__grep -i -e '^Source[0-9]*:' -e '^Patch[0-9]*:' $specfile | $__sed 's/\w*:[[:blank:]]*//'`
     for i in $s
     do
         IFS=$__ifs
