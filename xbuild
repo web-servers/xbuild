@@ -86,6 +86,14 @@ do
             has_maintainer_mode=yes
             shift
         ;;
+        --requires=* )
+            requires="$a"
+            shift
+        ;;
+        --buildrequires=*| --requires=)
+            buildrequires="$a"
+            shift
+        ;;
         --name=*     )
             name="$a"
             shift

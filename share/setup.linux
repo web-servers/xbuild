@@ -21,5 +21,13 @@
 # Linux specific setup
 #
 
-__java=$JAVA_HOME/bin/java
-export JAVA_HOME __java
+if [ ".$JAVA_HOME" = . ]; then
+    __java=`findoptexec java`
+    test -x $__java || xbexit 1 "cannot find java executable"
+    b="`dirname $__java`"
+    JAVA_HOME="`realdir $b/../`"
+    export JAVA_HOME
+else
+    __java=$JAVA_HOME/bin/java
+fi
+export __java

@@ -160,3 +160,8 @@ xbexport()
         test ".$v" != . && export $o
     done
 }
+
+realdir()
+{
+    (cd "$1" 2>/dev/null && pwd)
+}

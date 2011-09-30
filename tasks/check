@@ -67,6 +67,10 @@ _prefix         $_prefix
 _bindir         $_bindir
 _libdir         $_libdir
 _sbindir        $_sbindir
+_destdir        $_destdir
+_sourcedir      $_sourcedir
+_builddir       $_builddir
+_buildrootdir   $_buildrootdir
 
 Environment:
 __cwd           $__cwd
@@ -128,6 +132,23 @@ EOH
         e="`speceval $i`"
         b="`basename $e`"
         echo "copy : $b"
+    done
+    cat << EOH
+
+Build requirements:
+
+EOH
+    IFS=",$IFS"
+    for i in $buildrequires
+    do
+        IFS=$__ifs
+        n=`echo $i | $__awk -F: '{print $1}'`
+        p=`echo $i | $__awk -F: '{print $2}'`
+        test ".$p" = . && p=win        
+        echo "requires : $n -> \`$_buildreqsdir/$n/$p'"
+        if [ -d "$_buildreqsdir/$n/$p" ]; then            
+            ls -1 "$_buildreqsdir/$n/$p"
+        fi
     done
     return 0
 }
