@@ -138,12 +138,13 @@ export LANG
 export __year __month __mday
 export __tab __lf __ifs
 
-test ".$_topdir" = . && _topdir=/tmp/xbuild
+test ".$_topdir" = . && _topdir=/tmp/xbroot
 _sourcedir=$_topdir/SOURCES
 _builddir=$_topdir/BUILD
 _buildrootdir=$_topdir/BUILDROOT
-_buildreqsdir=/tmp/build/buildreqs
+_buildbrewdir=/tmp/build
+_buildreqsdir=$_buildbrewdir/buildreqs
 _destdir="$__cwd"
 export _topdir _sourcedir _builddir _buildrootdir _destdir
-export _buildreqsdir
+export _buildbrewdir _buildreqsdir
 
