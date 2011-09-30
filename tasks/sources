@@ -30,52 +30,97 @@
 # RPM_SOURCE_DIR.
 #
 
-downladsources()
+downloadsources()
 {
-    sIFS=$IFS; IFS=$XB_LF
+    IFS=$__lf
     s=`cat sources 2>/dev/null`
-    if [ ".$s" = "." ]; then
-        echo "empty sources file" 1>&2
-        return 1
-    fi
-    cd "$RPM_SOURCE_DIR"
+    test ".$s" = "." && xbexit 1 "empty 'sources' file"
+    cd "$_sourcedir"
     for i in $s
     do
-        IFS=$sIFS
+        IFS=$__ifs
         h=`echo $i | $__awk '{print $1}'`
         p=`echo $i | $__awk '{print $2}'`
-        u=http://cvs.devel.redhat.com/repo/dist/$RPM_PACKAGE_NAME/$p/$h/$p
-        $ECHO "Getting: \`$u'"
-        rm -f $p >/dev/null 1>&2 || true
-        wget --tries=0 --quiet $u
-        if [ $? -ne 0 ]; then
-            echo "failed to download redhat module \`$u'" 1>&2
-            return 1
+        u=http://cvs.devel.redhat.com/repo/dist/$name/$p/$h/$p
+        if [ ! -f "$p" ]; then
+            $ECHO "Getting: \`$u'"
+            wget --tries=0 --quiet $u
+            test $? -ne 0 && xbexit 1 "failed to download redhat module \`$u'"
         fi
         case "$p" in
             *.tar.gz|*.tgz )
                 d=$__gzip
             ;;
             *.tar.bz2 )
-                d=$__bzip
+                d=$__bzip2
             ;;
             *.tar.lzma|*.xz )
                 d=$__xz
             ;;
             * )
-                echo "cannot determine compression algorithm for \`$p'" 1>&2
-                return 1
+                xbexit 1 "cannot determine compression algorithm for \`$p'"
             ;;
         esac
-        $ECHO "$d -cd "$p" | $__tar -xvvf -"
-        $d -cd "$p" | $__tar -xvvf -
-        if [ $? -ne 0 ]; then
-            echo "failed to uncompress \`$p'" 1>&2
-            return 1
-        fi
+        v=""
+        test ".$has_verbose" = .yes && v=vv
+        $ECHO "$d -cd "$p" | $__tar -x${v}f -"
+        $d -cd "$p" | $__tar -x${v}f -
+        test $? -ne 0 && xbexit 1 "failed to uncompress \`$p'"
     done
     return 0
 }
+
+copysources()
+{
+    IFS=$__lf
+    s=`grep -i -e '^Source[0-9]*:' $specfile | sed 's/\w*:[[:blank:]]*//'`
+    for i in $s
+    do
+        IFS=$__ifs
+        e="`speceval $i`"
+        b="`basename $e`"
+        c="-f"
+        if [ -d "$e" ]; then
+            cp -Rf "$e" "$_sourcedir/$_source" 2>/dev/null || true
+        elif [ -e "$b" ]; then
+            $ECHO "cp -f $b"
+            cp -f "$b" "$_sourcedir/" 2>/dev/null || true
+        fi
+    done
+}
+
+applypatches()
+{
+
+    IFS=$__lf
+    c=`grep -i '^patch[0-9]*:' $specfile`
+    for i in $c
+    do
+        IFS=$__ifs
+        p=`echo "$i" | sed 's/[pP]atch\([0-9]*\).*/\1/'`
+        v=`echo "$i" | sed 's/\w*:[[:blank:]]*//'`
+        r=`grep -i '^%patch'$p' ' $specfile | sed 's/%\w*[[:blank:]]*//'`
+        if [ ".$r" = "." ]; then
+            $ECHO "%patch$p rule not found in specfile for \`$v'"
+        else
+            r="`echo $r | sed 's/-b \(\.\S*\)/-b -z \1/'`"
+            case "$v" in
+                http*://* )
+                    v=`echo $v | sed 's;.*/;;'`
+                ;;
+            esac
+            if [ -f "$RPM_ROOT_DIR/$v" ]; then
+            (
+                cd "$_sourcedir/$_source"
+                patch $r -s < "$RPM_ROOT_DIR/$v"
+            )
+            else
+                $ECHO "missing patch: \`$v'"
+            fi
+        fi
+    done
+}
+
 
 sources_prepare()
 {
@@ -84,19 +129,28 @@ sources_prepare()
         echo "cannot find sources file" 1>&2
         return 1
     fi
+    makedir "$_sourcedir"
+    rm -rf "$_sourcedir/$_source" >/dev/null 2>&1 || true
     return 0
 }
 
 sources_execute()
 {
     $ECHO "Executing sources task"
-
+    (
+        downloadsources
+    )
+    test -d "$_sourcedir/$_source" || xbexit 1 "cannot find \`$_source' directory"
+    (
+        applypatches
+    )
+    (
+        copysources
+    )        
     return 0
 }
 
 sources_cleanup()
 {
-    $ECHO "Cleanup sources task"
-
     return 0
 }
