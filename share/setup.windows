@@ -21,12 +21,12 @@
 # Windows specific setup
 #
 
+CYGWIN_ROOT=C:/cmsc/cygwin
 cmscbasedir=/cygdrive/c/cmsc
 
 msvcdir=$cmscbasedir/msvc
 _arch_msvc=i386
 test ".$__isa_bits" = .64 && _arch_msvc=amd64
-CYGWIN_ROOT=C:/cmsc/cygwin
 test ".$JAVA_HOME" = . && JAVA_HOME="/cygdrive/c/Java/jdk1.6.0"
 test ".$JAVA_HOME" = . && xbexit 1 "missing JAVA_HOME environment"
 JAVA_HOME="`cygpath \"$JAVA_HOME\"`"
@@ -34,10 +34,8 @@ PATH="$msvcdir/bin/$_arch_msvc:$msvcdir/bin:$cmscbasedir/perl/bin:$cmscbasedir/t
 LIB=$msvcdir/lib/$_arch_msvc
 INCLUDE=$msvcdir/include/crt:$msvcdir/include:$msvcdir/include/mfc:$msvcdir/include/atl
 EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
-__make="cygspawn nmake.exe"
-__perl="cygspawn perlw.exe"
-export CYGWIN_ROOT PATH LIB INCLUDE EXTRA_LIBS
-export __make __perl _arch_msvc
-__java="cygspawn java.exe"
-__javac="cygspawn javac.exe"
-export JAVA_HOME __java __javac
+__make="cygspawn nmake"
+__perl="cygspawn perlw"
+__java="cygspawn java"
+__javac="cygspawn javac"
+export CYGWIN_ROOT PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME

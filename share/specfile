@@ -91,7 +91,6 @@ _source="`speceval $setupname`"
 test ".$_bindir" = . && _bindir="$_prefix/bin"
 test ".$_libdir" = . && _libdir="$_prefix/$_lib"
 test ".$_sbindir" = . && _sbindir="$_prefix/sbin"
-export _bindir _libdir _sbindir _source
 
 buildroot="$_buildrootdir/$name-$version-$release.$_arch"
 RPM_BUILD_ROOT="$buildroot"
@@ -100,8 +99,8 @@ RPM_BUILD_DIR="$_builddir"
 RPM_ROOT_DIR="$__cwd"
 RPM_ARCH="$_arch"
 RPM_OS="$_os"
-export RPM_SOURCE_DIR RPM_BUILD_DIR RPM_ARCH RPM_OS RPM_ROOT_DIR
 RPM_PACKAGE_NAME="$name"
 RPM_PACKAGE_VERSION="$version"
 RPM_PACKAGE_RELEASE="$release"
+export RPM_SOURCE_DIR RPM_BUILD_DIR RPM_ARCH RPM_OS RPM_ROOT_DIR
 export RPM_PACKAGE_NAME RPM_PACKAGE_VERSION RPM_PACKAGE_RELEASE

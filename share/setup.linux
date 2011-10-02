@@ -30,4 +30,3 @@ if [ ".$JAVA_HOME" = . ]; then
 else
     __java=$JAVA_HOME/bin/java
 fi
-export __java

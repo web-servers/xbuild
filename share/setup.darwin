@@ -22,4 +22,3 @@
 #
 
 __java=$JAVA_HOME/bin/java
-export JAVA_HOME __java

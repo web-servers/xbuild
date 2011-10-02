@@ -23,10 +23,10 @@
 #
 set +x
 
-xb_prognam=`basename $0`
-xb_dirname=`dirname $0`
-xb_dirname="`cd \"$xb_dirname\" && pwd`"
-XB_LIBPATH="$xb_dirname/share"
+p=`basename $0`
+r=`dirname $0`
+XB_ROOTDIR="`cd \"$r\" && pwd`"
+XB_LIBPATH="$XB_ROOTDIR/share"
 include()
 {
     if [ -r $XB_LIBPATH/$1 ]; then
@@ -36,7 +36,7 @@ include()
 
 usetask()
 {
-    . $xb_dirname/tasks/$1
+    . $XB_ROOTDIR/tasks/$1
 }
 include stddefs
 
@@ -185,7 +185,7 @@ EOH
     esac
 done
 test .$has_maintainer_mode = .yes && set -x
-export xb_dirname xb_prognam XB_LIBPATH
+export XB_ROOTDIR XB_LIBPATH
 export has_maintainer_mode has_verbose ECHO
 include system
 include setup

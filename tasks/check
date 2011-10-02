@@ -30,9 +30,8 @@ check_execute()
 {
     cat << EOH
 XBuild:
-program         $xb_prognam
 version         $XB_VERSION
-root            $xb_dirname
+root            $XB_ROOTDIR
 
 Specfile definitions:
 name            $name

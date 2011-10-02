@@ -33,12 +33,9 @@ __xz=`findoptexec xz`
 __perl=`findoptexec perl`
 __ranlib=`findoptexec ranlib`
 __u2d=`findoptexec unix2dos`
-export __tar __gzip __bzip2 __awk __patch __make __grep __sed
-export __xz __perl __ranlib __u2d
 
 __rpm2cpio=`which rpm2cpio 2>/dev/null`
-test ".$__rpm2cpio" = . && __rpm2cpio=$xb_dirname/tools/rpm2cpio.pl
-export __rpm2cpio
+test ".$__rpm2cpio" = . && __rpm2cpio=$XB_ROOTDIR/tools/rpm2cpio.pl
 
 m=`uname -m 2>/dev/null | tr '[A-Z]' '[a-z]'` || m="unknown"
 s=`uname -s 2>/dev/null | tr '[A-Z]' '[a-z]'` || s="unknown"
@@ -127,20 +124,12 @@ if [ ".$dist" = . ]; then
     esac
 fi
 test ".$dist" != .disable && export dist
-
-export __isa __isa_name __isa_bits
-export _host _host_os _host_cpu
-export _arch _os
-
 _lib=lib
 test ".$__isa_bits" = .64 && _lib=lib64
-export _lib
 
 # XXX: Do we need to set the language?
 LANG=C
 export LANG
-export __year __month __mday
-export __tab __lf __ifs
 
 test ".$_topdir" = . && _topdir=/tmp/xbroot
 _sourcedir=$_topdir/SOURCES
@@ -149,6 +138,4 @@ _buildrootdir=$_topdir/BUILDROOT
 _buildbrewdir=/tmp/build
 _buildreqsdir=$_buildbrewdir/buildreqs
 _destdir="$__cwd"
-export _topdir _sourcedir _builddir _buildrootdir _destdir
-export _buildbrewdir _buildreqsdir
 
