@@ -60,7 +60,9 @@ __tar           $__tar
 __gzip          $__gzip
 __bzip2         $__bzip2
 __xz            $__xz
+__rpm2cpio      $__rpm2cpio
 __java          $__java
+__javac         $__javac
 
 Build:
 _prefix         $_prefix

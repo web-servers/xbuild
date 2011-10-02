@@ -36,6 +36,10 @@ __u2d=`findoptexec unix2dos`
 export __tar __gzip __bzip2 __awk __patch __make __grep __sed
 export __xz __perl __ranlib __u2d
 
+__rpm2cpio=`which rpm2cpio 2>/dev/null`
+test ".$__rpm2cpio" = . && __rpm2cpio=$xb_dirname/tools/rpm2cpio.pl
+export __rpm2cpio
+
 m=`uname -m 2>/dev/null | tr '[A-Z]' '[a-z]'` || m="unknown"
 s=`uname -s 2>/dev/null | tr '[A-Z]' '[a-z]'` || s="unknown"
 r=`uname -r 2>/dev/null | tr '[A-Z]' '[a-z]'` || r="unknown"
