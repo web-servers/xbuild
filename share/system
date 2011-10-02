@@ -120,7 +120,7 @@ xbexit()
 
 newdir()
 {
-    rm -rf "$1" >/dev/null 2>&1 || true
+    rm -rf "$1" >/dev/null 2>&1
     mkdir -p "$1" >/dev/null 2>&1
     e=$?
     if [ $e -ne 0 ]; then
@@ -138,20 +138,20 @@ copypdir()
         $_tar -cf "$2/x.tar" .
         cd "$2"
         $_tar -xf x.tar
-        rm -f x.tar 2>/dev/null || true
+        rm -f x.tar 2>/dev/null
     )
     fi
 }
 
 chownmod()
 {
-    chmod $1 "$4" 2>/dev/null || true
-    chown $2:$3 "$4" 2>/dev/null || true
+    chmod $1 "$4" 2>/dev/null
+    chown $2:$3 "$4" 2>/dev/null
 }
 
 makelink()
 {
-    rm -rf $2 >/dev/null 2>&1 || true
+    rm -rf $2 >/dev/null 2>&1
     ln -sf "$1" $2
 }
 
@@ -169,9 +169,9 @@ filecopy()
 {
     m=$3
     test ".$m" = . && m=0644
-    rm -f "$2" >/dev/null 2>&1 || true
-    cp -p "$1" "$2" >/dev/null 2>&1 || true
-    chmod $m "$2" >/dev/null 2>&1 || true
+    rm -f "$2" >/dev/null 2>&1
+    cp -p "$1" "$2" >/dev/null 2>&1
+    chmod $m "$2" >/dev/null 2>&1
 }
 
 xbexport()

@@ -49,7 +49,7 @@ if [ -n "$1" ]; then
     cd "$1"
 fi
 
-if [ -z "$OPENSSL" ]; then OPENSSL=openssl; fi
+test ".$OPENSSL" = . && OPENSSL=openssl
 # Encrypt all keys
 if $o_nokey; then
     GENRSA="$OPENSSL genrsa"

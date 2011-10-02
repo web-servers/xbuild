@@ -123,7 +123,7 @@ if [ ".$dist" = . ]; then
         ;;
     esac
 fi
-test ".$dist" != .disable && export dist
+test ".$dist" = .disable && dist=""
 _lib=lib
 test ".$__isa_bits" = .64 && _lib=lib64
 

@@ -85,7 +85,10 @@ copysources()
     for i in $s
     do
         IFS=$__ifs
-        e="`speceval $i`"
+        case "$i" in
+             *%{* ) e="`speceval $i`" ;;
+             *    ) e="$i" ;;
+        esac
         d="`dirname $e`"
         b="`basename $e`"
         test -e "$b" || continue

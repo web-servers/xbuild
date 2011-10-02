@@ -21,7 +21,7 @@
 # Main xbuild file
 # You will almost sure wish to call this file
 #
-set +x
+set +e +x
 
 p=`basename $0`
 r=`dirname $0`
@@ -185,8 +185,7 @@ EOH
     esac
 done
 test .$has_maintainer_mode = .yes && set -x
-export XB_ROOTDIR XB_LIBPATH
-export has_maintainer_mode has_verbose ECHO
+export XB_ROOTDIR XB_LIBPATH ECHO
 include system
 include setup
 include setup.$_os
