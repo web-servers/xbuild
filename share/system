@@ -21,11 +21,14 @@
 varadds()
 {
     p=$1 ; shift
-    if [ ".$p" = ".::" ]; then
+    if [ ".$p" = ".::" ]
+    then
         eval "$p=\"\""
-    elif [ ".$1" != . ]; then
+    elif [ ".$1" != . ]
+    then
         eval e="\$$p"
-        if [ ".$e" = . ]; then
+        if [ ".$e" = . ]
+        then
             eval "$p=\"$@\""
         else
             for v in $@
@@ -33,7 +36,8 @@ varadds()
                 a=true
                 for i in $e
                 do
-                    if [ ".$v" = ".$i" ]; then
+                    if [ ".$v" = ".$i" ]
+                    then
                         a=false
                         break
                     fi
@@ -48,47 +52,55 @@ varadds()
 findgnutool()
 {
     r="`which g$1 2>/dev/null`"
-    if [ ".$r" != . ]; then
+    if [ ".$r" != . ]
+    then
         echo "$r"
         return
     fi
     r="`which $1 2>/dev/null`"
-    if [ ".$r" != . ]; then
+    if [ ".$r" != . ]
+    then
         $r </dev/null --help 2>/dev/null | grep -i gnu 1>/dev/null
-        if [ $? -eq 0 ]; then
+        if [ $? -eq 0 ]
+        then
             echo "$r"
             return
         fi
     fi
     r=""
     (
-    IFS=":"
-    for p in `echo $PATH`
-    do
-        IFS=$__ifs
-        if [ -x "$p/g$1" ]; then
-            $p/g$1 </dev/null --help 2>/dev/null | grep -i gnu 1>/dev/null
-            if [ $? -eq 0 ]; then
-                r="$p/g$1"
-                break
+        IFS=":"
+        for p in `echo $PATH`
+        do
+            IFS=$__ifs
+            if [ -x "$p/g$1" ]
+            then
+                $p/g$1 </dev/null --help 2>/dev/null | grep -i gnu 1>/dev/null
+                if [ $? -eq 0 ]
+                then
+                    r="$p/g$1"
+                    break
+                fi
             fi
-        fi
-        if [ -x "$p/$1" ]; then
-            $p/$1 </dev/null --help 2>/dev/null | grep -i gnu 1>/dev/null
-            if [ $? -eq 0 ]; then
-                r="$p/$1"
-                break
+            if [ -x "$p/$1" ]
+            then
+                $p/$1 </dev/null --help 2>/dev/null | grep -i gnu 1>/dev/null
+                if [ $? -eq 0 ]
+                then
+                    r="$p/$1"
+                    break
+                fi
             fi
-        fi
-    done
-    echo "$r"
+        done
+        echo "$r"
     )
 }
 
 getgnutool()
 {
     r="`findgnutool $1`"
-    if [ ".$r" = . ]; then
+    if [ ".$r" = . ]
+    then
         e="`which $1 2>/dev/null || type $1 2>/dev/null || echo $1`"
         test -x "$e" && r="$e"
     fi
@@ -123,7 +135,8 @@ newdir()
     rm -rf "$1" >/dev/null 2>&1
     mkdir -p "$1" >/dev/null 2>&1
     e=$?
-    if [ $e -ne 0 ]; then
+    if [ $e -ne 0 ]
+    then
         echo "failed to create directory \`$1'" 1>&2
         exit $e
     fi
@@ -132,7 +145,8 @@ newdir()
 copypdir()
 {
     install -m 755 -d "$2"
-    if [ -d "$1" ]; then
+    if [ -d "$1" ]
+    then
     (
         cd "$1"
         $_tar -cf "$2/x.tar" .
@@ -157,7 +171,8 @@ makelink()
 
 makedir()
 {
-    if [ ! -d "$1" ]; then
+    if [ ! -d "$1" ]
+    then
     (
         umask 022
         mkdir -p "$1" >/dev/null 2>&1

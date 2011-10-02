@@ -85,7 +85,8 @@ $__perl --version 2>&1
 $__java -version 2>&1
 $__javac -version 2>&1
 
-if [ "$_os" = windows ]; then
+if [ "$_os" = windows ]
+then
     cat << EOH
 
 Windows envronment:
@@ -106,7 +107,8 @@ EOH
     cygspawn cl.exe /MD /c /tmp/cc$$.c /Fo/tmp/cc$$.o 2>&1
     test ".$?" != .0 && echo "MSVC FAILED"
     cygspawn link.exe /tmp/cc$$.o $EXTRA_LIBS /OUT:/tmp/cc$$.exe 2>&1
-    if [ ".$?" = .0 ]; then
+    if [ ".$?" = .0 ]
+    then
         cygspawn depends.exe /c /f:1 /ot /tmp/cc%%.txt /tmp/cc$$.exe
         cat /tmp/cc%%.txt | head -27
     else
@@ -173,7 +175,8 @@ EOH
             p=`echo $i | $__awk -F: '{print $2}'`
             test ".$p" = . && p=win
             echo "requires : $n -> \`$_buildreqsdir/$n/$p'"
-            if [ -d "$_buildreqsdir/$n/$p" ]; then
+            if [ -d "$_buildreqsdir/$n/$p" ]
+            then
                 find "$_buildreqsdir/$n/$p" -maxdepth 1 -type f -exec basename '{}' \;
             fi
         done

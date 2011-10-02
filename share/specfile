@@ -28,7 +28,8 @@ test -r $specfile || xbexit 1 "cannot find specfile: \`$specfile'"
 
 speceval()
 {
-    if [ ".$1" != "." ]; then
+    if [ ".$1" != "." ]
+    then
         x=`echo "$1" | $__sed 's/%{[?]*\(\w*\)}/${\L\1\E}/g'`
         eval "echo \"$x\""
     fi
@@ -55,11 +56,13 @@ changelog()
     n=0
     c=
     r=`$__grep -i '^%changelog$' -A 100 $specfile`
-    if [ ".$r" != . ]; then
+    if [ ".$r" != . ]
+    then
         for i in $r
         do
             IFS=$s
-            if $b; then
+            if [ $b ]
+            then
                 case "$i" in
                     \** )
                         let n=n+1

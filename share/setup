@@ -101,7 +101,8 @@ test ".$__isa_name" = . && __isa_name=$n
 test ".$__isa" = . && __isa=$__isa_name-$__isa_bits
 test ".$_host" = . && _host=$_host_cpu-pc-$_host_os
 
-if [ ".$dist" = . ]; then
+if [ ".$dist" = . ]
+then
     case "$_host_os" in
         linux   )
             dist="`rpm -E %{?dist} 2>/dev/null`"

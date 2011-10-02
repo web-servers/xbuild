@@ -29,7 +29,8 @@ XB_ROOTDIR="`cd \"$r\" && pwd`"
 XB_LIBPATH="$XB_ROOTDIR/share"
 include()
 {
-    if [ -r $XB_LIBPATH/$1 ]; then
+    if [ -r $XB_LIBPATH/$1 ]
+    then
         . $XB_LIBPATH/$1
     fi
 }
@@ -159,9 +160,7 @@ XBuild version $XB_VERSION
 Copyright (C) $__year Red Hat, Inc.
 
 EOH
-        if [ $o != --help ]; then
-            echo "Error: unknown option \`$o'" 1>&2
-        fi
+        test $o != --help && echo "Error: unknown option \`$o'" 1>&2
         cat 1>&2 << EOH
 Options are
   --help                           this screen
@@ -216,7 +215,8 @@ XBuild version $XB_VERSION
 Copyright (C) $__year Red Hat, Inc.
 
 EOH
-        if [ ".$1" = . ]; then
+        if [ ".$1" = . ]
+        then
             echo "Usage: xbuild [OPTION]... task" 1>&2
         else
             echo "Error: \`$task' is an invalid task." 1>&2

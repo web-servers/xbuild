@@ -30,7 +30,7 @@
 # RPM_SOURCE_DIR.
 #
 # Added:
-# If Source points to directoy this dircetory is copied to
+# If Source points to directoy this dircetory is copied
 # recursively to the source directory.
 #
 
@@ -45,7 +45,8 @@ downloadsources()
         h=`echo $i | $__awk '{print $1}'`
         p=`echo $i | $__awk '{print $2}'`
         u=http://cvs.devel.redhat.com/repo/dist/$name/$p/$h/$p
-        if [ ! -f "$p" ]; then
+        if [ ! -e "$p" ]
+        then
             $ECHO "Getting: \`$u'"
             wget --tries=0 --quiet $u
             test $? -ne 0 && xbexit 1 "failed to download redhat module \`$u'"
@@ -64,12 +65,11 @@ downloadsources()
                 xbexit 1 "cannot determine compression algorithm for \`$p'"
             ;;
         esac
-        v=""
-        test ".$has_verbose" = .yes && v=vv
-        $ECHO "$d -cd "$p" | $__tar -x${v}f -"
+        test ".$has_verbose" = .yes && v=-xvvf || v=-xf
+        $ECHO "$d -cd "$p" | $__tar $v -"
         (
             cd "$_sourcedir"
-            $d -cd "$_destdir/$p" | $__tar -x${v}f -
+            $d -cd "$_destdir/$p" | $__tar $v -
         )
         test $? -ne 0 && xbexit 1 "failed to uncompress \`$p'"
     done
@@ -78,8 +78,7 @@ downloadsources()
 
 copysources()
 {
-    c="f"
-    test ".$has_verbose" = .yes && c="v$c"
+    test ".$has_verbose" = .yes && c=vf || c=f
     IFS=$__lf
     s=`$__grep -i '^Source[0-9]*:' $specfile | $__sed 's/\w*:[[:blank:]]*//'`
     for i in $s
@@ -97,13 +96,14 @@ copysources()
                 d=.
             ;;
         esac
-        if [ -d "$b" ]; then
+        if [ -d "$b" ]
+        then
             test "$d"  = . && d=""
-            cp -R$c "$b" "$_sourcedir/$d" 2>/dev/null || true
+            cp -R$c "$b" "$_sourcedir/$d" 2>/dev/null
         else
-            test "$d" != . && mkdir -p "$_sourcedir/$d" 2>/dev/null || true
+            test "$d" != . && mkdir -p "$_sourcedir/$d" 2>/dev/null
             test "$d"  = . && d=""
-            cp -$c "$b" "$_sourcedir/$d" 2>/dev/null || true
+            cp -$c "$b" "$_sourcedir/$d" 2>/dev/null
         fi
     done
 }
@@ -119,7 +119,8 @@ applypatches()
         p=`echo "$i" | $__sed 's/[pP]atch\([0-9]*\).*/\1/'`
         v=`echo "$i" | $__sed 's/\w*:[[:blank:]]*//'`
         r=`$__grep -i '^%patch'$p' ' $specfile | $__sed 's/%\w*[[:blank:]]*//'`
-        if [ ".$r" != "." ]; then
+        if [ ".$r" != "." ]
+        then
             r="`echo $r | sed 's/\(.*\)\(\..*\)/\1 -z \2/'`"
             test ".$has_verbose" = .no && r="-s $r"
             case "$v" in
@@ -127,7 +128,8 @@ applypatches()
                     v=`basename "$v"`
                 ;;
             esac
-            if [ -f "$RPM_ROOT_DIR/$v" ]; then
+            if [ -r "$RPM_ROOT_DIR/$v" ]
+            then
             (
                 cd "$_sourcedir/$_source"
                 patch $r < "$RPM_ROOT_DIR/$v"
@@ -143,12 +145,13 @@ applypatches()
 sources_prepare()
 {
     $ECHO "Preparing sources task"
-    if [ ! -f sources ]; then
+    if [ ! -r sources ]
+    then
         echo "cannot find sources file" 1>&2
         return 1
     fi
     makedir "$_sourcedir"
-    rm -rf "$_sourcedir/$_source" >/dev/null 2>&1 || true
+    rm -rf "$_sourcedir/$_source" >/dev/null 2>&1
     return 0
 }
 
