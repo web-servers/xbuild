@@ -39,7 +39,6 @@ downloadsources()
     IFS=$__lf
     s=`cat sources 2>/dev/null`
     test ".$s" = "." && xbexit 1 "empty 'sources' file"
-    cd "$_sourcedir"
     for i in $s
     do
         IFS=$__ifs
@@ -68,7 +67,10 @@ downloadsources()
         v=""
         test ".$has_verbose" = .yes && v=vv
         $ECHO "$d -cd "$p" | $__tar -x${v}f -"
-        $d -cd "$p" | $__tar -x${v}f -
+        (
+            cd "$_sourcedir"
+            $d -cd "$_destdir/$p" | $__tar -x${v}f -
+        )
         test $? -ne 0 && xbexit 1 "failed to uncompress \`$p'"
     done
     return 0
