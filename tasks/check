@@ -93,10 +93,25 @@ Checking MSVC environment ...
 EOH
     $__make /? >/dev/null
     test ".$?" != .0 && echo "NMAKE FAILED"
-    touch /tmp/cc.$$
-    cygspawn cl.exe /EP /tmp/cc.$$ >/dev/null
+cat > /tmp/cc$$.c << EOH
+#include <stdlib.h>
+#include <stdio.h>
+int main()
+{
+    return 0;
+}
+
+EOH
+    cygspawn cl.exe /MD /c /tmp/cc$$.c /Fo/tmp/cc$$.o
     test ".$?" != .0 && echo "MSVC FAILED"
-    rm /tmp/cc.$$
+    cygspawn link.exe /tmp/cc$$.o $EXTRA_LIBS /OUT:/tmp/cc$$.exe
+    if [ ".$?" = .0 ]; then
+        cygspawn depends.exe /c /f:1 /ot /tmp/cc%%.txt /tmp/cc$$.exe
+        cat /tmp/cc%%.txt | head -27
+    else
+        echo "LINK FAILED"
+    fi
+    rm /tmp/cc$$.*
 fi
 
     cat << EOH
