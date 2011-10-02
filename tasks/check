@@ -41,7 +41,7 @@ specfile        $specfile
 release         $release
 dist            $dist
 version         $version
-setupname       $setupname : $setupname_ex
+setupname       $setupname -> $_source
 
 Host info:
 _os             $_os
@@ -81,9 +81,9 @@ PATH            $PATH
 JAVA_HOME       $JAVA_HOME
 EOH
 
-$__perl --version
-$__java -version
-$__javac -version
+$__perl --version 2>&1
+$__java -version 2>&1
+$__javac -version 2>&1
 
 if [ "$_os" = windows ]; then
     cat << EOH
@@ -103,9 +103,9 @@ int main()
 }
 
 EOH
-    cygspawn cl.exe /MD /c /tmp/cc$$.c /Fo/tmp/cc$$.o
+    cygspawn cl.exe /MD /c /tmp/cc$$.c /Fo/tmp/cc$$.o 2>&1
     test ".$?" != .0 && echo "MSVC FAILED"
-    cygspawn link.exe /tmp/cc$$.o $EXTRA_LIBS /OUT:/tmp/cc$$.exe
+    cygspawn link.exe /tmp/cc$$.o $EXTRA_LIBS /OUT:/tmp/cc$$.exe 2>&1
     if [ ".$?" = .0 ]; then
         cygspawn depends.exe /c /f:1 /ot /tmp/cc%%.txt /tmp/cc$$.exe
         cat /tmp/cc%%.txt | head -27

@@ -22,3 +22,4 @@
 #
 
 __java=$JAVA_HOME/bin/java
+__javac=$JAVA_HOME/bin/javac
