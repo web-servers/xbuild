@@ -22,22 +22,22 @@
 #
 
 cmscbasedir=/cygdrive/c/cmsc
-WINUEXECC="$xb_dirname/tools/xtool.exe exec -c"
-WINMKLINK="$xb_dirname/tools/xtool.exe mklink"
-export WINUEXECC WINMKLINK
 
 msvcdir=$cmscbasedir/msvc
 _arch_msvc=i386
 test ".$__isa_bits" = .64 && _arch_msvc=amd64
-PATH="$msvcdir/bin/$_arch_msvc:$msvcdir/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$_arch_msvc:$PATH"
+CYGWIN_ROOT=C:/cmsc/cygwin
+test ".$JAVA_HOME" = . && JAVA_HOME="/cygdrive/c/Java/jdk1.6.0"
+test ".$JAVA_HOME" = . && xbexit 1 "missing JAVA_HOME environment"
+JAVA_HOME="`cygpath \"$JAVA_HOME\"`"
+PATH="$msvcdir/bin/$_arch_msvc:$msvcdir/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$_arch_msvc:$JAVA_HOME/bin:$PATH"
 LIB=$msvcdir/lib/$_arch_msvc
 INCLUDE=$msvcdir/include/crt:$msvcdir/include:$msvcdir/include/mfc:$msvcdir/include/atl
 EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
-__make="$WINUEXECC nmake.exe"
-__perl="$WINUEXECC perlw.exe"
-export PATH LIB INCLUDE EXTRA_LIBS __make __perl _arch_msvc
-JAVA_HOME="`$xb_dirname/tools/xtool.exe jdk -r 64 2>/dev/null`"
-test ".$JAVA_HOME" = . && JAVA_HOME="`$xb_dirname/tools/xtool.exe jdk 2>/dev/null`"
-test ".$JAVA_HOME" = . && xbexit 1 "missing JAVA_HOME environment"
-__java="$WINUEXECC java"
-export JAVA_HOME __java
+__make="cygspawn nmake.exe"
+__perl="cygspawn perlw.exe"
+export CYGWIN_ROOT PATH LIB INCLUDE EXTRA_LIBS
+export __make __perl _arch_msvc
+__java="cygspawn java.exe"
+__javac="cygspawn javac.exe"
+export JAVA_HOME __java __javac
