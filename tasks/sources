@@ -121,22 +121,33 @@ applypatches()
         r=`$__grep -i '^%patch'$p' ' $specfile | $__sed 's/%\w*[[:blank:]]*//'`
         if [ ".$r" != "." ]
         then
-            r="`echo $r | sed 's/\(.*\)\(\..*\)/\1 -z \2/'`"
-            test ".$has_verbose" = .no && r="-s $r"
+            case "$r" in
+                -* )
+                    r="`echo $r | sed 's/\(.*\)\(\..*\)/\1 -z \2/'`"
+                    test ".$has_verbose" = .no && r="-s $r"
+                ;;
+            esac
             case "$v" in
                 http*://* )
                     v=`basename "$v"`
                 ;;
             esac
-            if [ -s "$RPM_ROOT_DIR/$v" ]
-            then
             (
                 cd "$_sourcedir/$_source"
-                patch $r < "$RPM_ROOT_DIR/$v"
+                case "$r" in
+                    -*  )
+                        if [ -s "$RPM_ROOT_DIR/$v" ]
+                        then
+                            patch $r < "$RPM_ROOT_DIR/$v"
+                        else
+                            $ECHO "missing patch: \`$v'"
+                        fi
+                    ;;
+                    *   )
+                        eval "$r $v"
+                    ;;
+                esac
             )
-            else
-                $ECHO "missing patch: \`$v'"
-            fi
         fi
     done
 }
