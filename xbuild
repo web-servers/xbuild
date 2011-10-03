@@ -136,7 +136,7 @@ do
             shift
         ;;
         --dist=*    )
-            dist="$a"
+            test ".$a" = .disable && dist="" || dist="$a"
             shift
         ;;
         --host-os=* )
