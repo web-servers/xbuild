@@ -193,6 +193,9 @@ task=$1
 shift
 # Parse tasks
 case ".$task" in
+    .build      )
+        usetask build
+    ;;
     .check      )
         usetask check
     ;;
@@ -225,6 +228,7 @@ EOH
 Standard tasks
   version                          display XBuild version info
   sources                          check out package sources
+  build                            perfom build
   check                            make a dry run
 
 EOH
