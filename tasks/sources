@@ -85,7 +85,7 @@ copysources()
     do
         IFS=$__ifs
         case "$i" in
-             *%{* ) e="`speceval $i`" ;;
+             *%{* ) e="`rpmeval $i`" ;;
              *    ) e="$i" ;;
         esac
         d="`dirname $e`"
@@ -106,6 +106,7 @@ copysources()
             cp -$c "$b" "$_sourcedir/$d" 2>/dev/null
         fi
     done
+    cp -$c Makefile.$_os "$_sourcedir/$_source/Makefile" 2>/dev/null
 }
 
 applypatches()

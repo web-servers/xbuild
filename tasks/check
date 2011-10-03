@@ -152,7 +152,7 @@ EOH
         do
             IFS=$__ifs
             case "$i" in
-                 *%{* ) e="`speceval $i`" ;;
+                 *%{* ) e="`rpmeval $i`" ;;
                  *    ) e="$i" ;;
             esac
             b="`basename $e`"

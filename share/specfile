@@ -26,7 +26,7 @@
 test ".$specfile" = . && xbexit 1 "no specfile defined"
 test -r $specfile || xbexit 1 "cannot find specfile: \`$specfile'"
 
-speceval()
+rpmeval()
 {
     if [ ".$1" != "." ]
     then
@@ -38,7 +38,7 @@ speceval()
 specparam()
 {
     v=`$__grep -i "^$1:\ " $specfile | head -1 | $__sed 's/.*:[[:blank:]]*//'`
-    speceval "$v"
+    rpmeval "$v"
 }
 
 specsetupname()
@@ -90,7 +90,7 @@ test ".$release" = . && release="`specparam release`"
 summary="`specparam summary`"
 group="`specparam group`"
 setupname="`specsetupname`"
-_source="`speceval $setupname`"
+_source="`rpmeval $setupname`"
 test ".$_bindir" = . && _bindir="$_prefix/bin"
 test ".$_libdir" = . && _libdir="$_prefix/$_lib"
 test ".$_sbindir" = . && _sbindir="$_prefix/sbin"
