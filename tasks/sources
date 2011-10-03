@@ -36,9 +36,9 @@
 
 downloadsources()
 {
+    test -s sources || return 0
     IFS=$__lf
     s=`cat sources 2>/dev/null`
-    test ".$s" = "." && xbexit 1 "empty 'sources' file"
     for i in $s
     do
         IFS=$__ifs
@@ -128,7 +128,7 @@ applypatches()
                     v=`basename "$v"`
                 ;;
             esac
-            if [ -r "$RPM_ROOT_DIR/$v" ]
+            if [ -s "$RPM_ROOT_DIR/$v" ]
             then
             (
                 cd "$_sourcedir/$_source"
@@ -145,13 +145,14 @@ applypatches()
 sources_prepare()
 {
     $ECHO "Preparing sources task"
-    if [ ! -r sources ]
-    then
-        echo "cannot find sources file" 1>&2
-        return 1
-    fi
-    makedir "$_sourcedir"
+
     rm -rf "$_sourcedir/$_source" >/dev/null 2>&1
+    if [ -s sources ]
+    then
+        makedir "$_sourcedir"
+    else
+        makedir "$_sourcedir/$_source"
+    fi
     return 0
 }
 
