@@ -40,10 +40,75 @@ build_prepare()
 
 build_execute()
 {
+    files=""
+    files_dev=""
     $ECHO "build execute \`$_source.$_arch'"
     (
         cd "$_builddir/$_source.$_arch"
         for i in $name.build.$_os $name.build
+        do
+            if [ -s "$_packagedir/$i" ]
+            then
+                . "$_packagedir/$i"
+                break
+            fi
+        done
+        return 0
+    )
+    test $? -ne 0 && exit 1
+    (
+        cd "$buildroot"
+        if [ ".$has_manifest" = .yes ]
+        then
+            install -m 755 -d META-INF
+            cat >META-INF/MANIFEST.MF <<EOH
+Manifest-Version: 1.0
+Archiver-Version: zip
+Created-By: $__ccver
+Built-At: `date "+%Y-%m-%d %H:%M:%S"`
+Built-By: brew
+Name: $name
+Version: $version
+Release: $release
+Platform: $_os
+Architecture: $_arch
+Summary: $summary
+Group: $group
+License: $license
+Implementation-Title: $name
+Implementation-Version: $version
+Implementation-URL: $origin
+
+EOH
+        else
+            cat >BUILDSPEC <<EOH
+Name: $name
+Version: $version
+Release: $release
+Platform: $_os
+Architecture: $_arch
+Summary: $summary
+Group: $group
+License: $license
+URL: $origin
+Timestamp: `date "+%Y%m%d %H%M%S"`
+Compiler: $__ccver
+
+EOH
+        fi
+        test ".$files" = . && files=.
+        zip -r9 "$_destdir/$name-$version-$release.$_arch.zip" $files
+        test $? -ne 0 && exit 1
+        if [ ".$files_dev" != . ]
+        then
+            zip -r9 "$_destdir/$name-$version-$release.$_arch-dev.zip" $files_dev
+        fi
+        return 0
+    )
+    test $? -ne 0 && exit 1
+    (
+        cd "$buildroot"
+        for i in $name.install.$_os $name.install
         do
             if [ -s "$_packagedir/$i" ]
             then
