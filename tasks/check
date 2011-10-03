@@ -109,8 +109,8 @@ EOH
     cygspawn link.exe /tmp/cc$$.o $EXTRA_LIBS /OUT:/tmp/cc$$.exe 2>&1
     if [ ".$?" = .0 ]
     then
-        cygspawn depends.exe /c /f:1 /ot /tmp/cc%%.txt /tmp/cc$$.exe
-        cat /tmp/cc%%.txt | head -27
+        cygspawn depends.exe /c /f:1 /ot /tmp/cc$$.txt /tmp/cc$$.exe
+        cat /tmp/cc$$.txt | head -27
     else
         echo "LINK FAILED"
     fi
