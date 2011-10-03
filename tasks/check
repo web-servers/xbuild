@@ -21,7 +21,7 @@
 #
 check_prepare()
 {
-    $ECHO "Check task started"
+    $ECHO "check started"
     echo "Dumping environment ..."
     return 0
 }
@@ -183,10 +183,3 @@ EOH
     )
     return 0
 }
-
-check_cleanup()
-{
-    $ECHO "Check task finsihed"
-    return 0
-}
-

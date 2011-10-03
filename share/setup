@@ -138,4 +138,5 @@ _buildrootdir=$_topdir/BUILDROOT
 _buildbrewdir=/tmp/build
 _buildreqsdir=$_buildbrewdir/buildreqs
 _destdir="$__cwd"
+_packagedir="$__cwd"
 

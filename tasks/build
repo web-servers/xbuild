@@ -1,0 +1,56 @@
+#!/bin/sh
+# Copyright(c) 2011 Red Hat, Inc.
+#
+# This is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library in the file COPYING.LIB;
+# if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+#
+# @author Mladen Turk
+#
+# This is the configuration file to treate the CA certificate of the
+# _DEMONSTRATION ONLY_ 'Tequila' Certificate Authority.
+# This CA is used to sign the localhost.crt and user.crt
+# because self-signed server certificates are not accepted by all browsers.
+# NEVER USE THIS CA YOURSELF FOR REAL LIFE! INSTEAD EITHER USE A PUBLICALLY
+# KNOWN CA OR CREATE YOUR OWN CA!
+#
+# Master build task
+#
+
+# Execute hooks
+build_prepare()
+{
+    $ECHO "build prepare \`$_source.$_arch'"
+    test -d "$_sourcedir/$_source" || xbexit 1 "cannot find \`$_source' directory"
+    copypdir "$_sourcedir/$_source" "$_builddir/$_source.$_arch"
+    return 0
+}
+
+build_execute()
+{
+    $ECHO "build execute \`$_source.$_arch'"
+    (
+        cd "$_builddir/$_source.$_arch"
+        for i in $name.build.$_os $name.build
+        do
+            if [ -s "$_packagedir/$i" ]
+            then
+                . "$_packagedir/$i"
+                break
+            fi
+        done
+        return 0
+    )
+    return $?
+}

@@ -231,15 +231,13 @@ EOH
         exit 1
     ;;
 esac
-$ECHO "XBuild started: $task"
+$ECHO "$task started"
 include specfile
 
-eval ${task}_prepare "$@"
-test .$? != .0 && xbexit 1 "prepare"
-eval ${task}_execute
-test .$? != .0 && xbexit 1 "execute"
-eval ${task}_cleanup
-test .$? != .0 && xbexit 1 "cleanup"
+( eval ${task}_prepare "$@" )
+test $? -ne 0 && xbexit 1 "$task prepare failed"
+( eval ${task}_execute "$@" )
+test $? -ne 0 && xbexit 1 "$task execute failed"
 
-$ECHO "XBuild finished"
+$ECHO "$task finished."
 exit 0

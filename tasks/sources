@@ -155,7 +155,7 @@ applypatches()
 # Execute hooks
 sources_prepare()
 {
-    $ECHO "Preparing sources task"
+    $ECHO "sources prepare"
 
     rm -rf "$_sourcedir/$_source" >/dev/null 2>&1
     if [ -s sources ]
@@ -169,21 +169,19 @@ sources_prepare()
 
 sources_execute()
 {
-    $ECHO "Executing sources task"
+    $ECHO "sources execute"
     (
         downloadsources
     )
+    test $? -ne 0 && exit 1
     test -d "$_sourcedir/$_source" || xbexit 1 "cannot find \`$_source' directory"
     (
         applypatches
     )
+    test $? -ne 0 && exit 1
     (
         copysources
     )        
-    return 0
+    return $?
 }
 
-sources_cleanup()
-{
-    return 0
-}
