@@ -48,6 +48,8 @@ __isa_name=
 _host=
 _host_os=
 _host_cpu=
+PATH=/bin:$PATH
+export PATH
 __year=`date +%Y`
 __month=`date +%m`
 __mday=`date +%d`

@@ -21,7 +21,7 @@
 # Windows specific setup
 #
 
-CYGWIN_ROOT=C:/cmsc/cygwin
+CYGWIN_ROOT=C:/cygwin
 cmscbasedir=/cygdrive/c/cmsc
 
 test ".$JAVA_HOME" = . && JAVA_HOME="`regtool -w get '/HKLM/SOFTWARE/JavaSoft/Java Development Kit/1.6/JavaHome' 2>/dev/null`"
