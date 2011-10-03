@@ -34,6 +34,7 @@ build_prepare()
     $ECHO "build prepare \`$_source.$_arch'"
     test -d "$_sourcedir/$_source" || xbexit 1 "cannot find \`$_source' directory"
     copypdir "$_sourcedir/$_source" "$_builddir/$_source.$_arch"
+    install -m 755 -d "$buildroot"
     return 0
 }
 

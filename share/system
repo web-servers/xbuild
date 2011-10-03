@@ -149,9 +149,9 @@ copypdir()
     then
     (
         cd "$1"
-        $_tar -cf "$2/x.tar" .
+        $__tar -cf "$2/x.tar" .
         cd "$2"
-        $_tar -xf x.tar
+        $__tar -xf x.tar
         rm -f x.tar 2>/dev/null
     )
     fi
