@@ -35,17 +35,31 @@ build_prepare()
     test -d "$_sourcedir/$_source" || xbexit 1 "cannot find \`$_source' directory"
     copypdir "$_sourcedir/$_source" "$_builddir/$_source.$_arch"
     install -m 755 -d "$buildroot"
+    (
+        cd "$_builddir/$_source.$_arch"
+        for i in $name.${_os_c}prep $name.buildprep
+        do
+            if [ -s "$_packagedir/$i" ]
+            then
+                . "$_packagedir/$i"
+                break
+            fi
+        done
+        return 0
+    )
+    test $? -ne 0 && exit 1
     return 0
 }
 
 build_execute()
 {
-    files=""
+    files=.
     files_dev=""
+    files_doc=""
     $ECHO "build execute \`$_source.$_arch'"
     (
         cd "$_builddir/$_source.$_arch"
-        for i in $name.build.$_os $name.build
+        for i in $name.${_os_c}build $name.build
         do
             if [ -s "$_packagedir/$i" ]
             then
@@ -76,11 +90,33 @@ Changelog:
 `changelog 1`
 EOH
         fi
-        test ".$files" = . && files=.
+        if [ ".$files_doc" != . ]
+        then
+            d="$_docdir/$name-$version"
+            install -m755 -d "$buildroot$d"
+            for i in $files_doc
+            do
+                cp -f $i "$buildroot$d/"
+            done
+            d="`echo $d | sed 's;^/;;'`"
+            test $files != . && files="$files $d"
+        fi
         zip -r9 "$_destdir/$name-$version-$release.$_arch.zip" $files
         test $? -ne 0 && exit 1
         if [ ".$files_dev" != . ]
         then
+            if [ ".$files_dev_doc" != . ]
+            then
+                d="$_docdir/$name-$version"
+                rm -rf "$buildroot$d" 2>/dev/null
+                install -m755 -d "$buildroot$d"
+                for i in $files_doc
+                do
+                    cp -f $i "$buildroot$d/"
+                done
+                d="`echo $d | sed 's;^/;;'`"
+                files_dev="$files_dev $d"
+            fi
             zip -r9 "$_destdir/$name-$version-$release.$_arch-dev.zip" $files_dev
         fi
         return 0
@@ -88,7 +124,7 @@ EOH
     test $? -ne 0 && exit 1
     (
         cd "$buildroot"
-        for i in $name.install.$_os $name.install
+        for i in $name.${_os_c}install $name.install
         do
             if [ -s "$_packagedir/$i" ]
             then

@@ -46,28 +46,35 @@ case "$s" in
         r="`echo $r | sed 's/\.//' | sed 's/\..*//'`"
         d="`rpm -E %{dist}`"
         p=linux
+        d=gnu
     ;;
     cygwin* )
         r="`echo $s | sed -e 's/\w*-//' -e 's/-.*//' -e 's/\.//'`"
+        test ".$r" = ".51" && r=5
+        test ".$r" = ".61" && r=6
         p=windows
-        d=.win
+        d=win
     ;;
     sunos   )
         r="`echo $r | sed 's/5.//'`"
         p=solaris
+        d=sun
     ;;
     darwin  )
         r="`echo $r | sed 's/\.//g'`"
         p=darwin
+        d=osx
     ;;
     *       )
         p=$s
+        d=gnu
     ;;
 esac
 
 test ".$_host_os" = .  && _host_os=$p
 test ".$_host_cpu" = . && _host_cpu=$m
 test ".$_os" = .   && _os=$p
+test ".$_os_c" = . && _os_c=$d
 test ".$_arch" = . && _arch=$m
 
 case "$_arch" in
@@ -108,19 +115,8 @@ then
             dist="`rpm -E %{?dist} 2>/dev/null`"
             test ".$dist" = . && dist=.gnu$r
         ;;
-        windows )
-            test ".$r" = ".51" && r=5
-            test ".$r" = ".61" && r=6
-            dist=.win$r
-        ;;
-        sunos   )
-            dist=.sun$r
-        ;;
-        darwin  )
-            dist=.osx$r
-        ;;
-        *       )
-            dist=disable
+        *      )
+            dist=.$os_c$r
         ;;
     esac
 fi
