@@ -21,9 +21,6 @@
 # Windows specific setup
 #
 
-CYGWIN_ROOT=C:/cmsc/cygwin
-cmscbasedir=/cygdrive/c/cmsc
-
 test ".$JAVA_HOME" = . && JAVA_HOME="`regtool -w get '/HKLM/SOFTWARE/JavaSoft/Java Development Kit/1.6/JavaHome' 2>/dev/null`"
 test ".$JAVA_HOME" = . && JAVA_HOME="`regtool -W get '/HKLM/SOFTWARE/JavaSoft/Java Development Kit/1.6/JavaHome' 2>/dev/null`"
 test ".$JAVA_HOME" = . && JAVA_HOME="/cygdrive/c/Java/jdk1.6.0"
@@ -39,5 +36,5 @@ __make="cygspawn nmake"
 __perl="cygspawn perlw"
 __java="cygspawn java"
 __javac="cygspawn javac"
-export CYGWIN_ROOT PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME
+export PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME
 __ccver="`cl 2>&1 | head -1`"

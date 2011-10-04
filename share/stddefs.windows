@@ -18,45 +18,12 @@
 #
 # @author Mladen Turk
 #
-# Contains all default variables
+# Contains windows default variables
 #
 
-XB_VERSION=2.0.0
-ECHO=:
-# String constants
-__tab="	"
-__lf="
-"
-__ifs=$IFS
-has_maintainer_mode=no
-has_buildspec=no
-has_verbose=no
-buildrequires=
-requires=
-dist=
-name=
-version="$version"
-release="$release"
-_prefix=/opt/redhat
-_bindir=
-_libdir=
-_sbindir=
-_includedir=
-_datadir=
-_docdir=
-_mandir=
-_os=
-_os_c=
-_arch=
-__isa=
-__isa_bits=
-__isa_name=
-_host=
-_host_os=
-_host_cpu=
-__year=`date +%Y`
-__month=`date +%m`
-__mday=`date +%d`
-__cwd="`pwd`"
-__tag_name=`basename "$__cwd"`
-specfile="`find . -maxdepth 1 -name '*.spec' -type f -exec basename '{}' \;`"
+_prefix=
+PATH=/bin:$PATH
+CYGWIN_ROOT=C:/cygwin
+cmscbasedir=/cygdrive/c/cmsc
+export PATH CYGWIN_ROOT
+

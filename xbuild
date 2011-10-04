@@ -39,7 +39,14 @@ usetask()
 {
     . $XB_ROOTDIR/tasks/$1
 }
+
 include stddefs
+o="`uname -s | tr '[A-Z]' '[a-z]' | sed 's/[^[:alnum:]].*//'`"
+case ".$o" in
+    .cygwin ) o=windows ;;
+    .sunos  ) o=solaris ;;
+esac
+include stddefs.$o
 
 for o
 do
