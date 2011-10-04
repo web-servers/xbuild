@@ -190,8 +190,10 @@ CMN_CFLAGS = $(CMN_CFLAGS) -D_CONSOLE
 !IF "$(CPU)" == "X86"
 CPU_CFLAGS = -D_X86_=1
 MACHINE=X86
+_LIB=lib
 !ELSE
 CPU_CFLAGS = -DWIN64 -D_WIN64
+_LIB=lib64
 !IF "$(CPU)" == "X64"
 CPU_CFLAGS = -D_AMD64_=1 -D_X64_=1 $(CPU_FLAGS)
 MACHINE=AMD64
@@ -232,7 +234,7 @@ CPPFLAGS = $(CPPFLAGS) $(EXTRA_CPPFLAGS)
 !ENDIF
 
 # Linker section
-LIBS = kernel32.lib advapi32.lib ws2_32.lib mswsock.lib ole32.lib shell32.lib rpcrt4.lib $(LIBS)
+LIBS = kernel32.lib advapi32.lib ws2_32.lib mswsock.lib ole32.lib shell32.lib rpcrt4.lib
 
 !IF DEFINED(EXTRA_LIBS)
 LIBS = $(LIBS) $(EXTRA_LIBS)

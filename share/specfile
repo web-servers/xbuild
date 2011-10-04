@@ -100,7 +100,7 @@ test ".$_includedir" = . && _includedir="$_prefix/include"
 test ".$_sbindir" = . && _sbindir="$_prefix/sbin"
 test ".$_datadir" = . && _datadir="$_prefix/share"
 test ".$_docdir" = . && _docdir="$_datadir/doc"
-test ".$_mandir" = . && _docdir="$_datadir/man"
+test ".$_mandir" = . && _mandir="$_datadir/man"
 
 buildroot="$_buildrootdir/$name-$version-$release.$_arch"
 RPM_BUILD_ROOT="$buildroot"
