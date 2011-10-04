@@ -134,7 +134,7 @@ build_execute()
             a="`procfiles $files_devel`"
             if [ ".$files_devel_doc" != . ]
             then
-                d="$_docdir/$name-$version"
+                d="$_docdir/$name-devel-$version"
                 newdir "$buildroot$d"
                 for i in $files_devel_doc
                 do
