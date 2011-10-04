@@ -54,8 +54,9 @@ build_prepare()
 build_execute()
 {
     files=.
-    files_dev=""
-    files_doc=""
+    files_doc=
+    files_devel=
+    files_devel_doc=
     $ECHO "build execute \`$_source.$_arch'"
     (
         cd "$_builddir/$_source.$_arch"
@@ -103,35 +104,22 @@ EOH
         fi
         zip -r9 "$_destdir/$name-$version-$release.$_arch.zip" $files
         test $? -ne 0 && exit 1
-        if [ ".$files_dev" != . ]
+        if [ ".$files_devel" != . ]
         then
-            if [ ".$files_dev_doc" != . ]
+            if [ ".$files_devel_doc" != . ]
             then
                 d="$_docdir/$name-$version"
                 rm -rf "$buildroot$d" 2>/dev/null
                 install -m755 -d "$buildroot$d"
-                for i in $files_doc
+                for i in $files_devel_doc
                 do
                     cp -f $i "$buildroot$d/"
                 done
                 d="`echo $d | sed 's;^/;;'`"
-                files_dev="$files_dev $d"
+                files_devel="$files_devel_doc $d"
             fi
-            zip -r9 "$_destdir/$name-$version-$release.$_arch-dev.zip" $files_dev
+            zip -r9 "$_destdir/$name-devel-$version-$release.$_arch.zip" $files_devel
         fi
-        return 0
-    )
-    test $? -ne 0 && exit 1
-    (
-        cd "$buildroot"
-        for i in $name.${_os_c}install $name.install
-        do
-            if [ -s "$_packagedir/$i" ]
-            then
-                . "$_packagedir/$i"
-                break
-            fi
-        done
         return 0
     )
     return $?
