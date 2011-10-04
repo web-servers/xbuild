@@ -35,7 +35,7 @@ procfiles()
         case $o in
             .  )
                echo .
-               return 0
+               break
             ;;
             /* )
                 echo $o | sed 's;^/;;'
@@ -108,7 +108,7 @@ EOH
         fi
         if [ ".$files" != . ]
         then
-            a="`(procfiles $files $d)`"
+            a="`procfiles $files`"
             if [ ".$files_doc" != . ]
             then
                 d="$_docdir/$name-$version"
@@ -118,16 +118,16 @@ EOH
                     for i in $files_doc
                     do
                         cp -f $i "$buildroot$d/"
+                        a="`(procfiles $a $d/$i)`"
                     done
                 )
-                a="`(procfiles $a $d)`"
             fi
             zip -r9 "$_destdir/$name-$version-$release.$_arch.zip" $a
             test $? -ne 0 && exit 1
         fi
         if [ ".$files_devel" != . ]
         then
-            a="`(procfiles $files_devel $d)`"
+            a="`procfiles $files_devel`"
             if [ ".$files_devel_doc" != . ]
             then
                 d="$_docdir/$name-$version"
@@ -138,9 +138,9 @@ EOH
                     for i in $files_devel_doc
                     do
                         cp -f $i "$buildroot$d/"
+                        a="`(procfiles $a $d/$i)`"
                     done
                 )
-                a="`(procfiles $a $d)`"
             fi
             zip -r9 "$_destdir/$name-devel-$version-$release.$_arch.zip" $a
         fi
