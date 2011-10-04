@@ -51,37 +51,38 @@ specsetupname()
 
 changelog()
 {
-    s=$IFS; IFS=$__lf
-    b=false
     n=0
-    c=
-    r=`$__grep -i '^%changelog$' -A 100 $specfile`
-    if [ ".$r" != . ]
-    then
-        for i in $r
-        do
-            IFS=$s
-            if [ $b ]
-            then
+    test ".$1" = . && c=1 || c=$1
+    (
+        b=true
+        IFS=$__lf
+        r=`$__grep -i '^%changelog$' -A 100 "$_packagedir/$specfile"`
+        if [ ".$r" != . ]
+        then
+            for i in $r
+            do
+                if $b
+                then
+                    b=false
+                    continue
+                fi
                 case "$i" in
                     \** )
                         let n=n+1
-                        test $n -gt $1 && return
+                        test $n -gt $c && return 0
                         test $n -gt 1 && echo ""
                         echo "$i"
                     ;;
                     %*  )
-                        r=""
+                        break
                     ;;
                     *   )
                         echo $i
-                    ;;
+                   ;;
                 esac
-            else
-                b=true
-            fi
-        done
-    fi
+            done
+        fi
+    )
 }
 
 test ".$name" = . && name="`specparam name`"

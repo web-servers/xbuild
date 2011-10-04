@@ -29,7 +29,7 @@ __lf="
 "
 __ifs=$IFS
 has_maintainer_mode=no
-has_manifest=no
+has_buildspec=no
 has_verbose=no
 buildrequires=
 requires=

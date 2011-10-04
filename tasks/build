@@ -58,42 +58,22 @@ build_execute()
     test $? -ne 0 && exit 1
     (
         cd "$buildroot"
-        if [ ".$has_manifest" = .yes ]
+        if [ ".$has_buildspec" = .yes ]
         then
-            install -m 755 -d META-INF
-            cat >META-INF/MANIFEST.MF <<EOH
-Manifest-Version: 1.0
-Archiver-Version: zip
-Created-By: $__ccver
-Built-At: `date "+%Y-%m-%d %H:%M:%S"`
-Built-By: brew
-Name: $name
-Version: $version
-Release: $release
-Platform: $_os
-Architecture: $_arch
-Summary: $summary
-Group: $group
-License: $license
-Implementation-Title: $name
-Implementation-Version: $version
-Implementation-URL: $origin
-
-EOH
-        else
             cat >BUILDSPEC <<EOH
 Name: $name
+Summary: $summary
+Group: $group
 Version: $version
 Release: $release
 Platform: $_os
 Architecture: $_arch
-Summary: $summary
-Group: $group
 License: $license
 URL: $origin
-Timestamp: `date "+%Y%m%d %H%M%S"`
-Compiler: $__ccver
-
+Build-By: $__ccver
+Timestamp: `date -R`
+Changelog:
+`changelog 1`
 EOH
         fi
         test ".$files" = . && files=.
