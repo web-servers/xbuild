@@ -68,6 +68,9 @@ _prefix         $_prefix
 _bindir         $_bindir
 _libdir         $_libdir
 _sbindir        $_sbindir
+_datadir        $_datadir
+_docdir         $_docdir
+_mandir         $_mandir
 _destdir        $_destdir
 _sourcedir      $_sourcedir
 _builddir       $_builddir

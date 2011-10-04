@@ -118,14 +118,11 @@ build_execute()
             then
                 d="$_docdir/$name-$version"
                 newdir "$buildroot$d"
-                (
-                    cd "$_builddir/$_source.$_arch"
-                    for i in $files_doc
-                    do
-                        cp -f $i "$buildroot$d/"
-                        a="`procfiles $a $d/$i`"
-                    done
-                )
+                for i in $files_doc
+                do
+                    cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
+                    a="`procfiles $a $d/$i`"
+                done
                 test -s BUILDSPEC && a="`procfiles $a BUILDSPEC`"
             fi
             zip -r9 "$_destdir/$name-$version-$release.$_arch.zip" $a
@@ -139,15 +136,11 @@ build_execute()
             then
                 d="$_docdir/$name-$version"
                 newdir "$buildroot$d"
-                install -m755 -d "$buildroot$d"
-                (
-                    cd "$_builddir/$_source.$_arch"
-                    for i in $files_devel_doc
-                    do
-                        cp -f $i "$buildroot$d/"
-                        a="`procfiles $a $d/$i`"
-                    done
-                )
+                for i in $files_devel_doc
+                do
+                    cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
+                    a="`procfiles $a $d/$i`"
+                done
                 test -s BUILDSPEC && a="`procfiles $a BUILDSPEC`"
             fi
             zip -r9 "$_destdir/$name-devel-$version-$release.$_arch.zip" $a
