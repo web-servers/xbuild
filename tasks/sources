@@ -100,10 +100,12 @@ copysources()
         then
             test "$d"  = . && d=""
             cp -R$c "$b" "$_sourcedir/$d" 2>/dev/null
+            test $? -ne 0 && exit 1
         else
             test "$d" != . && mkdir -p "$_sourcedir/$d" 2>/dev/null
             test "$d"  = . && d=""
             cp -$c "$b" "$_sourcedir/$d" 2>/dev/null
+            test $? -ne 0 && exit 1
         fi
     done
     cp -$c Makefile.$_os "$_sourcedir/$_source/Makefile" 2>/dev/null
