@@ -26,4 +26,3 @@ PATH=/bin:$PATH
 CYGWIN_ROOT="${CYGWIN_ROOT:=C:/cygwin}"
 cmscbasedir=/cygdrive/c/cmsc
 export PATH CYGWIN_ROOT
-

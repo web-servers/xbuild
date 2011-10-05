@@ -50,7 +50,6 @@ case ".$o" in
         include stddefs.windows
     ;;
 esac
-include stddefs.$o
 
 for o
 do
