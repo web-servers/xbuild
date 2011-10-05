@@ -93,7 +93,7 @@ build_prepare()
 
 build_execute()
 {
-    files=.
+    files=
     files_doc=
     files_devel=
     files_devel_doc=
@@ -104,6 +104,7 @@ build_execute()
        do
             if [ -s "$_packagedir/$i" ]
             then
+                files=.
                 . "$_packagedir/$i"
                 break
             fi
