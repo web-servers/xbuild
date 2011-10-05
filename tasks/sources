@@ -107,6 +107,7 @@ copysources()
         fi
     done
     cp -$c Makefile.$_os "$_sourcedir/$_source/Makefile" 2>/dev/null
+    return 0
 }
 
 applypatches()
