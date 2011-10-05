@@ -43,8 +43,12 @@ usetask()
 include stddefs
 o="`uname -s | tr '[A-Z]' '[a-z]' | sed 's/[^[:alnum:]].*//'`"
 case ".$o" in
-    .cygwin ) o=windows ;;
-    .sunos  ) o=solaris ;;
+    .cygwin ) include stddefs.windows ;;
+    .sunos  ) include stddefs.solaris ;;
+    *)
+        echo "Unknown OS: $os, forcing $XB_ROOTDIR/share/stddefs.windows"
+        include stddefs.windows
+    ;;
 esac
 include stddefs.$o
 
