@@ -59,4 +59,13 @@ __month=`date +%m`
 __mday=`date +%d`
 __cwd="`pwd`"
 __tag_name=`basename "$__cwd"`
+o="`uname -s | tr '[A-Z]' '[a-z]' | sed 's/[^[:alnum:]].*//'`"
+case ".$o" in
+    .cygwin ) include stddefs.windows ;;
+    .sunos  ) include stddefs.solaris ;;
+    *)
+        echo "$os is mot supported" 1>&2
+        exit 1
+    ;;
+esac
 specfile="`find . -maxdepth 1 -name '*.spec' -type f -exec basename '{}' \;`"
