@@ -38,7 +38,7 @@ procfiles()
                break
             ;;
             /* )
-                echo $o | sed 's;^/;;'
+                echo .$o
             ;;
             *  )
                 echo $o
@@ -49,9 +49,8 @@ procfiles()
 
 genbuildspec()
 {
-    if [ ".$has_buildspec" = .yes ]
-    then
-        cat >BUILDSPEC <<EOH
+    test ".$2" = . && $2=.
+    cat > "$2/BUILDSPEC" <<EOH
 Name: $1
 Summary: $summary
 Group: $group
@@ -66,7 +65,7 @@ Timestamp: `date -R`
 Changelog:
 `changelog 1`
 EOH
-    fi
+
 }
 
 # Execute hooks
@@ -110,7 +109,6 @@ build_execute()
             fi
         done
         cd "$buildroot"
-        genbuildspec $name
         if [ ".$files" != . ]
         then
             a="`procfiles $files`"
@@ -120,17 +118,23 @@ build_execute()
                 newdir "$buildroot$d"
                 for i in $files_doc
                 do
-                    cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
+                    case $i in
+                        @BUILDSPEC )
+                            i=BUILDSPEC
+                            genbuildspec $name "$buildroot$d"
+                        ;;
+                        *          )
+                            cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
+                        ;;
+                    esac
                     a="`procfiles $a $d/$i`"
                 done
-                test -s BUILDSPEC && a="`procfiles $a BUILDSPEC`"
             fi
             zip -r9 "$_destdir/$name-$version-$release.$_arch.zip" $a
             test $? -ne 0 && exit 1
         fi
         if [ ".$files_devel" != . ]
         then
-            genbuildspec $name-devel
             a="`procfiles $files_devel`"
             if [ ".$files_devel_doc" != . ]
             then
@@ -138,10 +142,17 @@ build_execute()
                 newdir "$buildroot$d"
                 for i in $files_devel_doc
                 do
-                    cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
+                    case $i in
+                        @BUILDSPEC )
+                            i=BUILDSPEC
+                            genbuildspec $name "$buildroot$d"
+                        ;;
+                        *          )
+                            cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
+                        ;;
+                    esac
                     a="`procfiles $a $d/$i`"
                 done
-                test -s BUILDSPEC && a="`procfiles $a BUILDSPEC`"
             fi
             zip -r9 "$_destdir/$name-devel-$version-$release.$_arch.zip" $a
         fi
