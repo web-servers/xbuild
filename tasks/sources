@@ -92,7 +92,7 @@ copysources()
         b="`basename $e`"
         test -e "$b" || continue
         case "$d" in
-            http*://* )
+            *://* )
                 d=.
             ;;
         esac
@@ -132,7 +132,7 @@ applypatches()
                 ;;
             esac
             case "$v" in
-                http*://* )
+                *://* )
                     v=`basename "$v"`
                 ;;
             esac
