@@ -18,13 +18,6 @@
 #
 # @author Mladen Turk
 #
-# This is the configuration file to treate the CA certificate of the
-# _DEMONSTRATION ONLY_ 'Tequila' Certificate Authority.
-# This CA is used to sign the localhost.crt and user.crt
-# because self-signed server certificates are not accepted by all browsers.
-# NEVER USE THIS CA YOURSELF FOR REAL LIFE! INSTEAD EITHER USE A PUBLICALLY
-# KNOWN CA OR CREATE YOUR OWN CA!
-#
 # Master build task
 #
 
@@ -131,6 +124,7 @@ build_execute()
                     a="`procfiles $a $d/$i`"
                 done
             fi
+            $ECHO "Creating $_destdir/$name-$version-$release.$_arch.zip"
             zip -r9 "$_destdir/$name-$version-$release.$_arch.zip" $a
             test $? -ne 0 && exit 1
         fi
@@ -155,6 +149,7 @@ build_execute()
                     a="`procfiles $a $d/$i`"
                 done
             fi
+            $ECHO "Creating $_destdir/$name-devel-$version-$release.$_arch.zip"
             zip -r9 "$_destdir/$name-devel-$version-$release.$_arch.zip" $a
         fi
         return 0

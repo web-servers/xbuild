@@ -196,3 +196,52 @@ realdir()
 {
     (cd "$1" 2>/dev/null && pwd)
 }
+
+realfile()
+{
+    (cd "`dirname \"$1\"`" 2>/dev/null && echo "`pwd`/`basename \"$1\"`")
+}
+
+unrpm()
+{
+    r="`realfile $1`"
+    d="$2"
+    if [ ".$d" = . ]
+    then
+        b="`basename $r`"
+        d="`echo \"$b\" | sed -e 's/\.rpm$//' -e 's/\.src$//' -e 's/\.noarch$//' -e 's/\.[ix].*[46]$//'`"
+    fi
+    install -m 755 -d "$d"
+    (
+        cd "$d"
+        $__rpm2cpio "$r" | cpio -idu 2>/dev/null
+        test $? -ne 0 && exit 1
+        IFS=$__lf
+        a="`find . -maxdepth 1 -name '*.tar.*' -type f -exec basename '{}' \;`"
+        for i in $a
+        do
+            IFS=$__ifs
+            case "$i" in
+                *.tar.gz|*.tgz )
+                    c=$__gzip
+                ;;
+                *.tar.bz2 )
+                    c=$__bzip2
+                ;;
+                *.tar.lzma|*.xz )
+                    c=$__xz
+                ;;
+                * )
+                    continue
+                ;;
+            esac
+            test ".$has_verbose" = .yes && v=-xvvf || v=-xf
+            $ECHO "$c -cd $i | $__tar $v -"
+            $c -cd $i | $__tar $v -
+            test $? -ne 0 && exit 1
+            rm -f $i 2>/dev/null
+        done
+        return 0
+    )
+    return $?
+}

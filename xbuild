@@ -26,12 +26,12 @@ set +e +x
 p=`basename $0`
 r=`dirname $0`
 XB_ROOTDIR="`cd \"$r\" && pwd`"
-XB_LIBPATH="$XB_ROOTDIR/share"
+XB_INCLUDE="$XB_ROOTDIR/include"
 include()
 {
-    if [ -r $XB_LIBPATH/$1 ]
+    if [ -r $XB_ROOTDIR/share/$1 ]
     then
-        . $XB_LIBPATH/$1
+        . $XB_ROOTDIR/share/$1
     fi
 }
 
@@ -184,7 +184,7 @@ EOH
     esac
 done
 test .$has_maintainer_mode = .yes && set -x
-export XB_ROOTDIR XB_LIBPATH ECHO
+export XB_ROOTDIR XB_INCLUDE ECHO
 include system
 include setup
 include setup.$_os
@@ -198,6 +198,9 @@ case ".$task" in
     ;;
     .check      )
         usetask check
+    ;;
+    .depends    )
+        usetask depends
     ;;
     .sources    )
         usetask sources
@@ -228,6 +231,7 @@ EOH
 Standard tasks
   version                          display XBuild version info
   sources                          check out package sources
+  depends                          setup dependencies
   build                            perfom build
   check                            make a dry run
 
