@@ -40,7 +40,7 @@ depends_execute()
         cd "$_rootdir"
         echo "Finding .zip file dependencies in $_buildreqsdir"
         IFS=$__lf
-        d="`find "$_buildreqsdir" -name '*.'$_arch'.zip' -type f 2>/dev/null`"
+        d="`find "$_buildreqsdir" -name '*.zip' -type f 2>/dev/null`"
         for i in $d
         do
             IFS=$__ifs
@@ -52,6 +52,9 @@ depends_execute()
                 *.$_arch.* )
                     echo "Found zip archive: \`$i"
                 ;;                
+                *.noarch.* )
+                    echo "Found noarch zip archive: \`$i"
+                ;;
             esac
         done
         echo "Finding .tgz file dependencies"
