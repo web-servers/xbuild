@@ -26,8 +26,10 @@
 depends_prepare()
 {
     $ECHO "depends prepare"
-    newdir "$_topdir/ROOT/i386"
-    newdir "$_topdir/ROOT/x86_64"
+    if $_rootdir != / ]
+    then
+        newdir "$_rootdir"
+    fi
     return 0
 }
 
@@ -35,22 +37,25 @@ depends_execute()
 {
     $ECHO "depends execute"
     (
-        cd "$_buildreqsdir"
-        echo "Finding .zip file dependencies"
+        cd "$_rootdir"
+        echo "Finding .zip file dependencies in $_buildreqsdir"
         IFS=$__lf
-        d="`find . -name '*.zip' -type f`"
+        d="`find "$_buildreqsdir" -name '*.'$_arch'.zip' -type f 2>/dev/null`"
         for i in $d
         do
             IFS=$__ifs
             case "$i" in
-                *xbuild-* )
+                *xbuild-*  )
                     echo "Skipping inherent xbuild dependency"
                     continue
                 ;;
+                *.$_arch.* )
+                    echo "Found zip archive: \`$i"
+                ;;                
             esac
-            echo "Found zip archive: \`$i"
         done
-        d="`find . -name '*.tar.*' -type f`"
+        echo "Finding .tgz file dependencies"
+        d="`find . -name '*.'$_arch'.tar.*' -type f`"
         for i in $d
         do
             IFS=$__ifs
@@ -63,11 +68,19 @@ depends_execute()
                 ;;
             esac
         done
+        echo "Finding .rpm file dependencies"
         d="`find . -name '*.rpm' -type f`"
         for i in $d
         do
             IFS=$__ifs
-            echo "Found rpm archive \`$i'"
+            case "$i" in
+                *.$_arch.*  )
+                    echo "Found rpm archive \`$i'"
+                ;;
+                *.noarch.*  )
+                    echo "Found noarch rpm archive \`$i'"
+                ;;
+            esac
         done
     )
 }

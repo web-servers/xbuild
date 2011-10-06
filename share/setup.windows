@@ -38,3 +38,4 @@ __java="cygspawn java"
 __javac="cygspawn javac"
 export PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME
 __ccver="`cl 2>&1 | head -1`"
+_rootdir=$_topdir/ROOT

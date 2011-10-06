@@ -131,9 +131,8 @@ test ".$_topdir" = . && _topdir=/tmp/xbroot
 _sourcedir=$_topdir/SOURCES
 _builddir=$_topdir/BUILD
 _buildrootdir=$_topdir/BUILDROOT
-_rootdir=$_topdir/ROOT/$_arch
 _buildbrewdir=/tmp/build
 _buildreqsdir=$_buildbrewdir/buildreqs
 _destdir="$__cwd"
 _packagedir="$__cwd"
-
+_rootdir=/
