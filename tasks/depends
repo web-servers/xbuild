@@ -25,7 +25,7 @@
 # Execute hooks
 depends_prepare()
 {
-    $ECHO "depends prepare"
+    $ECHO "depends prepare in: \`$_rootdir'"
     if [ $_rootdir != / ]
     then
         newdir "$_rootdir"
@@ -38,7 +38,11 @@ depends_execute()
     $ECHO "depends execute"
     (
         cd "$_rootdir"
-        echo "Finding .zip file dependencies in $_buildreqsdir"
+        if [ ".$has_verbose" = .yes ]
+        then
+            tree "$_buildreqsdir" 2>/dev/null
+        fi
+        echo "Finding .zip file dependencies ..."
         IFS=$__lf
         d="`find "$_buildreqsdir" -name '*.zip' -type f 2>/dev/null`"
         for i in $d
@@ -57,7 +61,7 @@ depends_execute()
                 ;;
             esac
         done
-        echo "Finding .tgz file dependencies"
+        echo "Finding .tgz file dependencies ..."
         d="`find . -name '*.'$_arch'.tar.*' -type f`"
         for i in $d
         do
@@ -71,7 +75,7 @@ depends_execute()
                 ;;
             esac
         done
-        echo "Finding .rpm file dependencies"
+        echo "Finding .rpm file dependencies ..."
         d="`find . -name '*.rpm' -type f`"
         for i in $d
         do
