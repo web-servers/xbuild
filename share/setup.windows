@@ -21,14 +21,20 @@
 # Windows specific setup
 #
 
-test ".$JAVA_HOME" = . && JAVA_HOME="`regtool -w get '/HKLM/SOFTWARE/JavaSoft/Java Development Kit/1.6/JavaHome' 2>/dev/null`"
-test ".$JAVA_HOME" = . && JAVA_HOME="`regtool -W get '/HKLM/SOFTWARE/JavaSoft/Java Development Kit/1.6/JavaHome' 2>/dev/null`"
-test ".$JAVA_HOME" = . && JAVA_HOME="/cygdrive/c/Java/jdk1.6.0"
-test ".$JAVA_HOME" = . && xbexit 1 "missing JAVA_HOME environment"
-JAVA_HOME="`cygpath \"$JAVA_HOME\"`"
+test -z $JAVA_HOME && JAVA_HOME="`regtool -w get '/HKLM/SOFTWARE/JavaSoft/Java Development Kit/1.6/JavaHome' 2>/dev/null`"
+test -z $JAVA_HOME && JAVA_HOME="`regtool -W get '/HKLM/SOFTWARE/JavaSoft/Java Development Kit/1.6/JavaHome' 2>/dev/null`"
+test -z $JAVA_HOME && JAVA_HOME="/cygdrive/c/Java/jdk1.6.0"
+if [ ! -e $JAVA_HOME/bin/java.exe ]
+then
+    echo "Cannot find Java in: \`$JAVA_HOME'" 1>&2
+    exit 1
+fi
+test -z $ANT_HOME && ANT_HOME="/cygdrive/c/Java/apache-ant-1.8.2"
+JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+ANT_HOME=`cygpath --unix "$ANT_HOME"`
 m=$cmscbasedir/msvc
 test ".$__isa_bits" = .64 && a=amd64 || a=i386
-PATH="$m/bin/$a:$m/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$a:$JAVA_HOME/bin:$PATH"
+PATH="$m/bin/$a:$m/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$a:$JAVA_HOME/bin:$ANT_HOME/bin:$PATH"
 LIB=$m/lib/$a
 INCLUDE=$m/include/crt:$m/include:$m/include/mfc:$m/include/atl:$XB_INCLUDE
 EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
@@ -36,7 +42,7 @@ __make="cygspawn nmake"
 __perl="cygspawn perlw"
 __java="cygspawn java"
 __javac="cygspawn javac"
-export PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME
+export PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME ANT_HOME
 __ccver="`cl 2>&1 | head -1`"
 _rootdir=$_topdir/ROOT
 _libexec=bin
