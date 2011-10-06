@@ -122,6 +122,7 @@ then
 fi
 _lib=lib
 test ".$__isa_bits" = .64 && _lib=lib64
+_libexec=$_lib
 
 # XXX: Do we need to set the language?
 LANG=C
