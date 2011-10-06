@@ -114,7 +114,12 @@ applypatches()
         IFS=$__ifs
         p=`echo "$i" | $__sed 's/[pP]atch\([0-9]*\).*/\1/'`
         v=`echo "$i" | $__sed 's/\w*:[[:blank:]]*//'`
-        r=`$__grep -i '^%patch'$p' ' $specfile | $__sed 's/%\w*[[:blank:]]*//'`
+        r=`$__grep -i '^%patch'$p'[[:blank:]]' $specfile | $__sed 's/%\w*[[:blank:]]*//'`
+        if [ ".$r" = "." ]
+        then
+            r="`$__grep -i '^%patch'$p'$' $specfile`"
+            test ".$r" != . && r="-p 0"
+        fi
         if [ ".$r" != "." ]
         then
             case "$r" in
@@ -124,9 +129,8 @@ applypatches()
                 ;;
             esac
             case "$v" in
-                *://* )
-                    v=`basename "$v"`
-                ;;
+                *://* ) v=`basename "$v"` ;;
+                *%{*  ) v=`rpmeval "$v"`  ;;
             esac
             (
                 cd "$_sourcedir/$_source"

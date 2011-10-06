@@ -37,7 +37,7 @@ rpmeval()
 
 specparam()
 {
-    v=`$__grep -i "^$1:\ " $specfile | head -1 | $__sed 's/.*:[[:blank:]]*//'`
+    v=`$__grep -i "^$1:[[:blank:]]" $specfile | head -1 | $__sed 's/.*:[[:blank:]]*//'`
     rpmeval "$v"
 }
 
