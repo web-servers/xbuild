@@ -154,6 +154,11 @@ do
             JAVA_HOME="$a"
             shift
         ;;
+        --with-*=*)
+            n=`echo "$o" | sed -e 's/--with-/_/' -e 's/=.*//' -e 's/-/_/'`
+            eval "$n=\"$a\""
+            shift
+        ;;
         --help|-* )
         cat 1>&2 << EOH
 XBuild version $XB_VERSION

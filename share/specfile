@@ -49,6 +49,21 @@ specsetupname()
     echo "$n"
 }
 
+getdefines()
+{
+    IFS=$__lf
+    d=`$__grep -i '^%define[[:blank:]]' $specfile |\
+       $__sed -e 's/%define[[:blank:]]*//' \
+              -e 's/%{[?]*\(\w*\)}/\\${\L\1\E}/g'`
+    for i in $d
+    do
+        IFS=$__ifs
+        n=`echo "$i" | $__awk '{print $1}'`
+        v="`echo \"$i\" | $__sed 's/\w*[[:blank:]]*//'`"
+        eval "$n=\"$v\""
+    done
+}
+
 changelog()
 {
     n=0
@@ -85,15 +100,6 @@ changelog()
     )
 }
 
-test ".$name" = . && name="`specparam name`"
-test ".$version" = . && version="`specparam version`"
-test ".$release" = . && release="`specparam release`"
-summary="`specparam summary`"
-group="`specparam group`"
-origin="`specparam URL`"
-license="`specparam license`"
-setupname="`specsetupname`"
-_source="`rpmeval $setupname`"
 test ".$_bindir" = . && _bindir="$_prefix/bin"
 test ".$_libdir" = . && _libdir="$_prefix/$_lib"
 test ".$_libexecdir" = . && _libexecdir="$_prefix/$_libexec"
@@ -105,6 +111,18 @@ test ".$_docdir" = . && _docdir="$_datadir/doc"
 test ".$_mandir" = . && _mandir="$_datadir/man"
 test ".$_javadir" = . && _javadir="$_datadir/java"
 test ".$_sysconfdir" = . && _sysconfdir="$_confdir/sysconfig"
+test ".$_localstatedir" = . && _localstatedir="$_prefix/var"
+
+getdefines
+test ".$name" = . && name="`specparam name`"
+test ".$version" = . && version="`specparam version`"
+test ".$release" = . && release="`specparam release`"
+summary="`specparam summary`"
+group="`specparam group`"
+origin="`specparam URL`"
+license="`specparam license`"
+setupname="`specsetupname`"
+_source="`rpmeval $setupname`"
 
 buildroot="$_buildrootdir/$name-$version-$release.$_arch"
 RPM_BUILD_ROOT="$buildroot"

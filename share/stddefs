@@ -67,3 +67,4 @@ case ".$o" in
     *       ) include stddefs.$o      ;;
 esac
 specfile="`find . -maxdepth 1 -name '*.spec' -type f -exec basename '{}' \;`"
+ix86="i386 i486 i586 i686 pentium3 pentium4 athlon geode"
