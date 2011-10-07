@@ -129,6 +129,7 @@ build_execute()
                     a="`procfiles $a $d/$i`"
                 done
             fi
+            fixzipperms
             $ECHO "Creating $_destdir/$name-$version-$release.$_arch.zip"
             zip -r9 "$_destdir/$name-$version-$release.$_arch.zip" $a
             test $? -ne 0 && exit 1
@@ -159,6 +160,7 @@ build_execute()
                     a="`procfiles $a $d/$i`"
                 done
             fi
+            fixzipperms
             $ECHO "Creating $_destdir/$name-devel-$version-$release.$_arch.zip"
             zip -r9 "$_destdir/$name-devel-$version-$release.$_arch.zip" $a
         fi

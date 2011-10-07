@@ -202,6 +202,18 @@ realfile()
     (cd "`dirname \"$1\"`" 2>/dev/null && echo "`pwd`/`basename \"$1\"`")
 }
 
+fixzipperms()
+{
+    if [ $_host_os = windows ]
+    then
+        find ./?bin -name '*' -type f -exec chmod 755 '{}' \; 2>/dev/null
+        for i in doc include
+        do
+            find ./$i -name '*' -type f -exec chmod 644 '{}' \; 2>/dev/null
+        done
+    fi
+}
+
 unrpm()
 {
     r="`realfile $1`"
