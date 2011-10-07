@@ -35,16 +35,17 @@ depends_prepare()
 
 depends_execute()
 {
-    $ECHO "depends execute"
+    $ECHO "depends execute in: \`$_buildreqsdir'"
     (
         cd "$_rootdir"
-        if [ ".$has_verbose" = .yes ]
+        if [ .$has_verbose = .yes ]
         then
             tree "$_buildreqsdir" 2>/dev/null
         fi
-        echo "Finding .zip file dependencies ..."
+        $ECHO "Finding .zip file dependencies ..."
         IFS=$__lf
         d="`find "$_buildreqsdir" -name '*.zip' -type f 2>/dev/null`"
+        test .$has_verbose = .yes && q="" || q="q"
         for i in $d
         do
             IFS=$__ifs
@@ -54,38 +55,44 @@ depends_execute()
                     continue
                 ;;
                 *.$_arch.* )
-                    echo "Found zip archive: \`$i"
+                    unzip -o$q "$i"
                 ;;                
                 *.noarch.* )
-                    echo "Found noarch zip archive: \`$i"
+                    test .$has_verbose = .yes && q=q
+                    unzip -o$q "$i"
                 ;;
             esac
         done
-        echo "Finding .tgz file dependencies ..."
-        d="`find . -name '*.'$_arch'.tar.*' -type f`"
+        $ECHO "Finding .tgz file dependencies ..."
+        d="`find "$_buildreqsdir" -name '*.'$_arch'.tar.*' -type f 2>/dev/null`"
+        test .$has_verbose = .yes && q="v" || q=""
         for i in $d
         do
             IFS=$__ifs
             case "$i" in
                 *.gz  )
-                    echo "Found tar.gz archive \`$i'"
+                    $ECHO "Archive: \`$i'"
+                    $__gzip -cd "$i" | $__tar -xf$q - 
                 ;;
                 *.bz2 )
-                    echo "Found tar.bz2 archive \`$i'"
+                    $ECHO "Archive: \`$i'"
+                    $__bzip2 -cd "$i" | $__tar -xf$q -
                 ;;
             esac
         done
-        echo "Finding .rpm file dependencies ..."
-        d="`find . -name '*.rpm' -type f`"
+        $ECHO "Finding .rpm file dependencies ..."
+        d="`find "$_buildreqsdir" -name '*.rpm' -type f 2>/dev/null`"
         for i in $d
         do
             IFS=$__ifs
             case "$i" in
                 *.$_arch.*  )
-                    echo "Found rpm archive \`$i'"
+                    $ECHO "Archive: \`$i'"
+                    unrpm "$i" .
                 ;;
                 *.noarch.*  )
-                    echo "Found noarch rpm archive \`$i'"
+                    $ECHO "Archive: \`$i'"
+                    unrpm "$i" .
                 ;;
             esac
         done

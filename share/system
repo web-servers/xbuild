@@ -211,9 +211,9 @@ unrpm()
         b="`basename $r`"
         d="`echo \"$b\" | sed -e 's/\.rpm$//' -e 's/\.src$//' -e 's/\.noarch$//' -e 's/\.[ix].*[46]$//'`"
     fi
-    install -m 755 -d "$d"
+    test "$d" != . && install -m 755 -d "$d"
     (
-        cd "$d"
+        test "$d" != . && cd "$d"
         $__rpm2cpio "$r" | cpio -idu 2>/dev/null
         test $? -ne 0 && exit 1
         IFS=$__lf
