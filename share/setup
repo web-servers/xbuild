@@ -49,9 +49,7 @@ case "$s" in
         d=gnu
     ;;
     cygwin* )
-        r="`echo $s | sed -e 's/\w*-//' -e 's/-.*//' -e 's/\.//'`"
-        test ".$r" = ".51" && r=5
-        test ".$r" = ".61" && r=6
+        r="`echo $s | sed -e 's/\w*-//' -e 's/-.*//' -e 's/\./_/'`"
         p=windows
         d=win
     ;;
