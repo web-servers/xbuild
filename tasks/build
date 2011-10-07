@@ -133,8 +133,8 @@ build_execute()
                 done
             fi
             fixzipperms
-            $ECHO "Creating $_destdir/$name-$version-$release.$_arch.zip"
-            zip -r9 "$_destdir/$name-$version-$release.$_arch.zip" $a
+            $ECHO "Archive: \`$name-$version-$release.$_arch.zip'"
+            zip -rq9 "$_destdir/$name-$version-$release.$_arch.zip" $a
             test $? -ne 0 && exit 1
         fi
         if [ ".$files_devel" != . ]
@@ -161,8 +161,8 @@ build_execute()
                 done
             fi
             fixzipperms
-            $ECHO "Creating $_destdir/$name-devel-$version-$release.$_arch.zip"
-            zip -r9 "$_destdir/$name-devel-$version-$release.$_arch.zip" $a
+            $ECHO "Archive: \`$name-devel-$version-$release.$_arch.zip'"
+            zip -rq9 "$_destdir/$name-devel-$version-$release.$_arch.zip" $a
         fi
         return 0
     )
