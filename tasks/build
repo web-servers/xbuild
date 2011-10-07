@@ -117,8 +117,13 @@ build_execute()
                             i=BUILDSPEC
                             genbuildspec $name "$buildroot$d"
                         ;;
+                        @*         )
+                            copydir $_builddir/$_source.$_arch/$i "$buildroot$d/$i"
+                            i=`basename "$i"`
+                        ;;
                         *          )
                             cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
+                            i=`basename "$i"`
                         ;;
                     esac
                     a="`procfiles $a $d/$i`"
@@ -142,8 +147,13 @@ build_execute()
                             i=BUILDSPEC
                             genbuildspec $name "$buildroot$d"
                         ;;
+                        @*         )
+                            copydir $_builddir/$_source.$_arch/$i "$buildroot$d/$i"
+                            i=`basename "$i"`
+                        ;;
                         *          )
                             cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
+                            i=`basename "$i"`
                         ;;
                     esac
                     a="`procfiles $a $d/$i`"
