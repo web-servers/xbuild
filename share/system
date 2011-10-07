@@ -207,10 +207,8 @@ fixzipperms()
     if [ $_host_os = windows ]
     then
         find ./?bin -name '*' -type f -exec chmod 755 '{}' \; 2>/dev/null
-        for i in doc include
-        do
-            find ./$i -name '*' -type f -exec chmod 644 '{}' \; 2>/dev/null
-        done
+        find ./lib* -name '*' -type f -exec chmod 644 '{}' \; 2>/dev/null
+        find ./inc* -name '*' -type f -exec chmod 644 '{}' \; 2>/dev/null
     fi
 }
 
