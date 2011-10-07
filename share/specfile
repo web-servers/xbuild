@@ -37,14 +37,14 @@ rpmeval()
 
 specparam()
 {
-    v=`$__grep -i "^$1:[[:blank:]]" $specfile | head -1 | $__sed 's/.*:[[:blank:]]*//'`
+    v=`$__grep -i "^$1:[[:blank:]]" $specfile | head -1 | $__sed 's/\w*:[[:blank:]]*//'`
     rpmeval "$v"
 }
 
 specsetupname()
 {
     IFS=$__lf
-    n=`$__grep -i '^%setup .* -n ' $specfile | $__sed -e 's/.*-n //' -e 's/\([^[:blank:]]*\).*/\1/'`
+    n=`$__grep -i '^%setup .* -n ' $specfile | $__sed -e 's/.*-n:[[:blank:]]//' -e 's/\([^[:blank:]]*\).*/\1/'`
     test ".$n" = "." && n="%{name}-%{version}"
     echo "$n"
 }
@@ -89,6 +89,39 @@ changelog()
                         test $n -gt 1 && echo ""
                         echo "$i"
                     ;;
+                    %*  )
+                        break
+                    ;;
+                    *   )
+                        echo $i
+                   ;;
+                esac
+            done
+        fi
+    )
+}
+
+description()
+{
+    (
+        b=true
+        IFS=$__lf
+        if [ ".$1" = . ]
+        then
+            r=`$__grep -i '^%description$' -A 100 "$_packagedir/$specfile"`
+        else
+            r=`$__grep -i '^%description '$1'$' -A 100 "$_packagedir/$specfile"`
+        fi
+        if [ ".$r" != . ]
+        then
+            for i in $r
+            do
+                if $b
+                then
+                    b=false
+                    continue
+                fi
+                case "$i" in
                     %*  )
                         break
                     ;;

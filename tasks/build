@@ -40,22 +40,28 @@ procfiles()
     done
 }
 
-genbuildspec()
+genbuildinfo()
 {
-    test ".$2" = . && $2=.
-    cat > "$2/BUILDSPEC" <<EOH
-Name: $1
-Summary: $summary
-Group: $group
-Version: $version
-Release: $release
-Platform: $_os
-Architecture: $_arch
-License: $license
-URL: $origin
-Build-By: $__ccver
-Timestamp: `date -R`
-Changelog:
+    install -m 755 -d META-INF
+    cat > "META-INF/INFO.txt" <<EOH
+NAME:         $1
+VERSION:      1.2.3
+RELEASE:      $release
+SUMMARY:      $summary
+DISTRIBUTION:
+VENDOR:
+LICENSE:      $license
+PACKAGER:
+GROUP:        $group
+OS:           $_os
+ARCH:         $_arch
+SOURCE RPM:
+URL:          $origin
+TIMESTAMP:    `date -R`
+COMPILER:     $__ccver
+DESCRIPTION:
+`description $2`
+CHANGELOG:
 `changelog 1`
 EOH
 
@@ -103,9 +109,10 @@ build_execute()
             fi
         done
         cd "$buildroot"
+        genbuildinfo $name
         if [ ".$files" != . ]
         then
-            a="`procfiles $files`"
+            a="`procfiles $files ./META-INF`"
             if [ ".$files_doc" != . ]
             then
                 d="$_docdir/$name-$version"
@@ -113,15 +120,11 @@ build_execute()
                 for i in $files_doc
                 do
                     case $i in
-                        @BUILDSPEC )
-                            i=BUILDSPEC
-                            genbuildspec $name "$buildroot$d"
-                        ;;
-                        @*         )
-                            copydir $_builddir/$_source.$_arch/$i "$buildroot$d/$i"
+                        @* )
+                            copypdir $_builddir/$_source.$_arch/$i "$buildroot$d/$i"
                             i=`basename "$i"`
                         ;;
-                        *          )
+                        *  )
                             cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
                             i=`basename "$i"`
                         ;;
@@ -136,7 +139,8 @@ build_execute()
         fi
         if [ ".$files_devel" != . ]
         then
-            a="`procfiles $files_devel`"
+            genbuildinfo $name-devel devel
+            a="`procfiles $files_devel ./META-INF`"
             if [ ".$files_devel_doc" != . ]
             then
                 d="$_docdir/$name-devel-$version"
@@ -144,15 +148,11 @@ build_execute()
                 for i in $files_devel_doc
                 do
                     case $i in
-                        @BUILDSPEC )
-                            i=BUILDSPEC
-                            genbuildspec $name "$buildroot$d"
-                        ;;
-                        @*         )
-                            copydir $_builddir/$_source.$_arch/$i "$buildroot$d/$i"
+                        @* )
+                            copypdir $_builddir/$_source.$_arch/$i "$buildroot$d/$i"
                             i=`basename "$i"`
                         ;;
-                        *          )
+                        *  )
                             cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
                             i=`basename "$i"`
                         ;;
