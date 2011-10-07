@@ -44,22 +44,26 @@ n=x86
 case "$s" in
     linux   )
         r="`echo $r | sed 's/\.//' | sed 's/\..*//'`"
+        _os_r="$r"
         d="`rpm -E %{dist}`"
         p=linux
         d=gnu
     ;;
     cygwin* )
         r="`echo $s | sed -e 's/\w*-//' -e 's/-.*//' -e 's/\./_/'`"
+        _os_r="`echo $r | sed 's/\_//'`"
         p=windows
         d=win
     ;;
     sunos   )
         r="`echo $r | sed 's/5.//'`"
+        _os_r="$r"
         p=solaris
         d=sun
     ;;
     darwin  )
         r="`echo $r | sed 's/\.//g'`"
+        _os_r="$r"
         p=darwin
         d=osx
     ;;
@@ -108,7 +112,7 @@ then
     case "$_host_os" in
         linux   )
             dist="`rpm -E %{?dist} 2>/dev/null`"
-            test ".$dist" = . && dist=.gnu$r
+            test ".$dist" = . && dist=.gnu$_os_r
         ;;
         *      )
             dist=.$_os_c$r

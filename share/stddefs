@@ -47,6 +47,7 @@ _docdir=
 _mandir=
 _os=
 _os_c=
+_os_r=
 _arch=
 __isa=
 __isa_bits=
