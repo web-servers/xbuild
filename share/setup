@@ -78,28 +78,25 @@ test ".$_os_c" = . && _os_c=$d
 test ".$_arch" = . && _arch=$m
 
 case "$_arch" in
-    amd64|x64)
+    amd64|x64  )
         _arch=x86_64
     ;;
-    i[3-7]86 )
+    i86pc|ia32 )
         _arch=i386
     ;;
-    i86pc    )
-        _arch=i386
-    ;;
-    sun4*    )
+    sun4*      )
         _arch=`/bin/isainfo -n`
         n=sparc
     ;;
 esac
 case "$_arch" in
-    sparc*   )
+    sparc*     )
         b=`/bin/isainfo -b`
     ;;
-    *64      )
+    *64        )
         b=64
     ;;
-    i386|ppc )
+    i?86|ppc   )
         b=32
     ;;
 esac

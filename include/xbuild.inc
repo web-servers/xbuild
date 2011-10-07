@@ -78,23 +78,13 @@ MT = mt.exe
 
 # Read the RPM_ARCH environment value for a CPU type
 
-!IF "$(RPM_ARCH)" == "i386" || "$(RPM_ARCH)" == "x86" || "$(RPM_ARCH)" == "i686"
+!IF "$(RPM_ARCH)" == "i386" || "$(RPM_ARCH)" == "x86" || "$(RPM_ARCH)" == "i586" || "$(RPM_ARCH)" == "i686" || "$(RPM_ARCH)" == "ia32"
 CPU=X86
 !ENDIF
-!IF "$(RPM_ARCH)" == "amd64" || "$(RPM_ARCH)" == "x86_64" || "$(RPM_ARCH)" == "x64"
+!IF "$(RPM_ARCH)" == "amd64" || "$(RPM_ARCH)" == "emt64" || "$(RPM_ARCH)" == "x86_64" || "$(RPM_ARCH)" == "x64"
 CPU=X64
 !ENDIF
 !IF "$(RPM_ARCH)" == "ia64" || "$(RPM_ARCH)" == "i64"
-CPU=I64
-!ENDIF
-
-!IF "$(CPU)" == "I386"
-CPU=X86
-!ENDIF
-!IF "$(CPU)" == "AMD64"
-CPU=X64
-!ENDIF
-!IF "$(CPU)" == "IA64"
 CPU=I64
 !ENDIF
 
