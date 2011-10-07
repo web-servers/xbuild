@@ -62,6 +62,7 @@ getdefines()
         v="`echo \"$i\" | $__sed 's/\w*[[:blank:]]*//'`"
         eval "$n=\"$v\""
     done
+    IFS=$__ifs
 }
 
 changelog()
