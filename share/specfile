@@ -30,7 +30,7 @@ rpmeval()
 {
     if [ ".$1" != "." ]
     then
-        x=`echo "$1" | $__sed 's/%{[?]*\(\w*\)}/${\L\1\E}/g'`
+        x=`echo "$1" | $__sed 's/%{[!?]*/${/g' | tr '[A-Z]' '[a-z]'`
         eval "echo \"$x\""
     fi
 }
@@ -44,9 +44,10 @@ specparam()
 specsetupname()
 {
     IFS=$__lf
-    n=`$__grep -i '^%setup .* -n ' $specfile | $__sed -e 's/.*-n:[[:blank:]]//' -e 's/\([^[:blank:]]*\).*/\1/'`
+    n=`$__grep -i '^%setup .* -n ' $specfile | $__sed -e 's/.*-n[[:blank:]]//' -e 's/\([^[:blank:]]*\).*/\1/'`
     test ".$n" = "." && n="%{name}-%{version}"
     echo "$n"
+    IFS=$__ifs
 }
 
 getdefines()
@@ -54,12 +55,12 @@ getdefines()
     IFS=$__lf
     d=`$__grep -i '^%define[[:blank:]]' $specfile |\
        $__sed -e 's/%define[[:blank:]]*//' \
-              -e 's/%{[?]*\(\w*\)}/\\${\L\1\E}/g'`
+              -e 's/%{[!?]*/\${/g'`
     for i in $d
     do
         IFS=$__ifs
         n=`echo "$i" | $__awk '{print $1}'`
-        v="`echo \"$i\" | $__sed 's/\w*[[:blank:]]*//'`"
+        v="`echo \"$i\" | $__sed -e 's/\w*[[:blank:]]*//' -e 's/.*\\\//'`"
         eval "$n=\"$v\""
     done
     IFS=$__ifs
