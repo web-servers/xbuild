@@ -111,10 +111,10 @@ applypatches()
     c=`grep -i '^patch[0-9]*:' $specfile`
     for i in $c
     do
-        IFS=$__ifs
         p=`echo "$i" | $__sed 's/[pP]atch\([0-9]*\).*/\1/'`
         v=`echo "$i" | $__sed 's/\w*:[[:blank:]]*//'`
-        r=`$__grep -i '^%patch'$p'[[:blank:]]' $specfile | $__sed 's/%\w*[[:blank:]]*//'`
+        r=`$__grep -i -e '^%patch'$p'[[:blank:]]' -e '^%ifos ' -e '%endif'\
+           $specfile | $__sed -e 's/^%//' -e 's/patch[0-9]*[[:blank:]]*//'`
         if [ ".$r" = "." ]
         then
             r="`$__grep -i '^%patch'$p'$' $specfile`"
@@ -122,32 +122,50 @@ applypatches()
         fi
         if [ ".$r" != "." ]
         then
-            case "$r" in
-                -* )
-                    r="`echo $r | sed 's/\(.*\)\(\..*\)/\1 -z \2/'`"
-                    test ".$has_verbose" = .no && r="-s $r"
-                ;;
-            esac
-            case "$v" in
-                *://* ) v=`basename "$v"` ;;
-                *%{*  ) v=`rpmeval "$v"`  ;;
-            esac
-            (
-                cd "$_sourcedir/$_source"
-                case "$r" in
-                    -*  )
-                        if [ -s "$RPM_ROOT_DIR/$v" ]
-                        then
-                            patch $r < "$RPM_ROOT_DIR/$v"
-                        else
-                            $ECHO "missing patch: \`$v'"
-                        fi
+            z=true
+            for x in $r
+            do
+                case $x in
+                    ifos* )
+                        o=`echo $x | $__sed 's/ifos[[:blank:]]*//'`
+                        test ".$o" != ".$_os" && z=false
+                        continue
                     ;;
-                    *   )
-                        eval "$r $v"
+                    endif )
+                        z=true
+                        continue
+                    ;;
+                    -*    )
+                        x="`echo $x | sed 's/\(.*\)\(\..*\)/\1 -z \2/'`"
+                        test ".$has_verbose" = .no && x="-s $x"
                     ;;
                 esac
-            )
+                case $v in
+                    *://* ) v=`basename $v` ;;
+                    *%{*  ) v=`rpmeval $v`  ;;
+                esac
+                if ! $z; then
+                    $ECHO "Skipping $o patch \`$v'"
+                    continue
+                fi
+                (
+                    IFS=$__ifs
+                    cd "$_sourcedir/$_source"
+                    case "$x" in
+                        -*  )
+                            if [ -s "$RPM_ROOT_DIR/$v" ]
+                            then
+                                patch $x < "$RPM_ROOT_DIR/$v"
+                            else
+                                $ECHO "missing patch: \`$v'"
+                            fi
+                        ;;
+                        *   )
+                            eval "$x $v"
+                        ;;
+                    esac
+                )
+            done
         fi
     done
 }
