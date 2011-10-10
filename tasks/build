@@ -121,6 +121,7 @@ build_execute()
                 do
                     case $i in
                         @* )
+                            i="`echo $i | sed 's/^@//'`"
                             copypdir $_builddir/$_source.$_arch/$i "$buildroot$d/$i"
                             i=`basename "$i"`
                         ;;
@@ -149,6 +150,7 @@ build_execute()
                 do
                     case $i in
                         @* )
+                            i="`echo $i | sed 's/^@//'`"
                             copypdir $_builddir/$_source.$_arch/$i "$buildroot$d/$i"
                             i=`basename "$i"`
                         ;;
