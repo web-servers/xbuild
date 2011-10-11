@@ -145,7 +145,7 @@ applypatches()
                     *%{*  ) v=`rpmeval $v`  ;;
                 esac
                 if ! $z; then
-                    $ECHO "Skipping $o patch \`$v'"
+                    $ECHO "skipping $o patch \`$v'"
                     continue
                 fi
                 (
