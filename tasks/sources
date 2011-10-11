@@ -113,11 +113,11 @@ applypatches()
     do
         p=`echo "$i" | $__sed 's/[pP]atch\([0-9]*\).*/\1/'`
         v=`echo "$i" | $__sed 's/\w*:[[:blank:]]*//'`
-        r=`$__grep -i -e '^%patch'$p'[[:blank:]]' -e '^%ifos ' -e '%endif'\
-           $specfile | $__sed -e 's/^%//' -e 's/patch[0-9]*[[:blank:]]*//'`
+        r=`$__grep -e '^%patch'$p'[[:blank:]]' -e '%ifos ' -e '%endif'\
+           $specfile | $__sed -e 's/[[:blank:]]*%//' -e 's/patch[0-9]*[[:blank:]]*//'`
         if [ ".$r" = "." ]
         then
-            r="`$__grep -i '^%patch'$p'$' $specfile`"
+            r="`$__grep '^%patch'$p'$' $specfile`"
             test ".$r" != . && r="-p 0"
         fi
         if [ ".$r" != "." ]
@@ -151,6 +151,7 @@ applypatches()
                 (
                     IFS=$__ifs
                     cd "$_sourcedir/$_source"
+                    echo "Patch rule $x"
                     case "$x" in
                         -*  )
                             if [ -s "$RPM_ROOT_DIR/$v" ]
