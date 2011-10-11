@@ -48,10 +48,10 @@ NAME:         $1
 VERSION:      1.2.3
 RELEASE:      $release
 SUMMARY:      $summary
-DISTRIBUTION:
-VENDOR:
+DISTRIBUTION: Red Hat
+VENDOR:       Red Hat, Inc.
 LICENSE:      $license
-PACKAGER:
+PACKAGER:     Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
 GROUP:        $group
 OS:           $_os
 ARCH:         $_arch
