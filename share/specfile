@@ -30,7 +30,7 @@ rpmeval()
 {
     if [ ".$1" != "." ]
     then
-        x=`echo "$1" | $__sed 's/%{[!?]*/${/g' | tr '[A-Z]' '[a-z]'`
+        x=`echo "$1" | $__sed 's/%{[!?]*/${/g'`
         eval "echo \"$x\""
     fi
 }
