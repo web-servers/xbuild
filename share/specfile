@@ -30,8 +30,8 @@ rpmeval()
 {
     if [ ".$1" != "." ]
     then
-        x=`echo "$1" | $__sed -e 's/{\(.*\)}/{\L\1\E}/g' -e 's/%{[!?]*/${/g'`
-        eval "echo \"$x\""
+        x=`echo "$1" | $__sed -e 's/{\(.*\)}/{\L\1\E}/g' -e 's/%{[!?]*/${/g' -e 's/.*[()].*//'`
+        eval "echo \"$x\"" 2>/dev/null
     fi
 }
 
@@ -59,7 +59,13 @@ getdefines()
     for i in $d
     do
         IFS=$__ifs
-        n=`echo "$i" | $__awk '{print $1}'`
+        n=`echo "$i" | $__awk '{print $1}' | tr '[A-Z]' '[a-z]'`
+        case ".$n" in
+            *\(\)* )
+                # function definition are not supported
+                continue
+            ;;
+        esac
         v="`echo \"$i\" | $__sed -e 's/\w*[[:blank:]]*//' -e 's/.*\\\//'`"
         eval "$n=\"$v\""
     done
