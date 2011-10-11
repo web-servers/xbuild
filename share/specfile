@@ -55,19 +55,22 @@ getdefines()
     IFS=$__lf
     d=`$__grep -i '^%define[[:blank:]]' $specfile |\
        $__sed -e 's/%define[[:blank:]]*//' \
-              -e 's/%{[!?]*/\${/g'`
+              -e 's/%{[!?]*/\${/g' -e 's/.*[()].*//'` 
     for i in $d
     do
         IFS=$__ifs
-        n=`echo "$i" | $__awk '{print $1}' | tr '[A-Z]' '[a-z]'`
-        case ".$n" in
-            *\(\)* )
+        n=`echo "$i" | $__awk '{print $1}' | tr '[A-Z]' '[a-z]' 2>/dev/null`
+        case "x$n" in
+            *\(*\)* )
                 # function definition are not supported
                 continue
             ;;
+            x       )
+                continue
+            ;;
         esac
-        v="`echo \"$i\" | $__sed -e 's/\w*[[:blank:]]*//' -e 's/.*\\\//'`"
-        eval "$n=\"$v\""
+        v="`echo \"$i\" | $__sed -e 's/\w*[[:blank:]]*//' -e 's/.*\\\//' 2>/dev/null`"
+        eval "$n=\"$v\"" 2>/dev/null
     done
     IFS=$__ifs
 }

@@ -200,7 +200,7 @@ sources_execute()
     test $? -ne 0 && exit 1
     (
         copysources
-    )        
+    )
     return $?
 }
 
