@@ -180,5 +180,11 @@ RPM_PACKAGE_VERSION="$version"
 RPM_PACKAGE_RELEASE="$release"
 export RPM_SOURCE_DIR RPM_BUILD_DIR RPM_ARCH RPM_OS RPM_ROOT_DIR
 export RPM_PACKAGE_NAME RPM_PACKAGE_VERSION RPM_PACKAGE_RELEASE
-XBS_ROOT_DIR="$_rootdir"
-export XBS_ROOT_DIR
+# Directory where dependencies unpacked
+# on Windows this is /tmp/xbuid/ROOT
+# on Solaris this is /opt/redhat
+RPM_PREFIX="$_rootdir$_prefix"
+# Local install directory
+RPM_DESTDIR="$RPM_BUILD_ROOT$_prefix"
+export RPM_PREFIX RPM_DESTDIR
+
