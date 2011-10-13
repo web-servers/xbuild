@@ -58,7 +58,7 @@ ARCH:         $_arch
 SOURCE RPM:
 URL:          $origin
 TIMESTAMP:    `date -R`
-COMPILER:     $__ccver
+COMPILER:     `ccversion`
 DESCRIPTION:
 `description $2`
 CHANGELOG:
@@ -72,15 +72,16 @@ build_prepare()
 {
     $ECHO "build prepare \`$_source.$_arch'"
     test -d "$_sourcedir/$_source" || xbexit 1 "cannot find \`$_source' directory"
+    newdir "$_builddir/$_source.$_arch"
+    newdir "$buildroot"
     copypdir "$_sourcedir/$_source" "$_builddir/$_source.$_arch"
-    install -m 755 -d "$buildroot"
     (
         cd "$_builddir/$_source.$_arch"
         for i in $name.${_os_c}prep $name.buildprep
         do
-            if [ -s "$_packagedir/$i" ]
+            if [ -s "$_sourcedir/$i" ]
             then
-                . "$_packagedir/$i"
+                . "$_sourcedir/$i"
                 break
             fi
         done
@@ -101,10 +102,10 @@ build_execute()
        cd "$_builddir/$_source.$_arch"
        for i in $name.${_os_c}build $name.build
        do
-            if [ -s "$_packagedir/$i" ]
+            if [ -s "$_sourcedir/$i" ]
             then
                 files=.
-                . "$_packagedir/$i"
+                . "$_sourcedir/$i"
                 break
             fi
         done
@@ -139,7 +140,7 @@ build_execute()
             fi
             fixzipperms
             $ECHO "Archive: \`$name-$version-$release.$_arch.zip'"
-            zip -rq9 "$_destdir/$name-$version-$release.$_arch.zip" $a
+            zip -rq9 "$_outputdir/$name-$version-$release.$_arch.zip" $a
             test $? -ne 0 && exit 1
         fi
         if [ ".$files_devel" != . ]
@@ -173,7 +174,7 @@ build_execute()
             fi
             fixzipperms
             $ECHO "Archive: \`$name-devel-$version-$release.$_arch.zip'"
-            zip -rq9 "$_destdir/$name-devel-$version-$release.$_arch.zip" $a
+            zip -rq9 "$_outputdir/$name-devel-$version-$release.$_arch.zip" $a
         fi
         return 0
     )

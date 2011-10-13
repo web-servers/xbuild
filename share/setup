@@ -127,12 +127,11 @@ _libexec=$_lib
 LANG=C
 export LANG
 
-test ".$_topdir" = . && _topdir=/tmp/xbroot
-_sourcedir=$_topdir/SOURCES
-_builddir=$_topdir/BUILD
-_buildrootdir=$_topdir/BUILDROOT
+_xbrootdir=/tmp/xbroot
+_sourcedir=$_xbrootdir/SOURCES
+_builddir=$_xbrootdir/BUILD
+_buildrootdir=$_xbrootdir/BUILDROOT
 _buildbrewdir=/tmp/build
 _buildreqsdir=$_buildbrewdir/buildreqs
-_destdir="$__cwd"
-_packagedir="$__cwd"
+_outputdir="$__cwd"
 _rootdir=/

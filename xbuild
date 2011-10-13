@@ -201,9 +201,6 @@ case ".$task" in
     .build      )
         usetask build
     ;;
-    .check      )
-        usetask check
-    ;;
     .depends    )
         usetask depends
     ;;
@@ -238,7 +235,6 @@ Standard tasks
   sources                          check out package sources
   depends                          setup dependencies
   build                            perfom build
-  check                            make a dry run
 
 EOH
         exit 1

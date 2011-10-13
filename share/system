@@ -206,9 +206,11 @@ fixzipperms()
 {
     if [ $_host_os = windows ]
     then
-        find ./?bin -name '*' -type f -exec chmod 755 '{}' \; 2>/dev/null
-        find ./lib* -name '*' -type f -exec chmod 644 '{}' \; 2>/dev/null
-        find ./inc* -name '*' -type f -exec chmod 644 '{}' \; 2>/dev/null
+        $ECHO "Fixing file permissions ..."
+        find . -name '*' -type f -exec chmod 644 '{}' \; 2>/dev/null
+        find . -name '*.exe' -type f -exec chmod 755 '{}' \; 2>/dev/null
+        find . -name '*.bat' -type f -exec chmod 755 '{}' \; 2>/dev/null
+        find . -name '*.?sh' -type f -exec chmod 755 '{}' \; 2>/dev/null
     fi
 }
 

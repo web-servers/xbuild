@@ -31,4 +31,8 @@ else
     __java=$JAVA_HOME/bin/java
 fi
 __javac=$JAVA_HOME/bin/javac
-__ccver="`gcc --version 2>&1 | head -1`"
+
+ccversion()
+{
+     echo "`gcc --version 2>&1 | head -1`"
+}

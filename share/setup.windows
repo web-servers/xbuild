@@ -37,9 +37,9 @@ else
     ANT_HOME=`cygpath --unix "$ANT_HOME"`
 fi
 m=$cmscbasedir/msvc
-test ".$__isa_bits" = .64 && a=amd64 || a=i386
-PATH="$m/bin/$a:$m/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$a:$JAVA_HOME/bin:$ANT_HOME/bin:$PATH"
-LIB=$m/lib/$a
+test ".$__isa_bits" = .64 && _arch_win=amd64 || _arch_win=i386
+PATH="$m/bin/$_arch_win:$m/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$_arch_win:$JAVA_HOME/bin:$ANT_HOME/bin:$PATH"
+LIB=$m/lib/$_arch_win
 INCLUDE=$m/include/crt:$m/include:$m/include/mfc:$m/include/atl:$XB_INCLUDE
 EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
 __make="cygspawn nmake"
@@ -48,5 +48,10 @@ __java="cygspawn java"
 __javac="cygspawn javac"
 export PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME ANT_HOME
 __ccver="`cl 2>&1 | head -1`"
-_rootdir=$_topdir/ROOT
+_rootdir=$_xbrootdir/ROOT
 _libexec=bin
+
+ccversion()
+{
+     echo "`cl 2>&1 | head -1`"
+}

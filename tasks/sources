@@ -35,34 +35,34 @@ downloadsources()
     for i in $s
     do
         IFS=$__ifs
-        h=`echo $i | $__awk '{print $1}'`
-        p=`echo $i | $__awk '{print $2}'`
-        u=http://cvs.devel.redhat.com/repo/dist/$name/$p/$h/$p
-        if [ ! -e "$p" ]
-        then
-            $ECHO "Getting: \`$u'"
-            wget --tries=0 --quiet $u
-            test $? -ne 0 && xbexit 1 "failed to download redhat module \`$u'"
-        fi
-        case "$p" in
-            *.tar.gz|*.tgz )
-                d=$__gzip
-            ;;
-            *.tar.bz2 )
-                d=$__bzip2
-            ;;
-            *.tar.lzma|*.xz )
-                d=$__xz
-            ;;
-            * )
-                xbexit 1 "cannot determine compression algorithm for \`$p'"
-            ;;
-        esac
-        test ".$has_verbose" = .yes && v=-xvvf || v=-xf
-        $ECHO "$d -cd "$p" | $__tar $v -"
         (
             cd "$_sourcedir"
-            $d -cd "$_destdir/$p" | $__tar $v -
+            h=`echo $i | $__awk '{print $1}'`
+            p=`echo $i | $__awk '{print $2}'`
+            u=http://cvs.devel.redhat.com/repo/dist/$name/$p/$h/$p
+            if [ ! -e "$p" ]
+            then
+                $ECHO "Getting: \`$u'"
+                wget --tries=0 --quiet $u
+                test $? -ne 0 && xbexit 1 "failed to download redhat module \`$u'"
+            fi
+            case "$p" in
+                *.tar.gz|*.tgz )
+                    d=$__gzip
+                ;;
+                *.tar.bz2 )
+                    d=$__bzip2
+                ;;
+                *.tar.lzma|*.xz )
+                    d=$__xz
+                ;;
+                * )
+                    xbexit 1 "cannot determine compression algorithm for \`$p'"
+                ;;
+            esac
+            test ".$has_verbose" = .yes && v=-xvvf || v=-xf
+            $ECHO "$d -cd $p | $__tar $v -"
+            $d -cd $p | $__tar $v -
         )
         test $? -ne 0 && xbexit 1 "failed to uncompress \`$p'"
     done
@@ -71,37 +71,13 @@ downloadsources()
 
 copysources()
 {
-    test ".$has_verbose" = .yes && c=vf || c=f
-    IFS=$__lf
-    s=`$__grep -i '^Source[0-9]*:' $specfile | $__sed 's/\w*:[[:blank:]]*//'`
-    for i in $s
-    do
-        IFS=$__ifs
-        case "$i" in
-             *%{* ) e="`rpmeval $i`" ;;
-             *    ) e="$i" ;;
-        esac
-        d="`dirname $e`"
-        b="`basename $e`"
-        test -e "$b" || continue
-        case "$d" in
-            *://* )
-                d=.
-            ;;
-        esac
-        if [ -d "$b" ]
-        then
-            test "$d"  = . && d=""
-            cp -R$c "$b" "$_sourcedir/$d" 2>/dev/null
-            test $? -ne 0 && exit 1
-        else
-            test "$d" != . && mkdir -p "$_sourcedir/$d" 2>/dev/null
-            test "$d"  = . && d=""
-            cp -$c "$b" "$_sourcedir/$d" 2>/dev/null
-            test $? -ne 0 && exit 1
-        fi
-    done
-    cp -$c Makefile.$_os "$_sourcedir/$_source/Makefile" 2>/dev/null
+    $__tar -cf "$_sourcedir/x.tar" .
+    (
+        cd "$_sourcedir"
+        $__tar -xf x.tar
+        rm -f x.tar 2>/dev/null
+    )
+    test -r Makefile.$_os && cp -$c Makefile.$_os "$_sourcedir/$_source/Makefile"
     return 0
 }
 
@@ -154,9 +130,9 @@ applypatches()
                     echo "Patch rule $x"
                     case "$x" in
                         -*  )
-                            if [ -s "$RPM_ROOT_DIR/$v" ]
+                            if [ -s "../$v" ]
                             then
-                                patch $x < "$RPM_ROOT_DIR/$v"
+                                patch $x < "../$v"
                             else
                                 $ECHO "missing patch: \`$v'"
                             fi
@@ -176,7 +152,7 @@ sources_prepare()
 {
     $ECHO "sources prepare"
 
-    rm -rf "$_sourcedir/$_source" >/dev/null 2>&1
+    rm -rf "$_sourcedir" >/dev/null 2>&1
     if [ -s sources ]
     then
         makedir "$_sourcedir"
@@ -190,16 +166,15 @@ sources_execute()
 {
     $ECHO "sources execute"
     (
-        downloadsources
+        copysources
     )
     test $? -ne 0 && exit 1
+    (
+        downloadsources
+    )
     test -d "$_sourcedir/$_source" || xbexit 1 "cannot find \`$_source' directory"
     (
         applypatches
-    )
-    test $? -ne 0 && exit 1
-    (
-        copysources
     )
     return $?
 }

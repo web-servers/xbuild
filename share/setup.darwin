@@ -23,3 +23,8 @@
 
 __java=$JAVA_HOME/bin/java
 __javac=$JAVA_HOME/bin/javac
+
+ccversion()
+{
+     echo "`gcc --version 2>&1 | head -1`"
+}

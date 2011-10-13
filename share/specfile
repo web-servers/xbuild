@@ -82,7 +82,7 @@ changelog()
     (
         b=true
         IFS=$__lf
-        r=`$__grep -i '^%changelog$' -A 100 "$_packagedir/$specfile"`
+        r=`$__grep -i '^%changelog$' -A 100 "$_sourcedir/$specfile"`
         if [ ".$r" != . ]
         then
             for i in $r
@@ -118,9 +118,9 @@ description()
         IFS=$__lf
         if [ ".$1" = . ]
         then
-            r=`$__grep -i '^%description$' -A 100 "$_packagedir/$specfile"`
+            r=`$__grep -i '^%description$' -A 100 "$_sourcedir/$specfile"`
         else
-            r=`$__grep -i '^%description '$1'$' -A 100 "$_packagedir/$specfile"`
+            r=`$__grep -i '^%description '$1'$' -A 100 "$_sourcedir/$specfile"`
         fi
         if [ ".$r" != . ]
         then
@@ -172,7 +172,7 @@ buildroot="$_buildrootdir/$name-$version-$release.$_arch"
 RPM_BUILD_ROOT="$buildroot"
 RPM_SOURCE_DIR="$_sourcedir"
 RPM_BUILD_DIR="$_builddir"
-RPM_ROOT_DIR="$__cwd"
+RPM_ROOT_DIR="$_rootdir$_prefix"
 RPM_ARCH="$_arch"
 RPM_OS="$_os"
 RPM_PACKAGE_NAME="$name"
@@ -180,11 +180,11 @@ RPM_PACKAGE_VERSION="$version"
 RPM_PACKAGE_RELEASE="$release"
 export RPM_SOURCE_DIR RPM_BUILD_DIR RPM_ARCH RPM_OS RPM_ROOT_DIR
 export RPM_PACKAGE_NAME RPM_PACKAGE_VERSION RPM_PACKAGE_RELEASE
-# Directory where dependencies unpacked
+# Dependencies are unpacked in RPM_ROOT_DIR
 # on Windows this is /tmp/xbuid/ROOT
 # on Solaris this is /opt/redhat
-RPM_PREFIX="$_rootdir$_prefix"
+# RPM_PREFIX="$_rootdir$_prefix"
 # Local install directory
-RPM_DESTDIR="$RPM_BUILD_ROOT$_prefix"
-export RPM_PREFIX RPM_DESTDIR
+RPM_BUILD_DESTDIR="$RPM_BUILD_ROOT$_prefix"
+export RPM_BUILD_DESTDIR
 
