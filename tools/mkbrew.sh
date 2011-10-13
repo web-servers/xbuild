@@ -17,6 +17,7 @@ do
         ;;
     esac
 done
+svn up >/dev/null 2>&1
 HEAD=`svn info | grep Revision: | sed 's/.*: //'`
 
 echo "$TAG svn+http://anonsvn.jboss.org/repos/xbuild?trunk#$HEAD $VM"
