@@ -55,7 +55,7 @@ PACKAGER:     Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
 GROUP:        $group
 OS:           $_os
 ARCH:         $_arch
-SOURCE RPM:
+SOURCE RPM:   $_source.src.zip
 URL:          $origin
 TIMESTAMP:    `date -R`
 COMPILER:     `ccversion`
@@ -121,24 +121,26 @@ build_execute()
                 for i in $files_doc
                 do
                     case $i in
-                        @* )
+                        @*  )
                             i="`echo $i | sed 's/^@//'`"
-                            copypdir $_builddir/$_source.$_arch/$i "$buildroot$d/$i"
-                            i=`basename "$i"`
+                            copypdir $_builddir/$_source.$_arch/$i "$buildroot$d"
                         ;;
-                        /* )
-                            cp -f $i "$buildroot$d"
-                            i=`basename "$i"`
+                        *=* )
+                            s="`echo $i | sed 's/=.*//'`"
+                            n="`echo $i | sed 's/.*=//'`"
+                            copypdir $_builddir/$_source.$_arch/$s "$buildroot$d/$n"
                         ;;
-                        *  )
-                            cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
-                            i=`basename "$i"`
+                        /*  )
+                            cp -rf $i "$buildroot$d"
+                        ;;
+                        *   )
+                            cp -rf $_builddir/$_source.$_arch/$i "$buildroot$d"
                         ;;
                     esac
-                    a="`procfiles $a $d/$i`"
                 done
+                a="`procfiles $a $d`"
             fi
-            fixzipperms
+            prepzipcontent
             $ECHO "Archive: \`$name-$version-$release.$_arch.zip'"
             zip -rq9 "$_outputdir/$name-$version-$release.$_arch.zip" $a
             test $? -ne 0 && exit 1
@@ -154,25 +156,26 @@ build_execute()
                 for i in $files_devel_doc
                 do
                     case $i in
-                        @* )
+                        @*  )
                             i="`echo $i | sed 's/^@//'`"
-                            s=`basename "$i"`
-                            copypdir $_builddir/$_source.$_arch/$i "$buildroot$d/$s"
-                            i="$s"
+                            copypdir $_builddir/$_source.$_arch/$i "$buildroot$d"
                         ;;
-                        /* )
-                            cp -f $i "$buildroot$d"
-                            i=`basename "$i"`
+                        *=* )
+                            s="`echo $i | sed 's/=.*//'`"
+                            n="`echo $i | sed 's/.*=//'`"
+                            copypdir $_builddir/$_source.$_arch/$s "$buildroot$d/$n"
                         ;;
-                        *  )
-                            cp -f $_builddir/$_source.$_arch/$i "$buildroot$d/"
-                            i=`basename "$i"`
+                        /*  )
+                            cp -rf $i "$buildroot$d"
+                        ;;
+                        *   )
+                            cp -rf $_builddir/$_source.$_arch/$i "$buildroot$d"
                         ;;
                     esac
-                    a="`procfiles $a $d/$i`"
                 done
+                a="`procfiles $a $d`"
             fi
-            fixzipperms
+            prepzipcontent
             $ECHO "Archive: \`$name-devel-$version-$release.$_arch.zip'"
             zip -rq9 "$_outputdir/$name-devel-$version-$release.$_arch.zip" $a
         fi
