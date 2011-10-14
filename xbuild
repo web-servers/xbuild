@@ -263,8 +263,8 @@ then
     )
     test $? -ne 0 && xbexit 1 "prep failed"
     (
-        depends_execute
         depends_prepare
+        depends_execute
     )
     test $? -ne 0 && xbexit 1 "depends failed"
     (
