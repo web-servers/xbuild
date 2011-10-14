@@ -142,8 +142,8 @@ build_execute()
                 a="`procfiles $a $d`"
             fi
             prepzipcontent
-            $ECHO "Archive: \`$name-$version-$release.$_arch.zip'"
-            zip -9ry$q "$_outputdir/$name-$version-$release.$_arch.zip" $a
+            $ECHO "Archive: \`$NVRA.zip'"
+            zip -9ry$q "$_outputdir/$NVRA.zip" $a
             test $? -ne 0 && exit 1
         fi
         if [ ".$files_devel" != . ]
@@ -177,8 +177,8 @@ build_execute()
                 a="`procfiles $a $d`"
             fi
             prepzipcontent
-            $ECHO "Archive: \`$name-devel-$version-$release.$_arch.zip'"
-            zip -9ry$q "$_outputdir/$name-devel-$version-$release.$_arch.zip" $a
+            $ECHO "Archive: \`$NDVRA.zip'"
+            zip -9ry$q "$_outputdir/$NDVRA.zip" $a
         fi
         return 0
     )

@@ -38,6 +38,7 @@ depends_execute()
     $ECHO "depends execute in: \`$_buildreqsdir'"
     (
         cd "$_rootdir"
+        test -d "$_buildreqsdir" || return 0
         if [ .$has_verbose = .yes ]
         then
             tree "$_buildreqsdir" 2>/dev/null
@@ -45,57 +46,70 @@ depends_execute()
         $ECHO "Finding .zip file dependencies ..."
         IFS=$__lf
         d="`find "$_buildreqsdir" -name '*.zip' -type f 2>/dev/null`"
-        test .$has_verbose = .yes && q="" || q="q"
-        for i in $d
-        do
-            IFS=$__ifs
-            case "$i" in
-                *xbuild-*  )
-                    echo "Skipping inherent xbuild dependency"
-                    continue
-                ;;
-                *.$_arch.* )
-                    unzip -o$q "$i"
-                ;;                
-                *.noarch.* )
-                    test .$has_verbose = .yes && q=q
-                    unzip -o$q "$i"
-                ;;
-            esac
-        done
+        if [ ".$d" != . ]
+        then
+            test .$has_verbose = .yes && q="" || q="q"
+            for i in $d
+            do
+                IFS=$__ifs
+                case "$i" in
+                    *xbuild-*  )
+                        continue
+                    ;;
+                    *-sources.*)
+                        continue
+                    ;;
+                    *-spec.*   )
+                        continue
+                    ;;
+                    *.$_arch.* )
+                        unzip -o$q "$i"
+                    ;;
+                    *.noarch.* )
+                        unzip -o$q "$i"
+                    ;;
+                esac
+            done
+        fi
         $ECHO "Finding .tgz file dependencies ..."
         d="`find "$_buildreqsdir" -name '*.'$_arch'.tar.*' -type f 2>/dev/null`"
-        test .$has_verbose = .yes && q="v" || q=""
-        for i in $d
-        do
-            IFS=$__ifs
-            case "$i" in
-                *.gz  )
-                    $ECHO "Archive: \`$i'"
-                    $__gzip -cd "$i" | $__tar -xf$q - 
-                ;;
-                *.bz2 )
-                    $ECHO "Archive: \`$i'"
-                    $__bzip2 -cd "$i" | $__tar -xf$q -
-                ;;
-            esac
-        done
+        if [ ".$d" != . ]
+        then
+            test .$has_verbose = .yes && q="v" || q=""
+            for i in $d
+            do
+                IFS=$__ifs
+                case "$i" in
+                    *.gz  )
+                        $ECHO "Archive: \`$i'"
+                        $__gzip -cd "$i" | $__tar -xf$q -
+                    ;;
+                    *.bz2 )
+                        $ECHO "Archive: \`$i'"
+                        $__bzip2 -cd "$i" | $__tar -xf$q -
+                    ;;
+                esac
+            done
+        fi
         $ECHO "Finding .rpm file dependencies ..."
         d="`find "$_buildreqsdir" -name '*.rpm' -type f 2>/dev/null`"
-        for i in $d
-        do
-            IFS=$__ifs
-            case "$i" in
-                *.$_arch.*  )
-                    $ECHO "Archive: \`$i'"
-                    unrpm "$i" .
-                ;;
-                *.noarch.*  )
-                    $ECHO "Archive: \`$i'"
-                    unrpm "$i" .
-                ;;
-            esac
-        done
+        if [ ".$d" != . ]
+        then
+            for i in $d
+            do
+                IFS=$__ifs
+                case "$i" in
+                    *.$_arch.*  )
+                        $ECHO "Archive: \`$i'"
+                        unrpm "$i" .
+                    ;;
+                    *.noarch.*  )
+                        $ECHO "Archive: \`$i'"
+                        unrpm "$i" .
+                    ;;
+                esac
+            done
+        fi
     )
 }
 

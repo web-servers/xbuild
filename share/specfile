@@ -187,4 +187,9 @@ export RPM_PACKAGE_NAME RPM_PACKAGE_VERSION RPM_PACKAGE_RELEASE
 # Local install directory
 RPM_BUILD_DESTDIR="$RPM_BUILD_ROOT$_prefix"
 export RPM_BUILD_DESTDIR
+NVR=$name-$version-$release
+NVRA=$NVR.$_arch
+NDVR=$name-devel-$version-$release
+NDVRA=$NDVR.$_arch
+export NVR NVRA NDVR NDVRA
 

@@ -199,9 +199,10 @@ shift
 # Parse tasks
 case ".$task" in
     .make       )
-        usetask build
+        usetask prep
         usetask depends
-        usetask sources
+        usetask build
+        usetask dist
     ;;
     .build      )
         usetask build
@@ -209,8 +210,11 @@ case ".$task" in
     .depends    )
         usetask depends
     ;;
-    .sources    )
-        usetask sources
+    .dist       )
+        usetask dist
+    ;;
+    .prep       )
+        usetask prep
     ;;
     .version    )
         cat << EOH
@@ -237,9 +241,10 @@ EOH
         cat 1>&2 << EOH
 Standard tasks
   version                          display XBuild version info
-  sources                          check out package sources
+  prep                             check out package sources
   depends                          setup dependencies
   build                            perfom build
+  dist                             create platform package
   make                             perfom sources-depends-build tasks
 
 EOH
@@ -251,18 +256,26 @@ include specfile
 
 if [ .$task = .make ]
 then
-    ( eval sources_prepare "$@" )
-    test $? -ne 0 && xbexit 1 "sources prepare failed"
-    ( eval sources_execute "$@" )
-    test $? -ne 0 && xbexit 1 "sources execute failed"
-    ( eval depends_prepare "$@" )
-    test $? -ne 0 && xbexit 1 "depends prepare failed"
-    ( eval depends_execute "$@" )
-    test $? -ne 0 && xbexit 1 "depends execute failed"
-    ( eval build_prepare "$@" )
-    test $? -ne 0 && xbexit 1 "build   prepare failed"
-    ( eval build_execute "$@" )
-    test $? -ne 0 && xbexit 1 "build   execute failed"
+    (
+        prep_prepare
+        prep_execute
+    )
+    test $? -ne 0 && xbexit 1 "prep failed"
+    (
+        depends_execute
+        depends_prepare
+    )
+    test $? -ne 0 && xbexit 1 "depends failed"
+    (
+        build_prepare
+        build_execute
+    )
+    test $? -ne 0 && xbexit 1 "build failed"
+    (
+        dist_prepare
+        dist_execute
+    )
+    test $? -ne 0 && xbexit 1 "dist failed"
 else
     ( eval ${task}_prepare "$@" )
     test $? -ne 0 && xbexit 1 "$task prepare failed"

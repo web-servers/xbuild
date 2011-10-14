@@ -42,7 +42,7 @@ downloadsources()
             u=http://cvs.devel.redhat.com/repo/dist/$name/$p/$h/$p
             if [ ! -e "$p" ]
             then
-                $ECHO "Getting: \`$u'"
+                $ECHO "download: \`$u'"
                 wget --tries=0 --quiet $u
                 test $? -ne 0 && xbexit 1 "failed to download redhat module \`$u'"
             fi
@@ -127,7 +127,6 @@ applypatches()
                 (
                     IFS=$__ifs
                     cd "$_sourcedir/$_source"
-                    echo "Patch rule $x"
                     case "$x" in
                         -*  )
                             if [ -s "../$v" ]
@@ -148,10 +147,8 @@ applypatches()
 }
 
 # Execute hooks
-sources_prepare()
+prep_prepare()
 {
-    $ECHO "sources prepare"
-
     rm -rf "$_sourcedir" >/dev/null 2>&1
     if [ -s sources ]
     then
@@ -162,9 +159,9 @@ sources_prepare()
     return 0
 }
 
-sources_execute()
+prep_execute()
 {
-    $ECHO "sources execute"
+    $ECHO "prep task"
     (
         copysources
     )
