@@ -196,6 +196,7 @@ include setup.$_os
 
 task=$1
 shift
+test ".$task" = . && task=make
 # Parse tasks
 case ".$task" in
     .make       )
