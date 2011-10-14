@@ -77,7 +77,6 @@ copysources()
         $__tar -xf x.tar
         rm -f x.tar 2>/dev/null
     )
-    test -r Makefile.$_os && cp -$c Makefile.$_os "$_sourcedir/$_source/Makefile"
     return 0
 }
 
@@ -146,6 +145,16 @@ applypatches()
     done
 }
 
+copyosfiles()
+{
+
+    cd "$_sourcedir"
+    for i in Makefile
+    do
+        test -r $i.$_os && cp -f $i.$_os $_source/$i
+    done
+}
+
 # Execute hooks
 prep_prepare()
 {
@@ -173,6 +182,10 @@ prep_execute()
     (
         applypatches
     )
-    return $?
+    test $? -ne 0 && exit 1
+    (
+        copyosfiles
+    )
+    return 0
 }
 
