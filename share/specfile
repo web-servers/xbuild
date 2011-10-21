@@ -82,32 +82,24 @@ changelog()
     (
         b=true
         IFS=$__lf
-        r=`$__grep -i '^%changelog$' -A 100 "$_sourcedir/$specfile"`
-        if [ ".$r" != . ]
-        then
-            for i in $r
-            do
-                if $b
-                then
-                    b=false
-                    continue
-                fi
-                case "$i" in
-                    \** )
-                        let n=n+1
-                        test $n -gt $c && return 0
-                        test $n -gt 1 && echo ""
-                        echo "$i"
-                    ;;
-                    %*  )
-                        break
-                    ;;
-                    *   )
-                        echo $i
-                   ;;
-                esac
-            done
-        fi
+        r=`$__sed -n '/^%changelog/,//p' "$_sourcedir/$specfile" | $__sed '/^%changelog/d'`
+        for i in $r
+        do
+            case "$i" in
+                %*  )
+                    break
+                ;;
+                \** )
+                    let n=n+1
+                    test $n -gt $c && return 0
+                    test $n -gt 1 && echo ""
+                    echo "$i"
+                ;;
+                *   )
+                    echo "$i"
+                ;;
+            esac
+        done
     )
 }
 

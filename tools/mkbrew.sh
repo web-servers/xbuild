@@ -1,12 +1,12 @@
 #!/bin/sh
 #
-TAG=jb-ep-5-win-candidate
+TARGET=jb-ep-5-win-candidate
 VM=jboss-natives-20110516-1
 CMD=win-build
 for o
 do
     case $o in
-        --tag=* )
+        --target=* )
             TAG="`sed 's/.*=//'`"
             shift
         ;;
@@ -25,5 +25,5 @@ do
     esac
 done
 HEAD=`svn info http://anonsvn.jboss.org/repos/xbuild/trunk | grep Revision: | sed 's/.*: //'`
-echo "$CMD $TAG svn+http://anonsvn.jboss.org/repos/xbuild?trunk#$HEAD $VM"
-brew $CMD $TAG svn+http://anonsvn.jboss.org/repos/xbuild?trunk#$HEAD $VM
+echo "$CMD $TARGET svn+http://anonsvn.jboss.org/repos/xbuild?trunk#$HEAD $VM"
+brew $CMD $TARGET svn+http://anonsvn.jboss.org/repos/xbuild?trunk#$HEAD $VM
