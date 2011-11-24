@@ -52,13 +52,13 @@ varadds()
 findgnutool()
 {
     r="`which g$1 2>/dev/null`"
-    if [ ".$r" != . ]
+    if [ ".$r" != . -a -x "$r" ]
     then
         echo "$r"
         return
     fi
     r="`which $1 2>/dev/null`"
-    if [ ".$r" != . ]
+    if [ ".$r" != . -a -x "$r" ]
     then
         $r </dev/null --help 2>/dev/null | grep -i gnu 1>/dev/null
         if [ $? -eq 0 ]
