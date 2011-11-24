@@ -45,7 +45,7 @@ genbuildinfo()
     install -m 755 -d META-INF
     cat > "META-INF/INFO.txt" <<EOH
 NAME:         $1
-VERSION:      1.2.3
+VERSION:      $version
 RELEASE:      $release
 SUMMARY:      $summary
 DISTRIBUTION: Red Hat
