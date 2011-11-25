@@ -63,10 +63,10 @@ depends_execute()
                         continue
                     ;;
                     *.$_arch.* )
-                        unzip -o$q "$i"
+                        unzip -o$q "$i" -x 'META-INF/*'
                     ;;
                     *.noarch.* )
-                        unzip -o$q "$i"
+                        unzip -o$q "$i" -x 'META-INF/*'
                     ;;
                 esac
             done
