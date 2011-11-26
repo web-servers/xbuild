@@ -42,8 +42,7 @@ procfiles()
 
 genbuildinfo()
 {
-    install -m 755 -d META-INF
-    cat > "META-INF/INFO.txt" <<EOH
+    cat > "$buildroot/.zipinfo" <<EOH
 NAME:         $1
 VERSION:      $version
 RELEASE:      $release
@@ -114,7 +113,7 @@ build_execute()
         genbuildinfo $name
         if [ ".$files" != . ]
         then
-            a="`procfiles $files ./META-INF`"
+            a="`procfiles $files`"
             if [ ".$files_doc" != . ]
             then
                 d="$_docdir/$name-$version"
@@ -143,13 +142,18 @@ build_execute()
             fi
             prepzipcontent
             $ECHO "Archive: \`$NVRA.zip'"
-            zip -9ry$q "$_outputdir/$NVRA.zip" $a
+            if [ -d opt ]; then
+                cd opt
+                a="`echo $a | sed 's;opt/;;g'`"
+            fi
+            zip -9zry$q "$_outputdir/$NVRA.zip" $a < "$buildroot/.zipinfo"
             test $? -ne 0 && exit 1
         fi
         if [ ".$files_devel" != . ]
         then
+            cd "$buildroot"
             genbuildinfo $name-devel devel
-            a="`procfiles $files_devel ./META-INF`"
+            a="`procfiles $files_devel`"
             if [ ".$files_devel_doc" != . ]
             then
                 d="$_docdir/$name-devel-$version"
@@ -178,7 +182,11 @@ build_execute()
             fi
             prepzipcontent
             $ECHO "Archive: \`$NDVRA.zip'"
-            zip -9ry$q "$_outputdir/$NDVRA.zip" $a
+            if [ -d opt ]; then
+                cd opt
+                a="`echo $a | sed 's;opt/;;g'`"
+            fi
+            zip -9ry$q "$_outputdir/$NDVRA.zip" $a < "$buildroot/.zipinfo"
         fi
         return 0
     )
