@@ -90,10 +90,18 @@ case "$_arch" in
         _arch=`/bin/isainfo -n`
         n=sparc
     ;;
+    ppc*       )
+        n=sparc
+    ;;
 esac
 case "$_arch" in
-    sparc*     )
-        b=`/bin/isainfo -b`
+    sparc32|sparc    )
+        b=32
+        n=sparc
+    ;;
+    sparc64|sparcv9  )
+        b=64
+        n=sparc
     ;;
     *64        )
         b=64

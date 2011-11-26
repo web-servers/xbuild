@@ -24,6 +24,34 @@
 __java=$JAVA_HOME/bin/java
 __javac=$JAVA_HOME/bin/javac
 
+case "$_arch" in
+    sparc32|sparc    )
+        __chrpath=/opt/csw/bin/chrpath
+        _arch_sun=sparc
+    ;;
+    sparc64|sparcv9  )
+        __chrpath=/opt/csw/bin/sparcv9/chrpath
+        _arch_sun=sparcv9
+    ;;
+    *64   )
+        __chrpath=/opt/csw/bin/amd64/chrpath
+        _arch_sun=amd64
+    ;;
+    i?86  )
+        __chrpath=/opt/csw/bin/i386/chrpath
+        _arch_sun=i386
+    ;;
+    *    )
+        __chrpath=/opt/csw/bin/chrpath
+        _arch_sun="`/bin/isainfo -n`"
+    ;;
+esac
+
+# XXX: Check if we can install to /opt
+# It would require that maintainer is member
+# of some group with write access to /opt
+_rootdir=$_xbrootdir/ROOT
+
 ccversion()
 {
      echo "`cc -V -flags 2>&1 | head -1`"
