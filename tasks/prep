@@ -170,8 +170,7 @@ LICENSE:      $license
 PACKAGER:     Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
 GROUP:        $group
 OS:           $_os
-ARCH:         $_arch
-SOURCE RPM:   $NVR.src.zip
+ARCH:         noarch
 URL:          $origin
 TIMESTAMP:    `date -R`
 COMPILER:     `ccversion`
