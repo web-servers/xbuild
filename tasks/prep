@@ -76,6 +76,8 @@ copysources()
         cd "$_sourcedir"
         $__tar -xf x.tar
         rm -f x.tar 2>/dev/null
+        rm -rf CVS
+        rm -f .cvsignore
     )
     return 0
 }
@@ -155,6 +157,32 @@ copyosfiles()
     done
 }
 
+gensourceinfo()
+{
+    cat > .zipinfo <<EOH
+NAME:         $1
+VERSION:      $version
+RELEASE:      $release
+SUMMARY:      $summary
+DISTRIBUTION: Red Hat
+VENDOR:       Red Hat, Inc.
+LICENSE:      $license
+PACKAGER:     Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
+GROUP:        $group
+OS:           $_os
+ARCH:         $_arch
+SOURCE RPM:   $NVR.src.zip
+URL:          $origin
+TIMESTAMP:    `date -R`
+COMPILER:     `ccversion`
+DESCRIPTION:
+`description $2`
+CHANGELOG:
+`changelog 1`
+EOH
+
+}
+
 # Execute hooks
 prep_prepare()
 {
@@ -185,6 +213,9 @@ prep_execute()
     test $? -ne 0 && exit 1
     (
         copyosfiles
+        cd "$_sourcedir"
+        gensourceinfo
+        zip -9zry$q "$_outputdir/$NVR.src.zip" $a < .zipinfo
     )
     return 0
 }

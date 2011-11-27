@@ -31,6 +31,7 @@ __ifs=$IFS
 has_maintainer_mode=no
 has_buildspec=no
 has_verbose=no
+has_force=no
 buildrequires=
 requires=
 dist=
