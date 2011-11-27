@@ -51,29 +51,32 @@ publish_execute()
     r="$_sharedroot/xbuildroot/packages"
     $ECHO "publish execute $r/$name/$version/$release/$_arch"
     (
-        d="$r/$name/$version/$release/$_arch"
+        d="$r/$name/$version/$release"
         if [ ".$has_force" = .yes ]; then
             rm -rf "$r/$name/$version/$release"
         fi
-        mkdir -p "$d"
-        for i in $NVR.*
+        mkdir -p "$d/$_arch"
+        mkdir -p "$d/src"
+        for x in $_arch src
         do
-            if [ -f "$d/$i" ]; then
-                $ECHO "$i already present in \`$d'"
-                $ECHO "use --force to override."
-                continue
-            else
-                addtorepo "$r"
-            fi
-            cp $i "$d/"
+            for i in $NVR.$x.*
+            do
+                if [ -f "$d/$x/$i" ]; then
+                    $ECHO "$i already present in \`$d/$x'"
+                    $ECHO "use --force to override."
+                    continue
+                fi
+                cp $i "$d/$x/"
+            done
         done
         for i in $NDVR.*
         do
-            if [ -f "$d/$i" ]; then
+            if [ -f "$d/$_arch/$i" ]; then
                 continue
             fi
-            cp $i "$d/"
+            cp $i "$d/$_arch"
         done
+        addtorepo "$r"
     )
     return $?    
 }
