@@ -215,7 +215,7 @@ prep_execute()
         copyosfiles
         cd "$_sourcedir"
         gensourceinfo
-        zip -9zry$q "$_outputdir/$NVR.src.zip" $a < .zipinfo
+        zip -9zry$q "$_outputdir/$NVR.src.zip" . < .zipinfo
     )
     return 0
 }
