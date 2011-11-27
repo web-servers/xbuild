@@ -21,46 +21,59 @@
 # Publish artifacts to repository
 #
 _sharedroot="/home/shared"
-_publishroot=""
 # Execute hooks
 publish_prepare()
 {
     $ECHO "publish prepare \`$_source.$_arch'"    
     test -d "$_sharedroot" || _sharedroot="/export/home/shared"
-    _publishroot="$_sharedroot/xbuildroot/packages"
-    mkdir -p "$_publishroot"
+    d="$_sharedroot/xbuildroot/packages"
+    mkdir -p "$d"
     return $?
+}
+
+addtorepo()
+{
+    if [ -f "$1/.${_os_c}repo" ]; then
+        a=`grep "$name $version $release" "$1/.${_os_c}repo"`
+        if [ ".$a" = . ]; then
+            echo "$name $version $release" > "$1/.${_os_c}repo.new"
+            cat "$1/.${_os_c}repo" >> "$1/.${_os_c}repo.new"
+            mv "$1/.${_os_c}repo.new" "$1/.${_os_c}repo"
+        fi
+    else
+        echo "$name $version $release" > "$1/.${_os_c}repo"
+    fi
 }
 
 publish_execute()
 {
-    $ECHO "publish execute"
+    test -d "$_sharedroot" || _sharedroot="/export/home/shared"
+    r="$_sharedroot/xbuildroot/packages"
+    $ECHO "publish execute $r/$name/$version/$release/$_arch"
     (
-        d="$_publishroot/$name/$version/$release/$_arch"
+        d="$r/$name/$version/$release/$_arch"
+        if [ ".$has_force" = .yes ]; then
+            rm -rf "$r/$name/$version/$release"
+        fi
         mkdir -p "$d"
         for i in $NVR.*
         do
             if [ -f "$d/$i" ]; then
-                if [ ".$has_force" = .no ]; then
-                    $ECHO "$i already present in \`$d'"
-                    $ECHO "use --force to override."
-                    continue
-                fi
+                $ECHO "$i already present in \`$d'"
+                $ECHO "use --force to override."
+                continue
+            else
+                addtorepo "$r"
             fi
             cp $i "$d/"
-            echo "$version $release $_arch" >> "$_publishroot/$name/.${_os_c}repo"
         done
         for i in $NDVR.*
         do
             if [ -f "$d/$i" ]; then
-                if [ ".$has_force" = .no ]; then
-                    $ECHO "$i already present in \`$d'"
-                    continue
-                fi
+                continue
             fi
             cp $i "$d/"
         done
-        
     )
     return $?    
 }
