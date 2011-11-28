@@ -30,29 +30,28 @@ depends_prepare()
     then
         newdir "$_rootdir"
     fi
-    if [ $_host_os = solaris ]
+    if [ ".$_host_os" = .solaris ]
     then
         s="/home/shared"
         test -d "$s" || s="/export/home/shared"
-        r="$s/xbuildroot/packages"
+        p="$s/xbuildroot/packages"
         newdir "$_buildreqsdir"
         (
         IFS=$__lf
         d=`grep -i '^#sun-buildrequires:' $specfile | sed 's/#sun-buildrequires: //'`
         for i in $d
         do
-            $ECHO "Solving dependency: \`$i'"
-            a="`cat $r/${_os_c}repo 2>/dev/null | grep "$i" | head -1`"
+            $ECHO "Dependency: \`$i'"
+            a="`cat $p/.${_os_c}repo | grep "$i" | head -1`"
             if [ ".$a" = . ]
             then
                 continue
             fi
             v="`echo $a | awk '{print $2;}'`"
             r="`echo $a | awk '{print $3;}'`"
-            cp "$r/$i/$v/$r/$_arch/$i-$v.$r.$_arch.zip" "$_buildreqsdir" 2>/dev/null
-            cp "$r/$i/$v/$r/$_arch/$i-devel-$v.$r.$_arch.zip" "$_buildreqsdir" 2>/dev/null
+            cp "$p/$i/$v/$r/$_arch/$i-$v-$r.$_arch.zip" "$_buildreqsdir"
+            cp "$p/$i/$v/$r/$_arch/$i-devel-$v-$r.$_arch.zip" "$_buildreqsdir" 2>/dev/null
         done
-
         )
     fi
     return 0
@@ -88,10 +87,10 @@ depends_execute()
                         continue
                     ;;
                     *.$_arch.* )
-                        unzip -o$q "$i" -x 'META-INF/*'
+                        unzip -o$q "$i"
                     ;;
                     *.noarch.* )
-                        unzip -o$q "$i" -x 'META-INF/*'
+                        unzip -o$q "$i"
                     ;;
                 esac
             done
