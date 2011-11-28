@@ -30,6 +30,31 @@ depends_prepare()
     then
         newdir "$_rootdir"
     fi
+    if [ $_host_os = solaris ]
+    then
+        s="/home/shared"
+        test -d "$s" || s="/export/home/shared"
+        r="$s/xbuildroot/packages"
+        newdir "$_buildreqsdir"
+        (
+        IFS=$__lf
+        d=`grep -i '^#sun-buildrequires:' $specfile | sed 's/#sun-buildrequires: //'`
+        for i in $d
+        do
+            $ECHO "Solving dependency: \`$i'"
+            a="`cat $r/${_os_c}repo 2>/dev/null | grep "$i" | head -1`"
+            if [ ".$a" = . ]
+            then
+                continue
+            fi
+            v="`echo $a | awk '{print $2;}'`"
+            r="`echo $a | awk '{print $3;}'`"
+            cp "$r/$i/$v/$r/$_arch/$i-$v.$r.$_arch.zip" "$_buildreqsdir" 2>/dev/null
+            cp "$r/$i/$v/$r/$_arch/$i-devel-$v.$r.$_arch.zip" "$_buildreqsdir" 2>/dev/null
+        done
+
+        )
+    fi
     return 0
 }
 
