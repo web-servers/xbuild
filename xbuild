@@ -80,7 +80,7 @@ do
     case "$o" in
         --verbose|-v )
             ECHO=echo
-            opt_verbose=yes
+            has_verbose=yes
             shift
         ;;
         --debug      )
