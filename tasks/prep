@@ -159,7 +159,7 @@ copyosfiles()
 
 gensourceinfo()
 {
-    cat > /tmp/.xbzipinfo <<EOH
+    cat > /tmp/.zipinfo <<EOH
 NAME:         $1
 VERSION:      $version
 RELEASE:      $release
@@ -213,8 +213,8 @@ prep_execute()
     (
         copyosfiles
         cd "$_sourcedir"
-        gensourceinfo
-        zip -9zry$q "$_outputdir/$NVR.src.zip" . < /tmp/.xbzipinfo
+        gensourceinfo $name
+        zip -9zry$q "$_outputdir/$NVR.src.zip" . < /tmp/.zipinfo
     )
     return 0
 }
