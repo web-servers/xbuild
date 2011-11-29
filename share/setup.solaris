@@ -31,7 +31,7 @@ case "$_arch" in
         __chrpath=/opt/csw/bin/chrpath
         _arch_sun=sparc
         SUNCC_CFLAGS="-m32"
-        SUNCC_LDFLAGS="-m64"
+        SUNCC_LDFLAGS="-m32"
     ;;
     sparc64|sparcv9  )
         __chrpath=/opt/csw/bin/sparcv9/chrpath
