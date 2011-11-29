@@ -25,6 +25,7 @@ procfiles()
 {
     for o
     do
+        o=`echo $o | sed "s;^$buildroot;;"`
         case $o in
             .   )
                echo .
