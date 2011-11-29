@@ -33,9 +33,11 @@ publish_prepare()
 
 addtorepo()
 {
-    if [ -f "$1/.${_os_c}repo" ]; then
+    if [ -f "$1/.${_os_c}repo" ]
+    then
         a=`grep "$name $version $release" "$1/.${_os_c}repo"`
-        if [ ".$a" = . ]; then
+        if [ ".$a" = . ]
+        then
             echo "$name $version $release" > "$1/.${_os_c}repo.new"
             cat "$1/.${_os_c}repo" >> "$1/.${_os_c}repo.new"
             mv "$1/.${_os_c}repo.new" "$1/.${_os_c}repo"
@@ -61,9 +63,13 @@ publish_execute()
         do
             for i in $NVR.$x.*
             do
-                if [ -f "$d/$x/$i" ]; then
-                    $ECHO "$i already present in \`$d/$x'"
-                    $ECHO "use --force to override."
+                if [ -f "$d/$x/$i" ]
+                then
+                    if  [ x != src ]
+                    then
+                        $ECHO "$i already present in \`$d/$x'"
+                        $ECHO "use --force to override."
+                    fi
                     continue
                 fi
                 cp $i "$d/$x/"
@@ -72,7 +78,8 @@ publish_execute()
         done
         for i in $NDVR.*
         do
-            if [ -f "$d/$_arch/$i" ]; then
+            if [ -f "$d/$_arch/$i" ]
+            then
                 continue
             fi
             cp $i "$d/$_arch"
