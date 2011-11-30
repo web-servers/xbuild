@@ -72,8 +72,8 @@ publish_execute()
                     fi
                     continue
                 fi
-                cp $i "$d/$x/"
                 md5sum -b $i > "$d/$x/$i.md5"
+                mv $i "$d/$x/"
             done
         done
         for i in $NDVR.*
@@ -82,8 +82,8 @@ publish_execute()
             then
                 continue
             fi
-            cp $i "$d/$_arch"
             md5sum -b $i > "$d/$_arch/$i.md5"
+            mv $i "$d/$_arch"
         done
         addtorepo "$r"
     )
