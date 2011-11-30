@@ -25,6 +25,8 @@ __java=$JAVA_HOME/bin/java
 __javac=$JAVA_HOME/bin/javac
 PATH=/opt/SUNWspro/bin:/opt/csw/gnu:/opt/csw/bin:/bin:/usr/xpg4/bin:/usr/X/bin:/usr/bin:/usr/ccs/bin:/usr/ucb:/etc:.
 export PATH
+LD_LIBRARY_PATH=
+export LD_LIBRARY_PATH
 
 case "$_arch" in
     sparc32|sparc    )
