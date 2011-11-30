@@ -132,6 +132,7 @@ applypatches()
                         -*  )
                             if [ -s "../$v" ]
                             then
+                                $ECHO "appling patch: \`$v'"
                                 patch $x < "../$v"
                             else
                                 $ECHO "missing patch: \`$v'"
@@ -214,7 +215,7 @@ prep_execute()
         copyosfiles
         cd "$_sourcedir"
         gensourceinfo $name
-        zip -9zry$q "$_outputdir/$NVR.src.zip" . < /tmp/.zipinfo
+        zip -9zry$q "$_outputdir/$NVR.src.zip" . -x *.tar.* *.tgz *.rpm < /tmp/.zipinfo
     )
     return 0
 }

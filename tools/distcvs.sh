@@ -48,7 +48,7 @@ do
     then
     (
         cd $i/$branch
-        make OSTYPE=windows sources
+        make OSTYPE=solaris sources
     )
     fi
     echo "Updated: \`$i'"
