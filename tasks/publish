@@ -58,33 +58,32 @@ publish_execute()
             rm -rf "$r/$name/$version/$release"
         fi
         mkdir -p "$d/$_arch"
-        mkdir -p "$d/src"
-        for x in $_arch src
+        for i in $NVRA.zip $NDVRA.zip
         do
-            for i in $NVR.$x.*
-            do
-                if [ -f "$d/$x/$i" ]
+            if [ -f $i ]
+            then
+                if [ -f "$d/$_arch/$i" ]
                 then
-                    if  [ x != src ]
-                    then
-                        $ECHO "$i already present in \`$d/$x'"
-                        $ECHO "use --force to override."
-                    fi
+                    $ECHO "$i already present in \`$d/$_arch'"
+                    $ECHO "use --force to override."
                     continue
                 fi
-                md5sum -b $i > "$d/$x/$i.md5"
-                mv $i "$d/$x/"
-            done
+                md5sum -b $i > "$d/$_arch/$i.md5"
+                mv $i "$d/$_arch/"
+            fi
+            
         done
-        for i in $NDVR.*
-        do
-            if [ -f "$d/$_arch/$i" ]
+        s=$NVR.src.zip
+        if [ -f $s ]
+        then
+            if [ -f "$d/src/$s" ]
             then
                 continue
             fi
-            md5sum -b $i > "$d/$_arch/$i.md5"
-            mv $i "$d/$_arch"
-        done
+            mkdir -p "$d/src"
+            md5sum -b $s > "$d/src/$s.md5"
+            mv $s "$d/src/"
+        fi
         addtorepo "$r"
     )
     return $?    

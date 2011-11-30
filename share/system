@@ -132,7 +132,7 @@ xbexit()
 
 newdir()
 {
-    rm -rf "$1" >/dev/null 2>&1
+    rm -rf "$1" >/dev/null 2>&1 || true
     install -m 755 -d "$1" >/dev/null 2>&1
     e=$?
     if [ $e -ne 0 ]
@@ -159,8 +159,8 @@ copypdir()
 
 chownmod()
 {
-    chmod $1 "$4" 2>/dev/null
-    chown $2:$3 "$4" 2>/dev/null
+    chmod $1 "$4" 2>/dev/null || true
+    chown $2:$3 "$4" 2>/dev/null || true
 }
 
 makelink()

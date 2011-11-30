@@ -185,7 +185,7 @@ EOH
 # Execute hooks
 prep_prepare()
 {
-    rm -rf "$_sourcedir" >/dev/null 2>&1
+    newdir "$_xbrootdir"
     if [ -s sources ]
     then
         makedir "$_sourcedir"
