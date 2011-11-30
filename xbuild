@@ -133,6 +133,8 @@ do
         ;;
         --arch=*    )
             _arch="$a"
+            test ".$a" = .amd64 && _arch=x86_64
+            test ".$a" = .sparcv9 && _arch=sparc64
             shift
         ;;
         --os=*      )
