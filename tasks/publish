@@ -76,13 +76,13 @@ publish_execute()
         s=$NVR.src.zip
         if [ -f $s ]
         then
-            if [ -f "$d/src/$s" ]
+            if [ ! -f "$d/src/$s" ]
             then
-                continue
+                mkdir -p "$d/src"
+                md5sum -b $s > "$d/src/$s.md5"
+                mv $s "$d/src/"
             fi
-            mkdir -p "$d/src"
-            md5sum -b $s > "$d/src/$s.md5"
-            mv $s "$d/src/"
+
         fi
         addtorepo "$r"
     )
