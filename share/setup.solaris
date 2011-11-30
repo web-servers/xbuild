@@ -23,7 +23,7 @@
 
 __java=$JAVA_HOME/bin/java
 __javac=$JAVA_HOME/bin/javac
-LD_LIBRARY_PATH=
+unset LD_LIBRARY_PATH
 export LD_LIBRARY_PATH
 
 case "$_arch" in
