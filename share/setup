@@ -142,4 +142,5 @@ _buildrootdir=$_xbrootdir/BUILDROOT
 _buildbrewdir=/tmp/build
 _buildreqsdir=$_buildbrewdir/buildreqs
 _outputdir="$__cwd"
-_rootdir=/
+_rootdir=/tmp/xbroot/ROOT
+
