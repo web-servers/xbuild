@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-TARGET=jb-ep-5-win-candidate
+TARGET=jb-ep-6-win-candidate
 VM=jboss-natives-20110516-1
 CMD=win-build
 for o
