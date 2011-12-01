@@ -81,6 +81,8 @@ publish_execute()
                 mkdir -p "$d/src"
                 md5sum -b $s > "$d/src/$s.md5"
                 mv $s "$d/src/"
+            else
+                rm -f $s
             fi
 
         fi

@@ -215,6 +215,7 @@ prep_execute()
         copyosfiles
         cd "$_sourcedir"
         gensourceinfo $name
+        rm -f "$_outputdir/$NVR.src.zip" 2>/dev/null || true
         zip -9zry$q "$_outputdir/$NVR.src.zip" . -x *.tar.* *.tgz *.rpm < /tmp/.zipinfo
     )
     return 0

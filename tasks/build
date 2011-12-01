@@ -147,6 +147,7 @@ build_execute()
                 cd opt
                 a="`echo $a | sed 's;opt/;;g'`"
             fi
+            rm -f "$_outputdir/$NVRA.zip" 2>/dev/null || true
             zip -9zry$q "$_outputdir/$NVRA.zip" $a < /tmp/.zipinfo
             test $? -ne 0 && exit 1
         fi
@@ -187,6 +188,7 @@ build_execute()
                 cd opt
                 a="`echo $a | sed 's;opt/;;g'`"
             fi
+            rm -f "$_outputdir/$NDVRA.zip" 2>/dev/null || true
             zip -9ry$q "$_outputdir/$NDVRA.zip" $a < /tmp/.zipinfo
         fi
         return 0
