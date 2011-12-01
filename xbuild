@@ -263,6 +263,7 @@ EOH
 esac
 $ECHO "$task started"
 include specfile
+test ".$name" = . && xbexit 1 "missing package name"
 
 if [ .$task = .make ]
 then
