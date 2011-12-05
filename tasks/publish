@@ -65,8 +65,8 @@ publish_execute()
                 if [ -f "$d/$_arch/$i" ]
                 then
                     $ECHO "$i already present in \`$d/$_arch'"
-                    $ECHO "use --force to override."
-                    continue
+#                    $ECHO "use --force to override."
+#                    continue
                 fi
                 md5sum -b $i > "$d/$_arch/$i.md5"
                 mv $i "$d/$_arch/"
