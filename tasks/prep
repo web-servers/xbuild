@@ -31,7 +31,12 @@ downloadsources()
 {
     test -s sources || return 0
     IFS=$__lf
-    s=`cat sources 2>/dev/null`
+    if [ -s sources.$_os ]
+    then
+        s=`cat sources.$_os 2>/dev/null`
+    else
+        s=`cat sources 2>/dev/null`
+    fi
     for i in $s
     do
         IFS=$__ifs
@@ -40,7 +45,7 @@ downloadsources()
             h=`echo $i | $__awk '{print $1}'`
             p=`echo $i | $__awk '{print $2}'`
             u=http://cvs.devel.redhat.com/repo/dist/$name/$p/$h/$p
-            if [ ! -e "$p" ]
+            if [ ! -s "$p" ]
             then
                 $ECHO "download: \`$u'"
                 wget --tries=0 --quiet $u
@@ -56,13 +61,23 @@ downloadsources()
                 *.tar.lzma|*.xz )
                     d=$__xz
                 ;;
+                *.zip )
+                    d=unzip
+                ;;
                 * )
                     xbexit 1 "cannot determine compression algorithm for \`$p'"
                 ;;
             esac
-            test ".$has_verbose" = .yes && v=-xvvf || v=-xf
-            $ECHO "$d -cd $p | $__tar $v -"
-            $d -cd $p | $__tar $v -
+            if [ "$d" = "unzip" ]
+            then
+                test ".$has_verbose" = .yes && v=-o || v=-oq
+                $ECHO "unzip $v $p"
+                unzip $v $p
+            else
+                test ".$has_verbose" = .yes && v=-xvvf || v=-xf
+                $ECHO "$d -cd $p | $__tar $v -"
+                $d -cd $p | $__tar $v -
+            fi
         )
         test $? -ne 0 && xbexit 1 "failed to uncompress \`$p'"
     done
@@ -90,7 +105,7 @@ applypatches()
     do
         p=`echo "$i" | $__sed 's/[pP]atch\([0-9]*\).*/\1/'`
         v=`echo "$i" | $__sed 's/\w*:[[:blank:]]*//'`
-        r=`$__grep -e '^%patch'$p'[[:blank:]]' -e '%ifos ' -e '%endif'\
+        r=`$__grep -e '^%patch'$p'[[:blank:]]' -e '%ifos ' -e '%ifnos ' -e '%endif'\
            $specfile | $__sed -e 's/[[:blank:]]*%//' -e 's/patch[0-9]*[[:blank:]]*//'`
         if [ ".$r" = "." ]
         then
@@ -106,6 +121,11 @@ applypatches()
                     ifos* )
                         o=`echo $x | $__sed 's/ifos[[:blank:]]*//'`
                         test ".$o" != ".$_os" && z=false
+                        continue
+                    ;;
+                    ifnos* )
+                        o=`echo $x | $__sed 's/infos[[:blank:]]*//'`
+                        test ".$o" = ".$_os" && z=false
                         continue
                     ;;
                     endif )
@@ -216,7 +236,8 @@ prep_execute()
         cd "$_sourcedir"
         gensourceinfo $name
         rm -f "$_outputdir/$NVR.src.zip" 2>/dev/null || true
-        zip -9zry$q "$_outputdir/$NVR.src.zip" . -x *.tar.* *.tgz *.rpm < /tmp/.zipinfo
+        test ".$has_verbose" = .yes && q="" || q=q
+        zip -9zry$q "$_outputdir/$NVR.src.zip" . -x *.tar.* *.tgz *.rpm *.zip < /tmp/.zipinfo
     )
     return 0
 }
