@@ -9,9 +9,8 @@ branch=JB-EP-6-XB
 for o
 do
     case "$o" in
-        --tgz )
+        -d|--di* )
             distro=yes
-            sources=yes
             shift
         ;;
         -s|--so* )
