@@ -45,6 +45,7 @@ depends_prepare()
             a="`cat $p/.${_os_c}repo | grep "$i" | head -1`"
             if [ ".$a" = . ]
             then
+                echo "Mising dependency: \`$i'"
                 continue
             fi
             v="`echo $a | awk '{print $2;}'`"

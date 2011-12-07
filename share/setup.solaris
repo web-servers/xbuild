@@ -21,6 +21,11 @@
 # Solaris specific setup
 #
 
+if [ ! -f "$JAVA_HOME/include/jni.h" ]
+then
+    JAVA_HOME=/usr/java
+    export JAVA_HOME
+fi
 __java=$JAVA_HOME/bin/java
 __javac=$JAVA_HOME/bin/javac
 unset LD_LIBRARY_PATH
