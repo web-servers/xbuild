@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 n=distcvs-`date +%F`
 sources=no
