@@ -68,9 +68,12 @@ publish_execute()
                     $ECHO "overwritting \`$i'"
                 fi
                 md5sum -b $i > "$d/$_arch/$i.md5"
-                echo '<blockquote><pre>' > "$d/$_arch/README.html"
-                unzip -z $i >> >> "$d/$_arch/README.html"
-                echo '</pre></blockquote>' >> "$d/$_arch/README.html"
+                if [ "$i" = "$NVRA" ]
+                then
+                    echo '<blockquote><pre>' > "$d/$_arch/README.html"
+                    unzip -z $i >> >> "$d/$_arch/README.html"
+                    echo '</pre></blockquote>' >> "$d/$_arch/README.html"
+                fi
                 mv -f $i "$d/$_arch/"
             fi
             
