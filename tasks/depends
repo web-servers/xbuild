@@ -50,6 +50,12 @@ depends_prepare()
             fi
             v="`echo $a | awk '{print $2;}'`"
             r="`echo $a | awk '{print $3;}'`"
+            if [ ! -f "$p/$i/$v/$r/$_arch/$i-$v-$r.$_arch.zip" ]
+            then
+                echo "Mising dependency file: \`$i-$v-$r.$_arch.zip'"
+                echo ""
+                exit 1
+            fi
             cp "$p/$i/$v/$r/$_arch/$i-$v-$r.$_arch.zip" "$_buildreqsdir"
             cp "$p/$i/$v/$r/$_arch/$i-devel-$v-$r.$_arch.zip" "$_buildreqsdir" 2>/dev/null
         done
