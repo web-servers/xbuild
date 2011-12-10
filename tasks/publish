@@ -68,13 +68,15 @@ publish_execute()
                     $ECHO "overwritting \`$i'"
                 fi
                 md5sum -b $i > "$d/$_arch/$i.md5"
+                mv -f $i "$d/$_arch/"
                 if [ "$i" = "$NVRA" ]
                 then
-                    echo '<blockquote><pre>' > "$d/$_arch/README.html"
-                    unzip -z $i >> >> "$d/$_arch/README.html"
-                    echo '</pre></blockquote>' >> "$d/$_arch/README.html"
+                    pushd "$d/$_arch/"
+                    echo '<blockquote><pre>' > README.html
+                    unzip -z $i >> README.html
+                    echo '</pre></blockquote>' >> README.html
+                    popd
                 fi
-                mv -f $i "$d/$_arch/"
             fi
             
         done
@@ -88,10 +90,12 @@ publish_execute()
             fi
             mkdir -p "$d/src"
             md5sum -b $s > "$d/src/$s.md5"
-            echo '<blockquote><pre>' > "$d/src/README.html"
-            unzip -z $i >> >> "$d/$_arch/README.html"
-            echo '</pre></blockquote>' >> "$d/src/README.html"
             mv -f $s "$d/src/"
+            pushd "$d/src/"
+            echo '<blockquote><pre>' > README.html
+            unzip -z $i >> README.html
+            echo '</pre></blockquote>' >> README.html
+            popd
         fi
         addtorepo "$r"
     )
