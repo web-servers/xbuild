@@ -21,7 +21,7 @@
 # Contains all default variables
 #
 
-XB_VERSION=2.0.1
+XB_VERSION=2.0.3
 ECHO=:
 # String constants
 __tab="	"

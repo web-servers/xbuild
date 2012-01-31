@@ -4,8 +4,9 @@ n=distgit-`date +%F`
 sources=no
 distro=no
 dclear=no
-dmaint=no
+dmaint=yes
 branch=jb-ep-6-xb
+lookaside=http://pkgs.devel.redhat.com/repo/pkgs
 
 for o
 do
@@ -22,8 +23,8 @@ do
             dclear=yes
             shift
         ;;
-        -m|--ma* )
-            dmaint=yes
+        -a|--anon* )
+            dmaint=no
             shift
         ;;
         * )
@@ -43,8 +44,10 @@ if [ .$dmaint = .no ]
 then
     rpms="git://pkgs.devel.redhat.com/rpms"
 else
-    rpms="ssh://pkgs.devel.redhat.com/rpms"
+    rpms="ssh://$USERNAME@pkgs.devel.redhat.com/rpms"
 fi
+
+test -f .branch || echo $branch > .branch
 
 for i in $d
 do
@@ -53,18 +56,18 @@ do
         rm -rf $i 2>/dev/null || true
         continue
     fi
-    if [ -d $i/$branch/.git ]
+    if [ -d $i/.git ]
     then
-        pushd $i/$branch
+        pushd $i
         git pull
         popd
     else
-        git clone -b $branch $rpms/$i $i/$branch
+        git clone -b $branch $rpms/$i $i
     fi
 
-    if [ .$sources = .yes -a -d $i/$branch ]
+    if [ .$sources = .yes -a -d $i ]
     then
-        pushd $i/$branch
+        pushd $i
         make sources
         popd
     fi
