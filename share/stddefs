@@ -60,7 +60,6 @@ __year=`date +%Y`
 __month=`date +%m`
 __mday=`date +%d`
 __cwd="`pwd`"
-__tag_name=`basename "$__cwd"`
 o="`uname -s | tr '[A-Z]' '[a-z]' | sed 's/[^[:alnum:]].*//'`"
 case ".$o" in
     .cygwin ) include stddefs.windows ;;

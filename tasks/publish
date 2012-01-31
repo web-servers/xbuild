@@ -78,7 +78,7 @@ publish_execute()
                     popd
                 fi
             fi
-            
+
         done
         s=$NVR.src.zip
         if [ -f $s ]
@@ -99,5 +99,5 @@ publish_execute()
         fi
         addtorepo "$r"
     )
-    return $?    
+    return $?
 }

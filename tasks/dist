@@ -34,7 +34,7 @@ dist_execute()
 {
     $ECHO "dist execute"
     (
-        files=        
+        files=
         cd "$_builddir/$_source.$_arch"
         for i in $name.${_os_c}dist $name.install
         do
@@ -51,5 +51,5 @@ dist_execute()
         fi
         return 0
     )
-    return $?    
+    return $?
 }

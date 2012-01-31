@@ -44,7 +44,7 @@ downloadsources()
             cd "$_sourcedir"
             h=`echo $i | $__awk '{print $1}'`
             p=`echo $i | $__awk '{print $2}'`
-            u=http://cvs.devel.redhat.com/repo/dist/$name/$p/$h/$p
+            u=http://http://pkgs.devel.redhat.com/repo/pkgs/$name/$p/$h/$p
             if [ ! -s "$p" ]
             then
                 $ECHO "download: \`$u'"
@@ -91,8 +91,9 @@ copysources()
         cd "$_sourcedir"
         $__tar -xf x.tar
         rm -f x.tar 2>/dev/null
-        rm -rf CVS
-        rm -f .cvsignore
+        rm -rf .git 2>/dev/null
+        rm -f .gitignore 2>/dev/null
+        rm -f .gitattributes 2>/dev/null
     )
     return 0
 }
