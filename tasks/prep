@@ -44,7 +44,7 @@ downloadsources()
             cd "$_sourcedir"
             h=`echo $i | $__awk '{print $1}'`
             p=`echo $i | $__awk '{print $2}'`
-            u=http://http://pkgs.devel.redhat.com/repo/pkgs/$name/$p/$h/$p
+            u=http://pkgs.devel.redhat.com/repo/pkgs/$name/$p/$h/$p
             if [ ! -s "$p" ]
             then
                 $ECHO "download: \`$u'"
