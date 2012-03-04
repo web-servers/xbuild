@@ -34,7 +34,8 @@ do
 done
 
 d="xbuild cyrus-sasl db4 httpd jakarta-commons-daemon \
-    jboss-eap-native jboss-ews-dist krb5 libiconv \
+    jboss-eap-native jboss-eap-native-webserver-connectors \
+    jboss-eap-native-utils jboss-ews-dist krb5 libiconv \
     mod_auth_kerb mod_cluster mod_cluster-native mod_jk mod_nss \
     nspr nss nss-softokn nss-util \
     openldap openssl sqlite \
