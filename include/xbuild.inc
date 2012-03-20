@@ -1,4 +1,4 @@
-# Copyright(c) 2011 Red Hat, Inc.
+# Copyright(c) 2012 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -235,7 +235,7 @@ COMMON_LFLAGS = /NOLOGO
 # Always add debugging to the linker
 OPT_LFLAGS = /INCREMENTAL:NO /DEBUG
 !IF "$(BUILD)" == "RELEASE"
-OPT_LFLAGS = /OPT:REF
+OPT_LFLAGS = $(OPT_LFLAGS) /OPT:REF
 !ENDIF
 
 !IF "$(TARGET)" == "EXE"
