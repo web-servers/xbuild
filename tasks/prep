@@ -125,7 +125,7 @@ applypatches()
                         continue
                     ;;
                     ifnos* )
-                        o=`echo $x | $__sed 's/infos[[:blank:]]*//'`
+                        o=`echo $x | $__sed 's/ifnos[[:blank:]]*//'`
                         test ".$o" = ".$_os" && z=false
                         continue
                     ;;
