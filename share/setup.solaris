@@ -63,7 +63,7 @@ case "$_arch" in
 esac
 test ".$ANT_HOME" = . && ANT_HOME=/qa/tools/opt/apache-ant-1.8.1
 export ANT_HOME
-PATH=/opt/SUNWspro/bin:/opt/csw/gnu:/opt/csw/bin/$_arch_sun:/opt/csw/bin:/bin:/usr/xpg4/bin:/usr/X/bin:/usr/bin:/usr/ccs/bin/$_arch_sun:/usr/ccs/bin:/usr/ucb:$ANT_HOME/bin:/etc:.
+PATH=$JAVA_HOME/bin:/opt/SUNWspro/bin:/opt/csw/gnu:/opt/csw/bin/$_arch_sun:/opt/csw/bin:/bin:/usr/xpg4/bin:/usr/X/bin:/usr/bin:/usr/ccs/bin/$_arch_sun:/usr/ccs/bin:/usr/ucb:$ANT_HOME/bin:/etc:.
 export PATH
 
 # XXX: Check if we can install to /opt
