@@ -103,6 +103,25 @@ depends_execute()
             echo "--- content of buildrequires ---"
             tree "$_buildreqsdir" 2>/dev/null
         fi
+        $ECHO "Finding .rpm file dependencies ..."
+        d="`find "$_buildreqsdir" -name '*.rpm' -type f 2>/dev/null`"
+        if [ ".$d" != . ]
+        then
+            for i in $d
+            do
+                IFS=$__ifs
+                case "$i" in
+                    *.$_arch.*  )
+                        $ECHO "Archive: \`$i'"
+                        unrpm "$i" .
+                    ;;
+                    *.noarch.*  )
+                        $ECHO "Archive: \`$i'"
+                        unrpm "$i" .
+                    ;;
+                esac
+            done
+        fi
         $ECHO "Finding .zip file dependencies ..."
         IFS=$__lf
         d="`find "$_buildreqsdir" -name '*.zip' -type f 2>/dev/null`"
@@ -151,25 +170,8 @@ depends_execute()
                 esac
             done
         fi
-        $ECHO "Finding .rpm file dependencies ..."
-        d="`find "$_buildreqsdir" -name '*.rpm' -type f 2>/dev/null`"
-        if [ ".$d" != . ]
-        then
-            for i in $d
-            do
-                IFS=$__ifs
-                case "$i" in
-                    *.$_arch.*  )
-                        $ECHO "Archive: \`$i'"
-                        unrpm "$i" .
-                    ;;
-                    *.noarch.*  )
-                        $ECHO "Archive: \`$i'"
-                        unrpm "$i" .
-                    ;;
-                esac
-            done
-        fi
+        $ECHO "Finished ..."
+        return 0;
     )
 }
 
