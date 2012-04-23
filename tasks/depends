@@ -59,9 +59,37 @@ depends_prepare()
             cp "$p/$i/$v/$r/$_arch/$i-$v-$r.$_arch.zip" "$_buildreqsdir"
             cp "$p/$i/$v/$r/$_arch/$i-devel-$v-$r.$_arch.zip" "$_buildreqsdir" 2>/dev/null
         done
+        return 0;
         )
+        test $? -ne 0 && exit 1
     fi
-    return 0
+    (
+        c="curl -H Pragma: -O -R -S --fail --show-error --insecure"
+        IFS=$__lf
+        d=`grep -i '^#rpm-buildrequires:' $specfile | sed 's/#rpm-buildrequires: //'`
+        for i in $d
+        do
+            if [ ! -d "$_buildreqsdir" ]
+            then
+                mkdir -p $_buildreqsdir 2>/dev/null || true
+            fi
+            if [ ".$brew_release" = . ]
+            then
+                echo "Missing '%define brew_release ...' from spec file"
+                exit 1
+            fi
+            (
+                p="$name/$version/$brew_release/$brew_arch/$i-$version-$brew_release.$brew_arch.rpm"
+                $ECHO "Dependency: \`$p'"
+                cd $_buildreqsdir
+                eval $c http://download.devel.redhat.com/brewroot/packages/$p
+                return $?
+            )
+            test $? -ne 0 && exit 1
+        done
+        return 0;
+    )
+    return $?
 }
 
 depends_execute()
@@ -72,6 +100,7 @@ depends_execute()
         test -d "$_buildreqsdir" || return 0
         if [ .$has_verbose = .yes ]
         then
+            echo "--- content of buildrequires ---"
             tree "$_buildreqsdir" 2>/dev/null
         fi
         $ECHO "Finding .zip file dependencies ..."
