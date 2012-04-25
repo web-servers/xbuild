@@ -44,7 +44,7 @@ d="xbuild cyrus-sasl db4 httpd jakarta-commons-daemon \
     mod_auth_kerb mod_cluster mod_cluster-native mod_jk mod_nss \
     mod_rt mod_snmp nspr nss nss-softokn nss-util \
     openldap openssl sqlite \
-    tanukiwrapper tomcat-native zlib"
+    tanukiwrapper tomcat6 tomcat7 tomcat-native zlib"
 
 if [ .$dmaint = .no ]
 then
@@ -71,10 +71,15 @@ do
         git clone -b $branch $rpms/$i $i
     fi
 
-    if [ .$sources = .yes -a -d $i ]
+    if [ .$sources = .yes -a -s $i/sources ]
     then
         pushd $i
-        make sources
+        if [ -f Makefile ]
+        then
+            make sources
+        else
+            rhpkg sources
+        fi
         popd
     fi
     echo "Updated: \`$i'"
