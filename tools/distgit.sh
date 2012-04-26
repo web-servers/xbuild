@@ -38,7 +38,7 @@ do
     esac
 done
 
-d="xbuild cyrus-sasl db4 httpd jakarta-commons-daemon \
+d="cyrus-sasl db4 httpd jakarta-commons-daemon \
     jboss-eap-native jboss-eap-native-webserver-connectors \
     jboss-eap-native-utils jboss-ews-dist jboss-logging krb5 libiconv \
     mod_auth_kerb mod_cluster mod_cluster-native mod_jk mod_nss \
@@ -54,6 +54,22 @@ else
 fi
 
 test -f .branch || echo $branch > .branch
+
+i=xbuild
+if [ -d $i/.git ]
+then
+    pushd $i
+    git pull
+    popd
+else
+    git clone -b $branch $rpms/$i $i
+fi
+if [ .$sources = .yes ]
+then
+    pushd $i
+    make xbuild
+    popd
+fi
 
 for i in $d
 do
