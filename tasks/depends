@@ -42,7 +42,7 @@ depends_prepare()
         for i in $d
         do
             $ECHO "Dependency: \`$i'"
-            a="`cat $p/.${_os_c}repo | grep "$i" | head -1`"
+            a="`cat $p/.${_os_c}repo | grep "$i"' .*'"$dist" | head -1`"
             if [ ".$a" = . ]
             then
                 echo "Mising dependency: \`$i'"
