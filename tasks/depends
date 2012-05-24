@@ -82,8 +82,14 @@ depends_prepare()
                 p="$name/$version/$brew_release/$brew_arch/$i-$version-$brew_release.$brew_arch.rpm"
                 $ECHO "Dependency: \`$p'"
                 cd $_buildreqsdir
-                eval $c http://download.devel.redhat.com/brewroot/packages/$p
-                return $?
+                if [ -r $i-$version-$brew_release.$brew_arch.rpm ]
+                then
+                    $ECHO "Reusing: \`$p'"
+                    return 0
+                else
+                    eval $c http://download.devel.redhat.com/brewroot/packages/$p
+                    return $?
+                fi
             )
             test $? -ne 0 && exit 1
         done
