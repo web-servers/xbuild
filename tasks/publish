@@ -98,6 +98,10 @@ publish_execute()
             popd
         fi
         addtorepo "$r"
+        if [ -r "$_outputdir/build.log" ]
+        then
+            cp "$_outputdir/build.log" "$d/$_arch/"
+        fi
     )
     return $?
 }
