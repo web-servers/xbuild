@@ -148,7 +148,7 @@ build_execute()
                 a="`echo $a | sed 's;opt/;;g'`"
             fi
             rm -f "$_outputdir/$NVRA.zip" 2>/dev/null || true
-            zip -9zry$q "$_outputdir/$NVRA.zip" $a < /tmp/.zipinfo
+            zip -9zry$q "$_outputdir/$NVRA.zip" $a -x devel < /tmp/.zipinfo
             test $? -ne 0 && exit 1
         fi
         if [ ".$files_devel" != . ]
