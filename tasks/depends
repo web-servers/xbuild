@@ -127,7 +127,7 @@ depends_execute()
                         unrpm "$i" .
                     ;;
                 esac
-                z=`basename "$i" | sed "s;\.$_arch.*;;" | sed "s;\.noarch.*;;"`
+                z=`basename "$i" | sed "s;\.sun[0-9].*;;" | sed "s;\.win[0-9].*;;"`
                 z=`echo $z | grep -v '\-devel'`
                 test ".$z" != . && echo "$z" >>/tmp/.zipdeps
             done
@@ -158,7 +158,7 @@ depends_execute()
                         unzip -o$q "$i"
                     ;;
                 esac
-                z=`basename "$i" | sed "s;\.$_arch.*;;" | sed "s;\.noarch.*;;"`
+                z=`basename "$i" | sed "s;\.sun[0-9].*;;" | sed "s;\.win[0-9].*;;"`
                 z=`echo $z | grep -v '\-devel'`
                 test ".$z" != . && echo "$z" >>/tmp/.zipdeps
             done
