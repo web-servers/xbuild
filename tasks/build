@@ -61,7 +61,7 @@ TIMESTAMP:    `date -R`
 COMPILER:     `ccversion`
 EOH
 
-for i in $depends
+for i in `cat /tmp/.zipdeps 2>/dev/null`
 do
 echo "DEPENDENCY:   $i" >> /tmp/.zipinfo
 done

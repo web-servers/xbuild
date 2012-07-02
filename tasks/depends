@@ -30,6 +30,7 @@ depends_prepare()
     then
         newdir "$_rootdir"
     fi
+    rm -f /tmp/.zipdeps 2>/dev/null || true
     if [ ".$_host_os" = .solaris ]
     then
         s="/home/shared"
@@ -128,7 +129,7 @@ depends_execute()
                 esac
                 z=`basename "$i" | sed "s;\.$_arch.*;;" | sed "s;\.noarch.*;;"`
                 z=`echo $z | grep -v '\-devel'`
-                depends="$depends $z"
+                test ".$z" != . && echo "$z" >>/tmp/.zipdeps
             done
         fi
         $ECHO "Finding .zip file dependencies ..."
@@ -159,7 +160,7 @@ depends_execute()
                 esac
                 z=`basename "$i" | sed "s;\.$_arch.*;;" | sed "s;\.noarch.*;;"`
                 z=`echo $z | grep -v '\-devel'`
-                depends="$depends $z"
+                test ".$z" != . && echo "$z" >>/tmp/.zipdeps
             done
         fi
         $ECHO "Finding .tgz file dependencies ..."
