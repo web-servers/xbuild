@@ -126,6 +126,9 @@ depends_execute()
                         unrpm "$i" .
                     ;;
                 esac
+                z=`basename "$i" | sed "s;\.$_arch.*;;" | sed "s;\.noarch.*;;"`
+                z=`echo $z | grep -v '\-devel'`
+                depends="$depends $z"
             done
         fi
         $ECHO "Finding .zip file dependencies ..."
@@ -154,6 +157,9 @@ depends_execute()
                         unzip -o$q "$i"
                     ;;
                 esac
+                z=`basename "$i" | sed "s;\.$_arch.*;;" | sed "s;\.noarch.*;;"`
+                z=`echo $z | grep -v '\-devel'`
+                depends="$depends $z"
             done
         fi
         $ECHO "Finding .tgz file dependencies ..."

@@ -59,6 +59,14 @@ SOURCE RPM:   $NVR.src.zip
 URL:          $origin
 TIMESTAMP:    `date -R`
 COMPILER:     `ccversion`
+EOH
+
+for i in $depends
+do
+echo "DEPENDENCY:   $i" >> /tmp/.zipinfo
+done
+
+    cat >> /tmp/.zipinfo <<EOH
 DESCRIPTION:
 `description $2`
 CHANGELOG:
