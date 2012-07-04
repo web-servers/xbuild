@@ -21,19 +21,84 @@
 # Extract source and header files info from the .dsp
 #
 #
-dos2unix -n $1 $1.tmp
+dos2unix -n $1 $1.tmp 2>/dev/null
+cat $1.tmp | sed 's;^SOURCE=\"\(.*\)\";SOURCE=\1;g' > $1.unm
+mv $1.unm $1.tmp
 sIFS=$IFS
 IFS="
 "
 
 dll="`grep 'out:.*\.dll' $1.tmp | head -1 | sed 's;.*[/\\]\(.*\.dll\).*;\1;' | sed 's;\.dll;;'`"
 lib="`grep 'out:.*\.lib' $1.tmp | head -1 | sed 's;.*[/\\]\(.*\.lib\).*;\1;' | sed 's;\.lib;;'`"
+exe="`grep 'out:.*\.exe' $1.tmp | head -1 | sed 's;.*[/\\]\(.*\.exe\).*;\1;' | sed 's;\.exe;;'`"
 printf "\n"
 test ".$dll" != "." && echo "DLL_NAME=$dll"
 test ".$lib" != "." && echo "LIB_NAME=$lib"
+test ".$exe" != "." && echo "EXE_NAME=$exe"
 printf "\n"
+i=n
+d=n
+defs=""
+incs=""
+acpp="`cat $1.tmp | grep ' CPP ' | head -2`"
+IFS=$sIFS
+for e in $acpp
+do
+    if [ $d = y ]
+    then
+        e=`echo $e | sed 's;";;g'`
+        h=`echo "$defs" | grep "\-D$e "`
+        test ".$h" = . && defs="$defs -D$e"
+        d=n
+    fi
+    if [ $i = y ]
+    then
+        e=`echo $e | sed 's;";;g'`
+        test ".$h" = . && h=`echo "$incs" | grep " $e "`
+        incs="$incs $e"
+        i=n
+    fi
+    test ".$e" = "./I" && i=y ;
+    test ".$e" = "./D" && d=y ;
 
-printf 'OBJECTS ='
+done
+printf 'INCLUDES = '
+for i in $incs
+do
+    printf " \\\\\n\t-I %s" $i
+done
+printf "\n\n"
+echo "DEFINES = $defs"
+echo ""
+
+libs=""
+libp=""
+acpp="`cat $1.tmp | grep ' LINK32 ' | head -2`"
+IFS=$sIFS
+for e in $acpp
+do
+    case $e in
+        *.lib )
+            h=`echo "$libs" | grep " $e"`
+            test ".$h" = . && libs="$libs $e"
+        ;;
+        /libpath:* )
+            e=`echo $e | sed 's;";;g'`
+            h=`echo "$libp" | grep " $e"`
+            test ".$h" = . && libp="$libp $e"
+        ;;
+        * )
+        ;;
+    esac
+done
+echo "LDDLIBS = $libs"
+echo ""
+echo "LIBPATH = $libp"
+echo ""
+
+printf "OBJECTS ="
+IFS="
+"
 for i in `grep -e '^SOURCE=.*\.c$' -e '^SOURCE=.*\.c"$' $1.tmp`
 do
     IFS=$sIFS
