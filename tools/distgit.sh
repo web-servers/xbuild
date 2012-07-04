@@ -41,9 +41,8 @@ done
 d="cyrus-sasl db4 httpd jakarta-commons-daemon \
     jboss-eap-native jboss-eap-native-webserver-connectors \
     jboss-eap-native-utils jboss-ews jboss-logging krb5 libiconv \
-    mod_auth_kerb mod_cluster mod_cluster-native mod_jk mod_nss \
-    mod_rt mod_snmp nspr nss nss-softokn nss-util \
-    openldap openssl sqlite \
+    mod_auth_kerb mod_cluster mod_cluster-native mod_jk \
+    mod_rt mod_snmp openldap openssl sqlite \
     tomcat6 tomcat7 tomcat-native zlib"
 
 if [ .$dmaint = .no ]
