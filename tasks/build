@@ -61,10 +61,17 @@ TIMESTAMP:    `date -R`
 COMPILER:     `ccversion`
 EOH
 
+d=""
 for i in `cat /tmp/.zipdeps 2>/dev/null`
 do
-echo "DEPENDENCY:   $i" >> /tmp/.zipinfo
+    if [ ".$d" = . ]
+    then
+        d="$i"
+    else
+        d="$d, $i"
+    fi
 done
+test ".$d" != . && echo "DEPENDENCIES: $i" >> /tmp/.zipinfo
 
     cat >> /tmp/.zipinfo <<EOH
 DESCRIPTION:
