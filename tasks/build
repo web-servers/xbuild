@@ -71,7 +71,7 @@ do
         d="$d, $i"
     fi
 done
-test ".$d" != . && echo "DEPENDENCIES: $i" >> /tmp/.zipinfo
+test ".$d" != . && echo "DEPENDENCIES: $d" >> /tmp/.zipinfo
 
     cat >> /tmp/.zipinfo <<EOH
 DESCRIPTION:
