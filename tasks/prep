@@ -92,8 +92,7 @@ copysources()
         $__tar -xf x.tar
         rm -f x.tar 2>/dev/null
         rm -rf .git 2>/dev/null
-        rm -f .gitignore 2>/dev/null
-        rm -f .gitattributes 2>/dev/null
+        rm -f .git* 2>/dev/null
     )
     return 0
 }
@@ -236,9 +235,15 @@ prep_execute()
         copyosfiles
         cd "$_sourcedir"
         gensourceinfo $name
-        rm -f "$_outputdir/$NVR.src.zip" 2>/dev/null || true
+        cd ..
+        cp -R SOURCES $name
+        cd $name
+        rm -f *.tar.* *.tgz *.rpm *.zip  2>/dev/null || true
+        rm -f "$_outputdir/$NVR.$dist.src.zip" 2>/dev/null || true
+        cd ..
         test ".$has_verbose" = .yes && q="" || q=q
-        zip -9zry$q "$_outputdir/$NVR.src.zip" . -x *.tar.* *.tgz *.rpm *.zip < /tmp/.zipinfo
+        zip -9zry$q "$_outputdir/$NVR.$dist.src.zip" $name < /tmp/.zipinfo
+        rm -rf $name 2>/dev/null || true
     )
     return 0
 }
