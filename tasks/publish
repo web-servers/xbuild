@@ -80,7 +80,7 @@ publish_execute()
             fi
 
         done
-        s=$NVR.$dist.src.zip
+        s=$NVR.src.zip
         if [ -f $s ]
         then
             if [ -f "$d/src/$s" ]

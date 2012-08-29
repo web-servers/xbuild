@@ -239,10 +239,10 @@ prep_execute()
         cp -R SOURCES $name
         cd $name
         rm -f *.tar.* *.tgz *.rpm *.zip  2>/dev/null || true
-        rm -f "$_outputdir/$NVR.$dist.src.zip" 2>/dev/null || true
+        rm -f "$_outputdir/$NVR.src.zip" 2>/dev/null || true
         cd ..
         test ".$has_verbose" = .yes && q="" || q=q
-        zip -9zry$q "$_outputdir/$NVR.$dist.src.zip" $name < /tmp/.zipinfo
+        zip -9zry$q "$_outputdir/$NVR.src.zip" $name < /tmp/.zipinfo
         rm -rf $name 2>/dev/null || true
     )
     return 0
