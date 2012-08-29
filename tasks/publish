@@ -24,7 +24,7 @@ _sharedroot="/home/shared"
 # Execute hooks
 publish_prepare()
 {
-    $ECHO "publish prepare \`$_source.$_arch'"    
+    $ECHO "publish prepare \`$_source.$_arch'"
     test -d "$_sharedroot" || _sharedroot="/export/home/shared"
     d="$_sharedroot/xbuildroot/packages"
     mkdir -p "$d"
@@ -80,7 +80,7 @@ publish_execute()
             fi
 
         done
-        s=$NVR.src.zip
+        s=$NVR.$dist.src.zip
         if [ -f $s ]
         then
             if [ -f "$d/src/$s" ]
