@@ -128,7 +128,7 @@ depends_execute()
                         unrpm "$i" .
                     ;;
                 esac
-                z=`basename "$i" | sed "s;\.ep[0-9].*;;""`
+                z=`basename "$i" | sed "s;\.ep[0-9].*;;"`
                 z=`echo $z | grep -v '\-devel' | grep -v '\-src-'`
                 test ".$z" != . && echo "$z" >>/tmp/.zipdeps
             done
