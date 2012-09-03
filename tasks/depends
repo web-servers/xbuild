@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright(c) 2011 Red Hat, Inc.
+# Copyright(c) 2012 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,7 @@ depends_prepare()
     then
         newdir "$_rootdir"
     fi
+    newdir "$_buildsrcsdir"
     rm -f /tmp/.zipdeps 2>/dev/null || true
     if [ ".$_host_os" = .solaris ]
     then
@@ -151,7 +152,10 @@ depends_execute()
                     *-spec.*   )
                         continue
                     ;;
-                    *.src.*    )
+                    *.src.zip  )
+                        pushd "$_buildsrcsdir"
+                        unzip -o$q "$i"
+                        popd
                         continue
                     ;;
                     *.$_arch.* )
