@@ -54,10 +54,18 @@ publish_execute()
     $ECHO "publish execute $r/$name/$version/$release/$_arch"
     (
         d="$r/$name/$version/$release"
-        if [ ".$has_force" = .yes ]; then
-            rm -rf "$r/$name/$version/$release"
+        if [ -f $NVRA.zip ]
+        then
+            if [ ".$has_force" = .yes ]
+            then
+                rm -rf "$r/$name/$version/$release"
+            fi
+            mkdir -p "$d/$_arch"
+            cp -f "$_outputdir/build.log" "$d/$_arch/" 2>/dev/null || true
+            echo '<blockquote><pre>' > "$d/$_arch/README.html"
+            unzip -z $i >> "$d/$_arch/README.html"
+            echo '</pre></blockquote>' >> "$d/$_arch/README.html"
         fi
-        mkdir -p "$d/$_arch"
         for i in $NVRA.zip $NDVRA.zip
         do
             if [ -f $i ]
@@ -69,25 +77,12 @@ publish_execute()
                 fi
                 md5sum -b $i > "$d/$_arch/$i.md5"
                 mv -f $i "$d/$_arch/"
-                if [ "$i" = "$NVRA.zip" ]
-                then
-                    pushd "$d/$_arch/"
-                    echo '<blockquote><pre>' > README.html
-                    unzip -z $i >> README.html
-                    echo '</pre></blockquote>' >> README.html
-                    popd
-                fi
             fi
 
         done
         s=$NVR.src.zip
         if [ -f $s ]
         then
-            if [ -f "$d/src/$s" ]
-            then
-                $ECHO "$s already present in \`$d/src'"
-                $ECHO "overwritting \`$s'"
-            fi
             mkdir -p "$d/src"
             md5sum -b $s > "$d/src/$s.md5"
             mv -f $s "$d/src/"
@@ -98,10 +93,6 @@ publish_execute()
             popd
         fi
         addtorepo "$r"
-        if [ -r "$_outputdir/build.log" ]
-        then
-            cp "$_outputdir/build.log" "$d/$_arch/"
-        fi
     )
     return $?
 }

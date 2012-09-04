@@ -153,9 +153,6 @@ depends_execute()
                         continue
                     ;;
                     *.src.zip  )
-                        pushd "$_buildsrcsdir"
-                        unzip -o$q "$i"
-                        popd
                         continue
                     ;;
                     *.$_arch.* )
@@ -188,6 +185,19 @@ depends_execute()
                         $__bzip2 -cd "$i" | $__tar -xf$q -
                     ;;
                 esac
+            done
+        fi
+        $ECHO "Finding .src.zip dependencies ..."
+        IFS=$__lf
+        d="`find "$_buildreqsdir" -name '*.src.zip' -type f 2>/dev/null`"
+        if [ ".$d" != . ]
+        then
+            cd "$_buildsrcsdir"
+            test .$has_verbose = .yes && q="" || q="q"
+            for i in $d
+            do
+                IFS=$__ifs
+                unzip -o$q "$i"
             done
         fi
         $ECHO "Finished ..."
