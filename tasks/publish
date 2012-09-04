@@ -63,7 +63,7 @@ publish_execute()
             mkdir -p "$d/$_arch"
             cp -f "$_outputdir/build.log" "$d/$_arch/" 2>/dev/null || true
             echo '<blockquote><pre>' > "$d/$_arch/README.html"
-            unzip -z $i >> "$d/$_arch/README.html"
+            unzip -z $NVRA.zip >> "$d/$_arch/README.html"
             echo '</pre></blockquote>' >> "$d/$_arch/README.html"
         fi
         for i in $NVRA.zip $NDVRA.zip
