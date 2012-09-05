@@ -60,6 +60,11 @@ depends_prepare()
             fi
             cp "$p/$i/$v/$r/$_arch/$i-$v-$r.$_arch.zip" "$_buildreqsdir"
             cp "$p/$i/$v/$r/$_arch/$i-devel-$v-$r.$_arch.zip" "$_buildreqsdir" 2>/dev/null
+            if [ -f "$p/$i/$v/$r/src/$i-$v-$r.src.zip" ]
+            then
+                $ECHO "Source: \`$i'"
+                cp "$p/$i/$v/$r/src/$i-$v-$r.src.zip" "$_buildreqsdir"
+            fi
         done
         return 0;
         )
