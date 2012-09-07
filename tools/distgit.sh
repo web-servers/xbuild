@@ -38,7 +38,7 @@ do
     esac
 done
 
-d="cyrus-sasl db4 httpd jakarta-commons-daemon \
+d="cyrus-sasl db4 httpd jakarta-commons-daemon jboss-eap \
     jboss-eap-native jboss-eap-native-webserver-connectors \
     jboss-eap-native-utils jboss-ews jboss-ews-application-servers \
     jboss-ews-httpd jboss-ews-webserver-connectors jboss-logging krb5 \
