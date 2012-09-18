@@ -71,7 +71,7 @@ depends_prepare()
         test $? -ne 0 && exit 1
     fi
     (
-        test ".$brew_arch" = . && brew_arch=noarch
+        test ".$brew_arch" = . && a=noarch || a=$brew_arch
         c="curl -H Pragma: -O -R -S --fail --show-error --insecure"
         IFS=$__lf
         d=`grep -i '^#rpm-buildrequires:' $specfile | sed 's/#rpm-buildrequires: //'`
@@ -87,7 +87,11 @@ depends_prepare()
                 mkdir -p $_buildreqsdir 2>/dev/null || true
             fi
             (
-                test ".$i" = ".src" && a=src || a=$brew_arch
+                if [ ".$i" = ".sources" ]
+                then
+                    i=$name
+                    a=src
+                fi
                 p="$name/$version/$brew_release/$a/$i-$version-$brew_release.$a.rpm"
                 $ECHO "Dependency: \`$p'"
                 cd $_buildreqsdir
