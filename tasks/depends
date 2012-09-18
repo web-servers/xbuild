@@ -71,25 +71,27 @@ depends_prepare()
         test $? -ne 0 && exit 1
     fi
     (
+        test ".$brew_arch" = . && brew_arch=noarch
         c="curl -H Pragma: -O -R -S --fail --show-error --insecure"
         IFS=$__lf
         d=`grep -i '^#rpm-buildrequires:' $specfile | sed 's/#rpm-buildrequires: //'`
         for i in $d
         do
-            if [ ! -d "$_buildreqsdir" ]
-            then
-                mkdir -p $_buildreqsdir 2>/dev/null || true
-            fi
             if [ ".$brew_release" = . ]
             then
                 echo "Missing '%define brew_release ...' from spec file"
                 exit 1
             fi
+            if [ ! -d "$_buildreqsdir" ]
+            then
+                mkdir -p $_buildreqsdir 2>/dev/null || true
+            fi
             (
-                p="$name/$version/$brew_release/$brew_arch/$i-$version-$brew_release.$brew_arch.rpm"
+                test ".$i" = ".src" && a=src || a=$brew_arch
+                p="$name/$version/$brew_release/$a/$i-$version-$brew_release.$a.rpm"
                 $ECHO "Dependency: \`$p'"
                 cd $_buildreqsdir
-                if [ -r $i-$version-$brew_release.$brew_arch.rpm ]
+                if [ -r $i-$version-$brew_release.$a.rpm ]
                 then
                     $ECHO "Reusing: \`$p'"
                     return 0
@@ -132,9 +134,14 @@ depends_execute()
                         $ECHO "Archive: \`$i'"
                         unrpm "$i" .
                     ;;
+                    *.src.*  )
+                        $ECHO "Sources: \`$i'"
+                        unrpm "$i" .
+                        continue
+                    ;;
                 esac
                 z=`basename "$i" | sed "s;\.ep[0-9].*;;"`
-                z=`echo $z | grep -v '\-devel' | grep -v '\-src-'`
+                z=`echo $z | grep -v '\devel' | grep -v '\-src-'`
                 test ".$z" != . && echo "$z" >>/tmp/.zipdeps
             done
         fi
