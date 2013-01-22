@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright(c) 2012 Red Hat, Inc.
+# Copyright(c) 2013 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -64,6 +64,24 @@ case "$s" in
         _os_r="$r"
         p=darwin
         d=osx
+    ;;
+    hp-ux   )
+        r="`echo $r | sed 's/[a-z]*\.//'`"
+        case "$r" in
+            11.23   )
+                r="2"
+            ;;
+            11.31   )
+                r="3"
+            ;;
+            *       )
+                r="0"
+            ;;
+        esac
+        _os_r="$r"
+        p=hpux
+        d=hpux
+        n=ia64
     ;;
     *       )
         p=$s
