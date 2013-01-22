@@ -32,7 +32,7 @@ depends_prepare()
     fi
     newdir "$_buildsrcsdir"
     rm -f /tmp/.zipdeps 2>/dev/null || true
-    if [ ".$_host_os" = .solaris ]
+    if [ ".$_host_os" = .solaris -o ".$_host_os" = .hpux ]
     then
         s="/home/shared"
         test -d "$s" || s="/export/home/shared"
@@ -40,7 +40,7 @@ depends_prepare()
         newdir "$_buildreqsdir"
         (
         IFS=$__lf
-        d=`grep -i '^#sun-buildrequires:' $specfile | sed 's/#sun-buildrequires: //'`
+        d=`grep -i -e "^#${_os_c}-buildrequires:" -e "^#unx-buildrequires:" $specfile | sed "s/#.*-buildrequires: //"`
         for i in $d
         do
             $ECHO "Dependency: \`$i'"
@@ -178,7 +178,7 @@ depends_execute()
                         unzip -o$q "$i"
                     ;;
                 esac
-                z=`basename "$i" | sed "s;\.sun[0-9].*;;" | sed "s;\.win[0-9].*;;"`
+                z=`basename "$i" | sed "s;\.hpux[0-9].*;;" | sed "s;\.sun[0-9].*;;" | sed "s;\.win[0-9].*;;"`
                 z=`echo $z | grep -v '\-devel'`
                 test ".$z" != . && echo "$z" >>/tmp/.zipdeps
             done
