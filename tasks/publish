@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright(c) 2012 Red Hat, Inc.
+# Copyright(c) 2013 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,14 +20,11 @@
 #
 # Publish artifacts to repository
 #
-_sharedroot="/home/shared"
 # Execute hooks
 publish_prepare()
 {
     $ECHO "publish prepare \`$_source.$_arch'"
-    test -d "$_sharedroot" || _sharedroot="/export/home/shared"
-    d="$_sharedroot/xbuildroot/packages"
-    mkdir -p "$d"
+    mkdir -p "$_sharedroot/xbuildroot/packages"
     return $?
 }
 
@@ -49,7 +46,6 @@ addtorepo()
 
 publish_execute()
 {
-    test -d "$_sharedroot" || _sharedroot="/export/home/shared"
     r="$_sharedroot/xbuildroot/packages"
     $ECHO "publish execute $r/$name/$version/$release/$_arch"
     (

@@ -130,6 +130,8 @@ test ".$__isa_bits" = . && __isa_bits=$b
 test ".$__isa_name" = . && __isa_name=$n
 test ".$__isa" = . && __isa=$__isa_name-$__isa_bits
 test ".$_host" = . && _host=$_host_cpu-pc-$_host_os
+test ".$_sharedroot" = . && _sharedroot="/home/shared"
+test -d "$_sharedroot" || _sharedroot="/export/home/shared"
 
 if [ ".$dist" = . ]
 then

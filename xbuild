@@ -131,6 +131,10 @@ do
             _prefix="$a"
             shift
         ;;
+        --sharedroot=*  )
+            _sharedroot="$a"
+            shift
+        ;;
         --arch=*    )
             _arch="$a"
             test ".$a" = .amd64 && _arch=x86_64
