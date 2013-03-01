@@ -43,6 +43,7 @@ ANT_HOME=/opt/apache-ant-1.8.4
 export ANT_HOME
 PATH=$JAVA_HOME/bin:/usr/local/coreutils/bin:/opt/imake/bin:/opt/ansic/bin:/usr/local/bin:/usr/ccs/bin:/usr/contrib/bin:/usr/local/sbin:/usr/bin:/usr/sbin:$ANT_HOME/bin:.
 export PATH
+__patch=/usr/bin/patch
 
 # XXX: Check if we can install to /opt
 # It would require that maintainer is member
