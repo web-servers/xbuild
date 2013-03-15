@@ -34,9 +34,7 @@ depends_prepare()
     rm -f /tmp/.zipdeps 2>/dev/null || true
     if [ ".$_host_os" = .solaris -o ".$_host_os" = .hpux ]
     then
-        s="/home/shared"
-        test -d "$s" || s="/export/home/shared"
-        p="$s/xbuildroot/packages"
+        p="$_sharedroot/xbuildroot/packages"
         newdir "$_buildreqsdir"
         (
         IFS=$__lf
