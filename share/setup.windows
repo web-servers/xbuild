@@ -38,7 +38,7 @@ else
 fi
 if [ ".$MAVEN_HOME" = . ]
 then
-    MAVEN_HOME="/cygdrive/c/Java/apache-maven-3.0.4"
+    MAVEN_HOME="/cygdrive/c/Java/apache-maven-3.0.5"
 else
     MAVEN_HOME=`cygpath --unix "$MAVEN_HOME"`
 fi
