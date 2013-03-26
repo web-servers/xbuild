@@ -178,6 +178,25 @@ copyosfiles()
     done
 }
 
+configsources()
+{
+    $ECHO "source configure \`$_sourcedir/$_source'"
+    (
+        cd "$_sourcedir/$_source"
+        for i in $name.${_os_c}conf $name.buildconf
+        do
+            if [ -s "$_sourcedir/$i" ]
+            then
+                . "$_sourcedir/$i"
+                break
+            fi
+        done
+        return 0
+    )
+    test $? -ne 0 && exit 1
+    return 0
+}
+
 gensourceinfo()
 {
     cat > /tmp/.zipinfo <<EOH
@@ -229,6 +248,9 @@ prep_execute()
     test -d "$_sourcedir/$_source" || xbexit 1 "cannot find \`$_source' directory"
     (
         applypatches
+    )
+    (
+        prepsources
     )
     test $? -ne 0 && exit 1
     (
