@@ -250,7 +250,7 @@ prep_execute()
         applypatches
     )
     (
-        prepsources
+        configsources
     )
     test $? -ne 0 && exit 1
     (
