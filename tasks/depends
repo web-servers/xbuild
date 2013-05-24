@@ -34,7 +34,7 @@ depends_prepare()
     rm -f /tmp/.zipdeps 2>/dev/null || true
     if [ ".$_host_os" = .solaris -o ".$_host_os" = .hpux ]
     then
-        p="$_sharedroot/xbuildroot/packages$_buildbranch"
+        p="$_sharedroot/xbuildroot/packages/$_buildbranch"
         newdir "$_buildreqsdir"
         (
         IFS=$__lf
@@ -98,7 +98,7 @@ depends_prepare()
                     $ECHO "Reusing: \`$p'"
                     return 0
                 else
-                    eval $c http://download.devel.redhat.com/brewroot/packages$_buildbranch/$p
+                    eval $c http://download.devel.redhat.com/brewroot/packages/$_buildbranch/$p
                     return $?
                 fi
             )
