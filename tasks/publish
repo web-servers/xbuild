@@ -24,7 +24,7 @@
 publish_prepare()
 {
     $ECHO "publish prepare \`$_source.$_arch'"
-    mkdir -p "$_sharedroot/xbuildroot/packages"
+    mkdir -p "$_sharedroot/xbuildroot/packages$_buildbranch"
     return $?
 }
 
@@ -46,7 +46,7 @@ addtorepo()
 
 publish_execute()
 {
-    r="$_sharedroot/xbuildroot/packages"
+    r="$_sharedroot/xbuildroot/packages$_buildbranch"
     $ECHO "publish execute $r/$name/$version/$release/$_arch"
     (
         d="$r/$name/$version/$release"

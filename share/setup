@@ -153,6 +153,7 @@ _libexec=$_lib
 LANG=C
 export LANG
 
+_buildbranch=$BUILD_BRANCH
 _xbrootdir=/tmp/xbroot
 _sourcedir=$_xbrootdir/SOURCES
 _builddir=$_xbrootdir/BUILD
