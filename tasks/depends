@@ -98,7 +98,7 @@ depends_prepare()
                     $ECHO "Reusing: \`$p'"
                     return 0
                 else
-                    eval $c http://download.devel.redhat.com/brewroot/packages/$_buildbranch/$p
+                    eval $c http://download.devel.redhat.com/brewroot/packages/$p
                     return $?
                 fi
             )
