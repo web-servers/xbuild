@@ -38,9 +38,9 @@ do
     esac
 done
 
-d="cyrus-sasl db4 httpd jboss-eap \
+d="cyrus-sasl db4 httpd jakarta-commons-daemon jboss-eap \
    jboss-eap-native mod_cluster mod_cluster-native mod_jk \
-   openldap openssl sqlite tomcat-native zlib"
+   openldap openssl tomcat-native zlib"
 
 if [ .$dmaint = .no ]
 then
