@@ -42,9 +42,15 @@ then
 else
     MAVEN_HOME=`cygpath --unix "$MAVEN_HOME"`
 fi
+if [ ".$WIX_HOME" = . ]
+then
+    WIX_HOME="/cygdrive/c/wix3"
+else
+    WIX_HOME=`cygpath --unix "$WIX_HOME"`
+fi
 m=$cmscbasedir/msvc
 test ".$__isa_bits" = .64 && _arch_win=amd64 || _arch_win=i386
-PATH="$m/bin/$_arch_win:$m/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$_arch_win:$JAVA_HOME/bin:$ANT_HOME/bin:$MAVEN_HOME/bin:$PATH"
+PATH="$m/bin/$_arch_win:$m/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$_arch_win:$JAVA_HOME/bin:$ANT_HOME/bin:$MAVEN_HOME/bin:$WIX_HOME:$PATH"
 LIB=$m/lib/$_arch_win
 INCLUDE=$m/include/crt:$m/include:$m/include/mfc:$m/include/atl:$XB_INCLUDE
 EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
