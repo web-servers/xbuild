@@ -44,7 +44,7 @@ else
 fi
 if [ ".$WIX_HOME" = . ]
 then
-    WIX_HOME="/cygdrive/c/wix3"
+    WIX_HOME="/cygdrive/c/wix3.7"
 else
     WIX_HOME=`cygpath --unix "$WIX_HOME"`
 fi
