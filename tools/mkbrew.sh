@@ -24,6 +24,6 @@ do
         ;;
     esac
 done
-HEAD=`svn info http://anonsvn.jboss.org/repos/xbuild/branches/eap6.2 | grep Revision: | sed 's/.*: //'`
-echo "$CMD $TARGET svn+http://anonsvn.jboss.org/repos/xbuild?branches/eap6.2#$HEAD $VM"
-brew $CMD $TARGET svn+http://anonsvn.jboss.org/repos/xbuild?branches/eap6.2#$HEAD $VM
+HEAD=`svn info http://anonsvn.jboss.org/repos/xbuild/branches/eap-6.2 | grep Revision: | sed 's/.*: //'`
+echo "$CMD $TARGET svn+http://anonsvn.jboss.org/repos/xbuild?branches/eap-6.2#$HEAD $VM"
+brew $CMD $TARGET svn+http://anonsvn.jboss.org/repos/xbuild?branches/eap-6.2#$HEAD $VM
