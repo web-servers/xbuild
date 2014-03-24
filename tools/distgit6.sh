@@ -5,7 +5,7 @@ sources=no
 distro=no
 dclear=no
 dmaint=yes
-branch=jb-ep-6-xb
+branch=jb-ep-6.2-xb
 lookaside=http://pkgs.devel.redhat.com/repo/pkgs
 
 for o
