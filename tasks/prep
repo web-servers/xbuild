@@ -152,10 +152,12 @@ applypatches()
                         -*  )
                             if [ -s "../$v" ]
                             then
-                                $ECHO "appling patch: \`$v'"
+                                $ECHO "applying patch: \`$v'"
                                 patch $x < "../$v"
+                                test $? -ne 0 && exit 1
                             else
                                 $ECHO "missing patch: \`$v'"
+                                exit 1
                             fi
                         ;;
                         *   )
@@ -166,6 +168,7 @@ applypatches()
             done
         fi
     done
+    return 0
 }
 
 copyosfiles()
