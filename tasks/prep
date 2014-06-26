@@ -252,6 +252,7 @@ prep_execute()
     (
         applypatches
     )
+    test $? -ne 0 && exit 1
     (
         configsources
     )
