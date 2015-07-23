@@ -93,6 +93,7 @@ copysources()
         rm -f x.tar 2>/dev/null
         rm -rf .git 2>/dev/null
         rm -f .git* 2>/dev/null
+        rm -f build.log 2>/dev/null
     )
     return 0
 }
