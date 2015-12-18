@@ -70,7 +70,7 @@ depends_prepare()
     fi
     (
         test ".$brew_arch" = . && a=noarch || a=$brew_arch
-        c="curl -H Pragma: -O -R -S --fail --show-error --insecure"
+        c="curl -L -H Pragma: -O -R -S --fail --show-error --insecure"
         IFS=$__lf
         d=`grep -i '^#rpm-buildrequires:' $specfile | sed 's/#rpm-buildrequires: //'`
         for i in $d
@@ -98,7 +98,7 @@ depends_prepare()
                     $ECHO "Reusing: \`$p'"
                     return 0
                 else
-                    eval $c http://download.devel.redhat.com/brewroot/packages/$p
+                    eval $c http://download.eng.bos.redhat.com/brewroot/packages/$p
                     return $?
                 fi
             )
