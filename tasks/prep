@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright(c) 2012 Red Hat, Inc.
+# Copyright(c) 2016 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -44,40 +44,48 @@ downloadsources()
             cd "$_sourcedir"
             h=`echo $i | $__awk '{print $1}'`
             p=`echo $i | $__awk '{print $2}'`
-            u=http://pkgs.devel.redhat.com/repo/pkgs/$name/$p/$h/$p
-            if [ ! -s "$p" ]
-            then
-                $ECHO "download: \`$u'"
-                wget --tries=0 --quiet $u
-                test $? -ne 0 && xbexit 1 "failed to download redhat module \`$u'"
-            fi
-            case "$p" in
-                *.tar.gz|*.tgz )
+            case "$h" in
+              git://* )
+                git clone -b $GIT_BRANCH --single-branch $h/$name $p
+                test $? -ne 0 && xbexit 1 "failed to clone source module \`$h/$name'"
+              ;;
+              * )
+                u=http://pkgs.devel.redhat.com/repo/pkgs/$name/$p/$h/$p
+                if [ ! -s "$p" ]
+                then
+                  $ECHO "download: \`$u'"
+                  wget --tries=0 --quiet $u
+                  test $? -ne 0 && xbexit 1 "failed to download redhat module \`$u'"
+                fi
+                case "$p" in
+                  *.tar.gz|*.tgz )
                     d=$__gzip
-                ;;
-                *.tar.bz2 )
+                  ;;
+                  *.tar.bz2 )
                     d=$__bzip2
-                ;;
-                *.tar.lzma|*.xz )
+                  ;;
+                  *.tar.lzma|*.xz )
                     d=$__xz
-                ;;
-                *.zip )
+                  ;;
+                  *.zip )
                     d=unzip
-                ;;
-                * )
+                  ;;
+                  * )
                     xbexit 1 "cannot determine compression algorithm for \`$p'"
-                ;;
+                  ;;
+                esac
+                if [ "$d" = "unzip" ]
+                then
+                  test ".$has_verbose" = .yes && v=-o || v=-oq
+                  $ECHO "unzip $v $p"
+                  unzip $v $p
+                else
+                  test ".$has_verbose" = .yes && v=-xvvf || v=-xf
+                  $ECHO "$d -cd $p | $__tar $v -"
+                  $d -cd $p | $__tar $v -
+                fi
+              ;;
             esac
-            if [ "$d" = "unzip" ]
-            then
-                test ".$has_verbose" = .yes && v=-o || v=-oq
-                $ECHO "unzip $v $p"
-                unzip $v $p
-            else
-                test ".$has_verbose" = .yes && v=-xvvf || v=-xf
-                $ECHO "$d -cd $p | $__tar $v -"
-                $d -cd $p | $__tar $v -
-            fi
         )
         test $? -ne 0 && xbexit 1 "failed to uncompress \`$p'"
     done
