@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-TARGET=jb-ep-7.0-win-candidate
+TARGET=jb-cs-httpd24-18-win-candidate
 VM=jboss-natives-20110516-1
 CMD=win-build
 for o
