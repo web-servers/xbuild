@@ -48,6 +48,7 @@ downloadsources()
               git://* )
                 git clone -b $GIT_BRANCH --single-branch $h/$name $p
                 test $? -ne 0 && xbexit 1 "failed to clone source module \`$h/$name'"
+                rm -rf $p/.git 2>/dev/null || true
               ;;
               * )
                 u=http://pkgs.devel.redhat.com/repo/pkgs/$name/$p/$h/$p
