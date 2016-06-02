@@ -46,7 +46,8 @@ downloadsources()
             p=`echo $i | $__awk '{print $2}'`
             case "$h" in
               git://* )
-                git clone -b $GIT_BRANCH --single-branch $h/$name $p
+                b=`echo $i | $__awk '{print $3}'`
+                git clone -b $b --single-branch $h/$name $p
                 test $? -ne 0 && xbexit 1 "failed to clone source module \`$h/$name'"
                 rm -rf $p/.git 2>/dev/null || true
               ;;
