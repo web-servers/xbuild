@@ -45,14 +45,15 @@ depends_prepare()
             a="`cat $p/.${_os_c}repo | grep "^$i"' .*'"$dist" | head -1`"
             if [ ".$a" = . ]
             then
-                echo "Mising dependency: \`$i'"
-                continue
+                echo "Missing dependency: \`$i'"
+                echo ""
+                exit 1
             fi
             v="`echo $a | awk '{print $2;}'`"
             r="`echo $a | awk '{print $3;}'`"
             if [ ! -f "$p/$i/$v/$r/$_arch/$i-$v-$r.$_arch.zip" ]
             then
-                echo "Mising dependency file: \`$i-$v-$r.$_arch.zip'"
+                echo "Missing dependency file: \`$i-$v-$r.$_arch.zip'"
                 echo ""
                 exit 1
             fi
