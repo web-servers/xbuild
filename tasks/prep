@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright(c) 2016 Red Hat, Inc.
+# Copyright(c) 2017 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -47,8 +47,13 @@ downloadsources()
             case "$h" in
               git://* )
                 b=`echo $i | $__awk '{print $3}'`
-                git clone -b $b --single-branch $h/$name $p
-                test $? -ne 0 && xbexit 1 "failed to clone source module \`$h/$name'"
+                n=`echo $i | $__awk '{print $4}'`
+                if [ ".$n" = "." ]
+                then
+                  n=$name
+                fi
+                git clone -b $b --single-branch $h/$n $p
+                test $? -ne 0 && xbexit 1 "failed to clone source module \`$h/$n'"
                 rm -rf $p/.git 2>/dev/null || true
               ;;
               * )
