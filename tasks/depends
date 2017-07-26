@@ -70,6 +70,7 @@ depends_prepare()
         test $? -ne 0 && exit 1
     fi
     (
+        test ".$brew_name" = . && brew_name=$name
         test ".$brew_arch" = . && a=noarch || a=$brew_arch
         c="curl -L -H Pragma: -O -R -S --fail --show-error --insecure"
         IFS=$__lf
@@ -91,7 +92,7 @@ depends_prepare()
                     i=$name
                     a=src
                 fi
-                p="$name/$version/$brew_release/$a/$i-$version-$brew_release.$a.rpm"
+                p="$brew_name/$version/$brew_release/$a/$i-$version-$brew_release.$a.rpm"
                 $ECHO "Dependency: \`$p'"
                 cd $_buildreqsdir
                 if [ -r $i-$version-$brew_release.$a.rpm ]
