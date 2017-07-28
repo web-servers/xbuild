@@ -89,7 +89,7 @@ depends_prepare()
             (
                 if [ ".$i" = ".sources" ]
                 then
-                    i=$name
+                    i=$brew_name
                     a=src
                 fi
                 p="$brew_name/$version/$brew_release/$a/$i-$version-$brew_release.$a.rpm"
