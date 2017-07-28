@@ -140,7 +140,7 @@ depends_execute()
                     ;;
                     *.src.*  )
                         $ECHO "Sources: \`$i'"
-                        unrpm "$i" $name.src.rpm
+                        unrpm "$i" $brew_name.src.rpm
                         continue
                     ;;
                 esac
