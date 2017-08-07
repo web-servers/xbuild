@@ -272,23 +272,19 @@ test ".$name" = . && xbexit 1 "missing package name"
 if [ .$task = .make ]
 then
     (
-        prep_prepare
-        prep_execute
+        prep_prepare && prep_execute
     )
     test $? -ne 0 && xbexit 1 "prep failed"
     (
-        depends_prepare
-        depends_execute
+        depends_prepare && depends_execute
     )
     test $? -ne 0 && xbexit 1 "depends failed"
     (
-        build_prepare
-        build_execute
+        build_prepare && build_execute
     )
     test $? -ne 0 && xbexit 1 "build failed"
     (
-        dist_prepare
-        dist_execute
+        dist_prepare && dist_execute
     )
     test $? -ne 0 && xbexit 1 "dist failed"
 else
