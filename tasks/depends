@@ -72,7 +72,7 @@ depends_prepare()
     (
         test ".$brew_name" = . && brew_name=$name
         test ".$brew_arch" = . && a=noarch || a=$brew_arch
-        c="curl -L -H Pragma: -O -R -S --fail --show-error --insecure"
+        c="curl -L -H Pragma: -O -R -sS --fail --show-error --insecure"
         IFS=$__lf
         d=`grep -i '^#rpm-buildrequires:' $specfile | sed 's/#rpm-buildrequires: //'`
         for i in $d
