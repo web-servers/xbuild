@@ -160,6 +160,9 @@ license="`specparam license`"
 setupname="`specsetupname`"
 _source="`rpmeval $setupname`"
 
+extra_specfile_cflags="`specparam extra_specfile_cflags`"
+EXTRA_CFLAGS="$extra_specfile_cflags"
+export EXTRA_SPECFILE_CFLAGS
 buildroot="$_buildrootdir/$name-$version-$release.$_arch"
 RPM_BUILD_ROOT="$buildroot"
 RPM_SOURCE_DIR="$_sourcedir"

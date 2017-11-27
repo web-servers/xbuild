@@ -65,6 +65,8 @@ test ".$ANT_HOME" = . && ANT_HOME=/qa/tools/opt/apache-ant-1.8.1
 export ANT_HOME
 PATH=$JAVA_HOME/bin:/opt/SUNWspro/bin:/opt/csw/gnu:/opt/csw/bin/$_arch_sun:/opt/csw/bin:/bin:/usr/xpg4/bin:/usr/X/bin:/usr/bin:/usr/ccs/bin/$_arch_sun:/usr/ccs/bin:/usr/ucb:$ANT_HOME/bin:/etc:.
 export PATH
+# If EXTRA_SPECFILE_CFLAGS is on the environment add it to SUNCC_CFLAGS
+SUNCC_CFLAGS=$SUNCC_CFLAGS $EXTRA_SPECFILE_CFLAGS
 
 # XXX: Check if we can install to /opt
 # It would require that maintainer is member
