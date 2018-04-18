@@ -50,6 +50,31 @@ specsetupname()
     IFS=$__ifs
 }
 
+getglobals()
+{
+    IFS=$__lf
+    d=`$__grep -i '^%global[[:blank:]]' $specfile |\
+       $__sed -e 's/%global[[:blank:]]*//' \
+              -e 's/%{[!?]*/\${/g' -e 's/.*[()].*//'`
+    for i in $d
+    do
+        IFS=$__ifs
+        n=`echo "$i" | $__awk '{print $1}' | tr '[A-Z]' '[a-z]' 2>/dev/null`
+        case "x$n" in
+            *\(*\)* )
+                # function definition are not supported
+                continue
+            ;;
+            x       )
+                continue
+            ;;
+        esac
+        v="`echo \"$i\" | $__sed -e 's/\w*[[:blank:]]*//' -e 's/.*\\\//' 2>/dev/null`"
+        eval "$n=\"$v\"" 2>/dev/null
+    done
+    IFS=$__ifs
+}
+
 getdefines()
 {
     IFS=$__lf
@@ -149,6 +174,7 @@ test ".$_javadir" = . && _javadir="$_datadir/java"
 test ".$_sysconfdir" = . && _sysconfdir="$_confdir/sysconfig"
 test ".$_localstatedir" = . && _localstatedir="$_prefix/var"
 
+getglobals
 getdefines
 test ".$name" = . && name="`specparam name`"
 test ".$version" = . && version="`specparam version`"
