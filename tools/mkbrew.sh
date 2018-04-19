@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-TARGET=jb-cs-httpd24-18-win-candidate
+TARGET=jws-5.0-win-candidate
 VM=jboss-natives-20110516-1
 CMD=win-build
 for o
@@ -24,6 +24,6 @@ do
         ;;
     esac
 done
-HEAD=`svn info http://anonsvn.jboss.org/repos/xbuild/trunk | grep Revision: | sed 's/.*: //'`
-echo "$CMD $TARGET svn+http://anonsvn.jboss.org/repos/xbuild?trunk#$HEAD $VM"
-brew $CMD $TARGET svn+http://anonsvn.jboss.org/repos/xbuild?trunk#$HEAD $VM
+HEAD=`git ls-remote https://github.com/web-servers/xbuild  | grep HEAD | awk '{print $1}'`
+echo "$CMD $TARGET https://github.com/web-servers/xbuild#$HEAD $VM"
+brew $CMD $TARGET https://github.com/web-servers/xbuild#$HEAD $VM
