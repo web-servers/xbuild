@@ -241,6 +241,12 @@ EOH
 
 }
 
+# find gmake pid
+find_make_pid()
+{
+  ps -p $PPID -o ppid=
+}
+
 # Execute hooks
 prep_prepare()
 {
@@ -258,7 +264,7 @@ prep_prepare()
       fi
     fi
     newdir "$_xbrootdir"
-    $ECHO $PPID > $_xbrootdir/pid
+    find_make_pid > $_xbrootdir/pid
     if [ -s sources ]
     then
         makedir "$_sourcedir"
