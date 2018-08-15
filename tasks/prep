@@ -252,7 +252,7 @@ prep_prepare()
         ps -p $MYPID
         if [ $? -eq 0 ]
         then
-          $ECHO "Another build is running if not remove $_xbrootdir"
+          $ECHO "Another build is running. Remove $_xbrootdir if it is not."
           exit 1
         fi
       fi
