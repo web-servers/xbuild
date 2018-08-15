@@ -244,7 +244,21 @@ EOH
 # Execute hooks
 prep_prepare()
 {
+    if [ -d "$_xbrootdir" ]
+    then
+      if [ -f "$_xbrootdir/pid" ]
+      then
+        MYPID=`cat $_xbrootdir/pid`
+        ps -p $MYPID
+        if [ $? -eq 0 ]
+        then
+          $ECHO "Another build is running if not remove $_xbrootdir"
+          exit 1
+        fi
+      fi
+    fi
     newdir "$_xbrootdir"
+    $ECHO $PPID > $_xbrootdir/pid
     if [ -s sources ]
     then
         makedir "$_sourcedir"
