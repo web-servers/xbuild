@@ -241,7 +241,6 @@ EOH
 
 }
 
-# find gmake pid
 find_make_pid()
 {
   ps -p $PPID -o ppid=
@@ -250,20 +249,38 @@ find_make_pid()
 # Execute hooks
 prep_prepare()
 {
-    if [ -d "$_xbrootdir" ]
+    if [ ".$has_force" = .yes ]
     then
-      if [ -f "$_xbrootdir/pid" ]
+      newdir "$_xbrootdir"
+    else
+      # Check if another build is running.
+      if [ -d "$_xbrootdir" ]
       then
-        MYPID=`cat $_xbrootdir/pid`
-        ps -p $MYPID
-        if [ $? -eq 0 ]
+        if [ -f "$_xbrootdir/pid" ]
         then
-          $ECHO "Another build is running. Remove $_xbrootdir if it is not."
-          exit 1
+          MYPID=`cat $_xbrootdir/pid`
+          ps -p $MYPID > /dev/null
+          if [ $? -eq 0 ]
+          then
+            $ECHO "Another build is running. Remove $_xbrootdir if it is not."
+            exit 1
+          fi
         fi
       fi
+      # Check if the build already exists
+      r="$_sharedroot/xbuildroot/packages/$_buildbranch"
+      d="$r/$name/$version/$release"
+      test ".$_arch" = .amd64 && archdir=x86_64
+      test ".$_arch" = .sparcv9 && archdir=sparc64
+      if [ -d $d/$archdir ]
+      then
+         $ECHO "The build already exist. Remove $d/$archdir to allow rebuild."
+         exit 1
+      fi
+
+      newdir "$_xbrootdir"
     fi
-    newdir "$_xbrootdir"
+
     find_make_pid > $_xbrootdir/pid
     if [ -s sources ]
     then
