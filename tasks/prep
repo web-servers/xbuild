@@ -271,6 +271,7 @@ prep_prepare()
       r="$_sharedroot/xbuildroot/packages/$_buildbranch"
       d="$r/$name/$version/$release"
       test ".$_arch" = .amd64 && archdir=x86_64
+      test ".$_arch" = .i386 && archdir=i386
       test ".$_arch" = .sparcv9 && archdir=sparc64
       if [ -d $d/$archdir ]
       then
