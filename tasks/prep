@@ -249,6 +249,19 @@ find_make_pid()
 # Execute hooks
 prep_prepare()
 {
+    if [ $_host_os = windows ]
+    then
+      # windows runs on a newly created VM no need to check for multi run or existing builds.
+      newdir "$_xbrootdir"
+      if [ -s sources ]
+      then
+          makedir "$_sourcedir"
+      else
+          makedir "$_sourcedir/$_source"
+      fi
+      return 0
+    fi
+
     if [ ".$has_force" = .yes ]
     then
       newdir "$_xbrootdir"
