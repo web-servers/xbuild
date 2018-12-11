@@ -228,7 +228,7 @@ VENDOR:       Red Hat, Inc.
 LICENSE:      $license
 PACKAGER:     Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
 GROUP:        $group
-OS:           $_os
+OS:           ${_os^}
 ARCH:         noarch
 URL:          $origin
 TIMESTAMP:    `date -R`
