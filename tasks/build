@@ -61,21 +61,13 @@ TIMESTAMP:    `date -R`
 COMPILER:     `ccversion`
 EOH
 
-d=""
-for i in `cat /tmp/.zipdeps 2>/dev/null`
-do
-    if [ ".$d" = . ]
-    then
-        d="$i"
-    else
-        d="$d, $i"
-    fi
+# Grab the first dependency in the list and prepend the dependencies tag
+echo "DEPENDENCIES: $(head -n+1 /tmp/.zipdeps 2>/dev/null)" >> /tmp/.zipinfo
+
+# List the rest of the dependencies
+for d in $(tail -n+2 /tmp/.zipdeps 2>/dev/null); do
+    echo "${d}" >> /tmp/.zipinfo
 done
-test ".$d" != . && echo "DEPENDENCIES: $d" >> /tmp/.zipinfo
-
-    cat >> /tmp/.zipinfo <<EOH
-EOH
-
 }
 
 # Execute hooks
