@@ -74,8 +74,6 @@ done
 test ".$d" != . && echo "DEPENDENCIES: $d" >> /tmp/.zipinfo
 
     cat >> /tmp/.zipinfo <<EOH
-DESCRIPTION:
-`description $2`
 CHANGELOG:
 `changelog 1`
 EOH
