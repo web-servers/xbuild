@@ -55,7 +55,7 @@ PACKAGER:     Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
 GROUP:        $group
 OS:           ${_os^}
 ARCH:         $_arch
-SOURCE RPM:   $NVR.src.zip
+SOURCE ZIP:   $NVR.src.zip
 URL:          $origin
 TIMESTAMP:    `date -R`
 COMPILER:     `ccversion`
