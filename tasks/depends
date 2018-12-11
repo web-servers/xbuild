@@ -151,7 +151,7 @@ depends_execute()
         fi
         $ECHO "Finding .zip file dependencies ..."
         IFS=$__lf
-        d="`find "$_buildreqsdir" -name '*.zip' -type f 2>/dev/null`"
+        d="`find "$_buildreqsdir" -name '*.'$_arch'.zip' -o -name '*.noarch.zip' -type f 2>/dev/null`"
         if [ ".$d" != . ]
         then
             test .$has_verbose = .yes && q="" || q="q"
