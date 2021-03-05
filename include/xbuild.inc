@@ -1,4 +1,4 @@
-# Copyright(c) 2012 Red Hat, Inc.
+# Copyright(c) 2021 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -35,7 +35,7 @@
 #                           WVISTA  for Windows Vista and up
 #                           WIN7    for Windows 7 and up
 #                 BUILD     Build version
-#                           RETAIL or RELEASE (default)
+#                           RELEASE (default)
 #                           DEBUG
 #                 TARGET    Build application target
 #                           EXE Console executable (default)
@@ -114,20 +114,6 @@ TARGET=EXE
 WINVER=WVISTA
 !ENDIF
 
-!IF "$(WINVER)" != "WINNT"
-!IF "$(WINVER)" != "WINXP"
-!IF "$(WINVER)" != "WIN2003"
-!IF "$(WINVER)" != "WVISTA"
-!IF "$(WINVER)" != "WIN7"
-!IF "$(WINVER)" != "WIN8"
-!ERROR Must specify WINVER environment variable (WINNT, WINXP, WIN2003, WVISTA, WIN7, WIN8)
-!ENDIF
-!ENDIF
-!ENDIF
-!ENDIF
-!ENDIF
-!ENDIF
-
 !IF "$(WINVER)" == "WINNT"
 NMAKE_WINVER = 0x0500
 _WIN32_IE = 0x0500
@@ -147,7 +133,8 @@ _WIN32_IE = 0x0800
 NMAKE_WINVER = 0x0602
 _WIN32_IE = 0x0900
 !ELSE
-!ERROR Must specify WINVER environment variable (WINNT, WINXP, WIN2003, WVISTA, WIN7, WIN8)
+NMAKE_WINVER = $(WINVER)
+_WIN32_IE = 0x0800
 !ENDIF
 
 NMAKE_WINNT = -D_WINNT -DWINNT -D_WIN32_WINNT=$(NMAKE_WINVER) -DWINVER=$(NMAKE_WINVER) -D_WIN32_IE=$(_WIN32_IE)
@@ -204,9 +191,9 @@ OPT_CFLAGS = -Od -Zi -DDEBUG -D_DEBUG
 !ENDIF
 
 !IF DEFINED(STATIC_CRT)
-CRT_CFLAGS = -D_MT -MT
+CRT_CFLAGS = -MT
 !ELSE
-CRT_CFLAGS = -D_MT -MD
+CRT_CFLAGS = -MD
 !ENDIF
 
 !IF "$(BUILD)" == "DEBUG"
@@ -269,7 +256,7 @@ BASE_RCFLAGS = $(BASE_RCFLAGS) /d "NDEBUG"
 !ELSE
 BASE_RCFLAGS = $(BASE_RCFLAGS) /d "_DEBUG" /d "DEBUG"
 !ENDIF
-RCFLAGS = $(BASE_RCFLAGS)
+RCFLAGS = $(BASE_RCFLAGS) /d WINVER=$(NMAKE_WINVER) /d _WIN32_WINNT=$(NMAKE_WINVER)
 !IF DEFINED(EXTRA_RCFLAGS)
 RCFLAGS = $(RCFLAGS) $(EXTRA_RCFLAGS)
 !ENDIF

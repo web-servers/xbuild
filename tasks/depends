@@ -72,7 +72,6 @@ depends_prepare()
     (
         test ".$brew_name" = . && brew_name=$name
         test ".$brew_arch" = . && a=noarch || a=$brew_arch
-        c="curl -L -H Pragma: -O -R -sS --fail --show-error --insecure"
         IFS=$__lf
         d=`grep -i '^#rpm-buildrequires:' $specfile | sed 's/#rpm-buildrequires: //'`
         for i in $d
@@ -100,7 +99,7 @@ depends_prepare()
                     $ECHO "Reusing: \`$p'"
                     return 0
                 else
-                    eval $c http://download.eng.bos.redhat.com/brewroot/packages/$p
+                    curl -qkLORsSf http://download.eng.bos.redhat.com/brewroot/packages/$p
                     return $?
                 fi
             )
@@ -193,12 +192,16 @@ depends_execute()
                 IFS=$__ifs
                 case "$i" in
                     *.gz  )
-                        $ECHO "Archive: \`$i'"
+                        $ECHO "gz archive: \`$i'"
                         $__gzip -cd "$i" | $__tar -xf$q -
                     ;;
                     *.bz2 )
-                        $ECHO "Archive: \`$i'"
+                        $ECHO "bz archive: \`$i'"
                         $__bzip2 -cd "$i" | $__tar -xf$q -
+                    ;;
+                    *.xz )
+                        $ECHO "xz archive: \`$i'"
+                        $__xz -cd "$i" | $__tar -xf$q -
                     ;;
                 esac
             done
