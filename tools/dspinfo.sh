@@ -95,34 +95,48 @@ echo "LDDLIBS = $libs"
 echo ""
 echo "LIBPATH = $libp"
 echo ""
-
 printf "OBJECTS ="
+
+p=""
 IFS="
 "
-for i in `grep -e '^SOURCE=.*\.c$' -e '^SOURCE=.*\.c"$' $1.tmp`
+for i in `grep -A1 -e '^SOURCE=.*\.c$' -e '^SOURCE=.*\.c"$' $1.tmp`
 do
-    IFS=$sIFS
-    f=`echo $i | sed 's;^SOURCE=;;' | sed 's;";;g'`
-    f=`echo $f | sed 's;.*\\\\\(.*\.c$\);\1;'`
-    f=`echo $f | sed 's/\.c$//'`
-    printf " \\\\\n\t\$(WORKDIR)\\%s.obj" $f
+    if [ "$i" = "# End Source File" ]
+    then
+        printf " \\\\\n\t\$(WORKDIR)\\%s.obj" $p
+    else
+        if [ "$i" != "--" ]
+        then
+            f=`echo $i | sed 's;^SOURCE=;;' | sed 's;";;g'`
+            f=`echo $f | sed 's;.*\\\\\(.*\.c$\);\1;'`
+            p=`echo $f | sed 's;\.c$;;'`
+        fi
+    fi
 done
 printf "\n\n\n"
 
 cxxhdr=true
+p=""
 IFS="
 "
-for i in `grep -e '^SOURCE=.*\.cpp$' -e '^SOURCE=.*\.cpp"$' $1.tmp`
+for i in `grep -A1 -e '^SOURCE=.*\.cpp$' -e '^SOURCE=.*\.cpp"$' $1.tmp`
 do
-    IFS=$sIFS
     if $cxxhdr; then
         printf 'OBJECTS = $(OBJECTS)'
         cxxhdr=false
     fi
-    f=`echo $i | sed 's;^SOURCE=;;' | sed 's;";;g'`
-    f=`echo $f | sed 's;.*\\\\\(.*\.cpp$\);\1;'`
-    f=`echo $f | sed 's/\.cpp$//'`
-    printf " \\\\\n\t\$(WORKDIR)\\%s.obj" $f
+    if [ "$i" = "# End Source File" ]
+    then
+        printf " \\\\\n\t\$(WORKDIR)\\%s.obj" $p
+    else
+        if [ "$i" != "--" ]
+        then
+            f=`echo $i | sed 's;^SOURCE=;;' | sed 's;";;g'`
+            f=`echo $f | sed 's;.*\\\\\(.*\.cpp$\);\1;'`
+            p=`echo $f | sed 's;\.cpp$;;'`
+        fi
+    fi
 done
 if [ $cxxhdr = false ]; then
     printf "\n\n\n"
@@ -135,7 +149,8 @@ for i in `grep -e '^SOURCE=.*\.h$' -e '^SOURCE=.*\.h"$' $1.tmp`
 do
     IFS=$sIFS
     h=`echo $i | sed 's;^SOURCE=;;' | sed 's;";;g'`
-    printf " \\\\\n\t%s" $h
+    h=`echo $h | sed 's;^\.;;'`
+    printf " \\\\\n\t\$(SRCDIR)%s" $h
 done
 printf "\n\n\n"
 
@@ -147,11 +162,12 @@ do
     IFS=$sIFS
     d=`echo $i | sed 's;^SOURCE=;;' | sed 's;";;g'`
     d=`echo $d | sed 's;\(.*\)\\\\.*\.c;\1;'`
+    d=`echo $d | sed 's;^\.;;'`
     c=`echo $d | tr '\134' '/'`
     x=`echo "$pp" | grep ";$c"`
     if [ ".$x" = . ]; then
         printf "{\$(SRCDIR)%s}.c{\$(WORKDIR)}.obj:\n" "$d"
-        printf "\t\$(CC) \$(CFLAGS) \$(INCLUDES) \$(PDBFLAGS) \$<\n\n"
+        printf "\t\$(CC) \$(CLOPTS) \$(CFLAGS) \$(INCLUDES) \$(PDBFLAGS) \$<\n\n"
 
         pp="$pp;$c"
     fi
@@ -174,4 +190,5 @@ do
     fi
 done
 printf "\n"
+
 rm $1.tmp
