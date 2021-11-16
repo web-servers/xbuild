@@ -62,18 +62,29 @@ echo "Applied patches for $srcdir from $specfn" > $runlog
 
 IFS=$lf
 pruns=`cat $specfile | grep '^%patch[0-9]*[[:blank:]]' | sed 's;^%patch;;'`
-
+if [ -z $pruns ]
+then
+  pruns=`cat $specfile | grep '^Patch[0-9]*:[[:blank:]]' | sed 's;\w*:[[:blank:]];;'`
+  hasas=`cat ../../openssl.spec | grep '^%autosetup' | sed 's;%autosetup.*;yes;'`
+  test ".$hasas" != ".yes" && xbexit 1 "No %patch and no %autosetup found in $specfn"
+fi
 cnt=0
 for i in $pruns
 do
   IFS=$_ifs
-  pp="`echo \"$i\" | sed -e 's;\w*[[:blank:]];;' -e 's;-p\([0-9]\);-p \1;;' -e 's;-b.*;;'`"
-  pn="`echo \"$i\" | sed 's;[[:blank:]].*;;'`"
-  pf="`cat $specfile | grep \"^Patch$pn:[[:blank:]]\" | sed 's;\w*:[[:blank:]];;'`"
+  if [ ".$hasas" == ".yes" ]
+  then
+    pp="-p 1"
+    pf="$i"
+  else
+    pp="`echo \"$i\" | sed -e 's;\w*[[:blank:]];;' -e 's;-p\([0-9]\);-p \1;;' -e 's;-b.*;;'`"
+    pn="`echo \"$i\" | sed 's;[[:blank:]].*;;'`"
+    pf="`cat $specfile | grep \"^Patch$pn:[[:blank:]]\" | sed 's;\w*:[[:blank:]];;'`"
+  fi
   if [ ".$pf" != "." ]
   then
     patch $pp -i $pdir/$pf >> $outlog
-    test $? -ne 0 && exit 1
+    test $? -ne 0 && xbexit 1 "Cannot apply $pf"
     echo "$pf" >> $runlog
     let "cnt=cnt+1"
   fi
