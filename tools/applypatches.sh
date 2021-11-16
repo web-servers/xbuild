@@ -40,6 +40,7 @@ cdir="`pwd`"
 
 lf='
 '
+_ifs=$IFS
 
 xbexit()
 {
@@ -48,21 +49,20 @@ xbexit()
     exit $e
 }
 
+srcdir="`basename $cdir`"
 outlog="../applypatches.log"
 runlog="../appliedpatches.log"
+specfn="`find  $pdir -maxdepth 1 -name '*.spec' -type f -exec basename '{}' \;`"
 
-specfile=`ls -1 $pdir/*.spec 2>/dev/null`
-test ".$specfile" = . && xbexit 1 "Cannot find .spec file in \`$pdir'"
-echo "Applying patches from `basename $specfile`"
-echo "# `basename $cdir`" > $outlog
-
-_ifs=$IFS
+test ".$specfn" = . && xbexit 1 "Cannot find .spec file in \`$pdir'"
+specfile="$pdir/$specfn"
+echo "Applying patches from $specfn"
+echo "Using $specfile" > $outlog
+echo "Applied patches for $srcdir from $specfn" > $runlog
 
 IFS=$lf
 pruns=`cat $specfile | grep '^%patch[0-9]*[[:blank:]]' | sed 's;^%patch;;'`
 
-echo "# Applied patches" > $runlog
-echo "#" >> $runlog
 cnt=0
 for i in $pruns
 do
