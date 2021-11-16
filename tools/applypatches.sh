@@ -19,13 +19,19 @@
 # @author Mladen Turk
 #
 # Apply patches defined in .spec file
+# This utility searches for %patchNN lines
+# inside .spec file and combines them with corresponding
+# PatchNN: file.patch lines and call 'patch' for each
+# matched line.
 #
-# Using applypatch.sh:
+# Using applypatches.sh:
 # Step 1: Download sources eg. mkdir build && rhpkg sources --outdir build
 # Step 2: cd to build directory
-# Step 3: uncompress sources file(s)
-# Strp 4: cd to uncompressed source directory
-# Step 4: [sh ../../]applysources.sh
+# Step 3: uncompress source file(s)
+#         eg. tar jzf httpd-*.tar.bz2
+# Step 4: cd to uncompressed source directory
+#         eg. cd httpd-2.4.51
+# Step 4: [sh ../../]applypatches.sh
 #
 set +e +x
 
@@ -70,5 +76,4 @@ do
     echo "$pf" >> $runlog
   fi
 done
-
 
