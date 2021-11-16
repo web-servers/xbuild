@@ -52,21 +52,27 @@ xbexit()
 srcdir="`basename $cdir`"
 outlog="../applypatches.log"
 runlog="../appliedpatches.log"
-specfn="`find  $pdir -maxdepth 1 -name '*.spec' -type f -exec basename '{}' \;`"
+specfn="`find $pdir -maxdepth 1 -name '*.spec' -type f -exec basename '{}' \;`"
 
 test ".$specfn" = . && xbexit 1 "Cannot find .spec file in \`$pdir'"
 specfile="$pdir/$specfn"
 echo "Applying patches from $specfn"
 echo "Using $specfile" > $outlog
-echo "Applied patches for $srcdir from $specfn" > $runlog
+if [ -f "$pdir/.git/config" ]
+then
+  bname="`cat \"$pdir/.git/config\" | grep '\[branch "' | sed 's;\[branch "\(.*\)"\];\1;'`"
+else
+  bname="unknown"
+fi
+echo "Applied patches for $srcdir from $bname/$specfn" > $runlog
 
 IFS=$lf
 hasas="`cat $specfile | grep -A 5 '^%prep$' | grep '^%autosetup' | sed 's;%autosetup.*;yes;'`"
 if [ ".$hasas" == ".yes" ]
 then
-  pruns=`cat $specfile | grep '^Patch[0-9]*:[[:blank:]]' | sed 's;\w*:[[:blank:]];;'`
+  pruns=`cat $specfile | grep '^Patch[0-9]*:[[:blank:]]*' | sed 's;\w*:[[:blank:]]*;;'`
 else
-  pruns=`cat $specfile | grep '^%patch[0-9]*[[:blank:]]' | sed 's;^%patch;;'`
+  pruns=`cat $specfile | grep '^%patch[0-9]*[[:blank:]]*' | sed 's;^%patch;;'`
 fi
 
 cnt=0
@@ -78,7 +84,7 @@ do
     pp="-p 1"
     pf="$i"
   else
-    pp="`echo \"$i\" | sed -e 's;\w*[[:blank:]];;' -e 's;-p\([0-9]\);-p \1;;' -e 's;-b.*;;'`"
+    pp="`echo \"$i\" | sed 's;.*-p\([0-9]\).*;-p \1;;'`"
     pn="`echo \"$i\" | sed 's;[[:blank:]].*;;'`"
     pf="`cat $specfile | grep \"^Patch$pn:[[:blank:]]\" | sed 's;\w*:[[:blank:]];;'`"
   fi
