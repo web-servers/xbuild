@@ -48,13 +48,13 @@ xbexit()
     exit $e
 }
 
-outlog="../.applypatches.log"
-runlog="../.appliedpatches.log"
+outlog="../applypatches.log"
+runlog="../appliedpatches.log"
 
 specfile=`ls -1 $pdir/*.spec 2>/dev/null`
 test ".$specfile" = . && xbexit 1 "Cannot find .spec file in \`$pdir'"
-echo "# Applying patches from `basename $specfile`" > $outlog
-echo "#" >> $outlog
+echo "Applying patches from `basename $specfile`"
+echo "# `basename $cdir`" > $outlog
 
 _ifs=$IFS
 
@@ -63,10 +63,11 @@ pruns=`cat $specfile | grep '^%patch[0-9]*[[:blank:]]' | sed 's;^%patch;;'`
 
 echo "# Applied patches" > $runlog
 echo "#" >> $runlog
+cnt=0
 for i in $pruns
 do
   IFS=$_ifs
-  pp="`echo \"$i\" | sed -e 's;\w*[[:blank:]];;' -e 's;-p1;-p 1;;' -e 's;-b[[:blank:]];-b -B;;'`"
+  pp="`echo \"$i\" | sed -e 's;\w*[[:blank:]];;' -e 's;-p\([0-9]\);-p \1;;' -e 's;-b.*;;'`"
   pn="`echo \"$i\" | sed 's;[[:blank:]].*;;'`"
   pf="`cat $specfile | grep \"^Patch$pn:[[:blank:]]\" | sed 's;\w*:[[:blank:]];;'`"
   if [ ".$pf" != "." ]
@@ -74,6 +75,9 @@ do
     patch $pp -i $pdir/$pf >> $outlog
     test $? -ne 0 && exit 1
     echo "$pf" >> $runlog
+    let "cnt=cnt+1"
   fi
 done
+
+echo "Applied $cnt patches"
 
