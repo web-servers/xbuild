@@ -61,13 +61,14 @@ echo "Using $specfile" > $outlog
 echo "Applied patches for $srcdir from $specfn" > $runlog
 
 IFS=$lf
-pruns=`cat $specfile | grep '^%patch[0-9]*[[:blank:]]' | sed 's;^%patch;;'`
-if [ -z $pruns ]
+hasas="`cat $specfile | grep -A 5 '^%prep$' | grep '^%autosetup' | sed 's;%autosetup.*;yes;'`"
+if [ ".$hasas" == ".yes" ]
 then
   pruns=`cat $specfile | grep '^Patch[0-9]*:[[:blank:]]' | sed 's;\w*:[[:blank:]];;'`
-  hasas=`cat ../../openssl.spec | grep '^%autosetup' | sed 's;%autosetup.*;yes;'`
-  test ".$hasas" != ".yes" && xbexit 1 "No %patch and no %autosetup found in $specfn"
+else
+  pruns=`cat $specfile | grep '^%patch[0-9]*[[:blank:]]' | sed 's;^%patch;;'`
 fi
+
 cnt=0
 for i in $pruns
 do
