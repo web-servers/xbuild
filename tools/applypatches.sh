@@ -36,6 +36,7 @@
 set +e +x
 
 pdir="`cd ../.. && pwd`"
+bdir="`cd .. && pwd`"
 cdir="`pwd`"
 
 lf='
@@ -50,14 +51,12 @@ xbexit()
 }
 
 srcdir="`basename $cdir`"
-outlog="../applypatches.log"
-runlog="../appliedpatches.log"
+runlog="$bdir/appliedpatches.log"
 specfn="`find $pdir -maxdepth 1 -name '*.spec' -type f -exec basename '{}' \;`"
 
 test ".$specfn" = . && xbexit 1 "Cannot find .spec file in \`$pdir'"
 specfile="$pdir/$specfn"
 echo "Applying patches from $specfn"
-echo "Using $specfile" > $outlog
 if [ -f "$pdir/.git/config" ]
 then
   bname="`cat \"$pdir/.git/config\" | grep '\[branch "' | sed 's;\[branch "\(.*\)"\];\1;'`"
@@ -90,7 +89,7 @@ do
   fi
   if [ ".$pf" != "." ]
   then
-    patch $pp -i $pdir/$pf >> $outlog
+    patch $pp -i $pdir/$pf
     test $? -ne 0 && xbexit 1 "Cannot apply $pf"
     echo "$pf" >> $runlog
     let "cnt=cnt+1"
