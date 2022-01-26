@@ -36,7 +36,6 @@
 set +e +x
 
 pdir="`cd ../.. && pwd`"
-bdir="`cd .. && pwd`"
 cdir="`pwd`"
 
 lf='
@@ -51,7 +50,7 @@ xbexit()
 }
 
 srcdir="`basename $cdir`"
-runlog="$bdir/appliedpatches.log"
+runlog="$cdir/appliedpatches.log"
 specfn="`find $pdir -maxdepth 1 -name '*.spec' -type f -exec basename '{}' \;`"
 
 test ".$specfn" = . && xbexit 1 "Cannot find .spec file in \`$pdir'"
@@ -85,7 +84,7 @@ do
   else
     pp="`echo \"$i\" | sed 's;.*-p\([0-9]\).*;-p \1;;'`"
     pn="`echo \"$i\" | sed 's;[[:blank:]].*;;'`"
-    pf="`cat $specfile | grep \"^Patch$pn:[[:blank:]]\" | sed 's;\w*:[[:blank:]];;'`"
+    pf="`cat $specfile | grep \"^Patch$pn:[[:blank:]]\" | sed 's;\w*:[[:blank:]]*;;'`"
   fi
   if [ ".$pf" != "." ]
   then
