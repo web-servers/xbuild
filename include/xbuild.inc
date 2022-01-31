@@ -1,4 +1,4 @@
-# Copyright(c) 2021 Red Hat, Inc.
+# Copyright(c) 2022 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -29,10 +29,6 @@
 #                           PROCESSOR_ARCHITECTURE environment variable
 #                           or to the X86 if not specified.
 #                 WINVER    Compile for specified Windows version
-#                           WINNT   for Windows 2000 and up(default)
-#                           WINXP   for Windows XP and up
-#                           WIN2003 for Windows 2003 and up
-#                           WVISTA  for Windows Vista and up
 #                           WIN7    for Windows 7 and up
 #                 BUILD     Build version
 #                           RELEASE (default)
@@ -78,10 +74,10 @@ MT = mt.exe
 
 # Read the RPM_ARCH environment value for a CPU type
 
-!IF "$(RPM_ARCH)" == "i386" || "$(RPM_ARCH)" == "x86" || "$(RPM_ARCH)" == "i586" || "$(RPM_ARCH)" == "i686" || "$(RPM_ARCH)" == "ia32"
+!IF "$(RPM_ARCH)" == "i386" || "$(RPM_ARCH)" == "x86" || "$(RPM_ARCH)" == "i686" || "$(RPM_ARCH)" == "ia32"
 CPU=X86
 !ENDIF
-!IF "$(RPM_ARCH)" == "amd64" || "$(RPM_ARCH)" == "emt64" || "$(RPM_ARCH)" == "x86_64" || "$(RPM_ARCH)" == "x64"
+!IF "$(RPM_ARCH)" == "amd64" || "$(RPM_ARCH)" == "x86_64" || "$(RPM_ARCH)" == "x64"
 CPU=X64
 !ENDIF
 !IF "$(RPM_ARCH)" == "ia64" || "$(RPM_ARCH)" == "i64"
@@ -111,19 +107,10 @@ TARGET=EXE
 !ENDIF
 
 !IF !DEFINED(WINVER) || "$(WINVER)" == ""
-WINVER=WVISTA
+WINVER=WIN7
 !ENDIF
 
-!IF "$(WINVER)" == "WINNT"
-NMAKE_WINVER = 0x0500
-_WIN32_IE = 0x0500
-!ELSEIF "$(WINVER)" == "WINXP"
-NMAKE_WINVER = 0x0501
-_WIN32_IE = 0x0600
-!ELSEIF "$(WINVER)" == "WIN2003"
-NMAKE_WINVER = 0x0502
-_WIN32_IE = 0x0600
-!ELSEIF "$(WINVER)" == "WVISTA"
+!IF "$(WINVER)" == "WVISTA"
 NMAKE_WINVER = 0x0600
 _WIN32_IE = 0x0700
 !ELSEIF "$(WINVER)" == "WIN7"
@@ -192,6 +179,7 @@ OPT_CFLAGS = -Od -Zi -DDEBUG -D_DEBUG
 
 !IF DEFINED(STATIC_CRT)
 CRT_CFLAGS = -MT
+!UNDEF EXTRA_LIBS
 !ELSE
 CRT_CFLAGS = -MD
 !ENDIF
@@ -274,8 +262,8 @@ WORKDIR = $(CPU)_$(BUILD)_$(BUILDIR_EXT)
 !ENDIF
 !ENDIF
 
-CLEANTARGET=if exist "$(WORKDIR)\$(NULL)" rd /s /q $(WORKDIR)
-MAKEWORKDIR=if not exist "$(WORKDIR)\$(NULL)" mkdir $(WORKDIR)
+CLEANTARGET=if exist "$(WORKDIR)" rd /s /q $(WORKDIR)
+MAKEWORKDIR=if not exist "$(WORKDIR)" mkdir $(WORKDIR)
 MAKEINSTALL=if not exist "$(INSTALLLOC)" mkdir $(INSTALLLOC)
 
 !IF DEFINED(JAVA_HOME) && "$(JAVA_HOME)" != ""
@@ -294,3 +282,4 @@ ML = ml64.exe
 AFLAGS = /coff /Zi /c
 !ENDIF
 !ENDIF
+

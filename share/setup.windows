@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright(c) 2012 Red Hat, Inc.
+# Copyright(c) 2022 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -48,17 +48,20 @@ then
 else
     WIX_HOME=`cygpath --unix "$WIX_HOME"`
 fi
+CMSC_VERSION="15044"
+
 m=$cmscbasedir/msvc
-test ".$__isa_bits" = .64 && _arch_win=amd64 || _arch_win=i386
-PATH="$m/bin/$_arch_win:$m/bin:$cmscbasedir/perl/bin:$cmscbasedir/tools/$_arch_win:$JAVA_HOME/bin:$ANT_HOME/bin:$MAVEN_HOME/bin:$WIX_HOME:$PATH"
+test ".$__isa_bits" = .64 && _arch_win=x64 || _arch_win=x86
+PATH="$m/bin/$_arch_win:$m/bin:$cmscbasedir/tools:$cmscbasedir/nasm:$cmscbasedir/perl/perl/bin:$WIX_HOME:$PATH"
+JAVA_TOOLS_PATH="$JAVA_HOME/bin:$ANT_HOME/bin:$MAVEN_HOME/bin"
 LIB=$m/lib/$_arch_win
 INCLUDE=$m/include/crt:$m/include:$m/include/mfc:$m/include/atl:$XB_INCLUDE
 EXTRA_LIBS="msvcrt_compat.lib msvcrt_compat.obj"
-__make="cygspawn nmake"
-__perl="cygspawn perlw"
-__java="cygspawn java"
-__javac="cygspawn javac"
-export PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME ANT_HOME MAVEN_HOME
+__make="cygwrun nmake"
+__perl="cygwrun perlw"
+__java="cygwrun java"
+__javac="cygwrun javac"
+export PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME JAVA_TOOLS_PATH CMSC_VERSION ANT_HOME MAVEN_HOME
 __ccver="`cl 2>&1 | head -1`"
 _rootdir=$_xbrootdir/ROOT
 _libexec=bin
@@ -67,3 +70,4 @@ ccversion()
 {
      echo "`cl 2>&1 | head -1`"
 }
+

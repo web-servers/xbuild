@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright(c) 2012 Red Hat, Inc.
+# Copyright(c) 2022 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -23,5 +23,6 @@
 
 PATH=/bin:$PATH
 CYGWIN_ROOT="${CYGWIN_ROOT:=C:/cygwin}"
-cmscbasedir=/cygdrive/c/cmsc27
+cmscbasedir=/cygdrive/c/cmsc-15.0_44
 export PATH CYGWIN_ROOT
+
