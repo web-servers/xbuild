@@ -21,8 +21,7 @@
 # Contains windows default variables
 #
 
-PATH=/bin:$PATH
 CYGWIN_ROOT="${CYGWIN_ROOT:=C:/cygwin}"
 cmscbasedir=/cygdrive/c/cmsc-15.0_44
-export PATH CYGWIN_ROOT
+export CYGWIN_ROOT
 

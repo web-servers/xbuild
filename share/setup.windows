@@ -21,8 +21,6 @@
 # Windows specific setup
 #
 
-test -z $JAVA_HOME && JAVA_HOME="`regtool -w get '/HKLM/SOFTWARE/JavaSoft/Java Development Kit/1.6/JavaHome' 2>/dev/null`"
-test -z $JAVA_HOME && JAVA_HOME="`regtool -W get '/HKLM/SOFTWARE/JavaSoft/Java Development Kit/1.6/JavaHome' 2>/dev/null`"
 test -z $JAVA_HOME && JAVA_HOME="/cygdrive/c/Java/jdk1.6.0"
 JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
 if [ ! -e "$JAVA_HOME/bin/java.exe" ]
@@ -49,10 +47,9 @@ else
     WIX_HOME=`cygpath --unix "$WIX_HOME"`
 fi
 CMSC_VERSION="15044"
-
 m=$cmscbasedir/msvc
 test ".$__isa_bits" = .64 && _arch_win=x64 || _arch_win=x86
-PATH="$m/bin/$_arch_win:$m/bin:$cmscbasedir/tools:$cmscbasedir/nasm:$cmscbasedir/perl/perl/bin:$WIX_HOME:$PATH"
+PATH="$m/bin/$_arch_win:$m/bin:$cmscbasedir/tools:$cmscbasedir/nasm:$cmscbasedir/perl/perl/bin:$PATH"
 JAVA_TOOLS_PATH="$JAVA_HOME/bin:$ANT_HOME/bin:$MAVEN_HOME/bin"
 LIB=$m/lib/$_arch_win
 INCLUDE=$m/include/crt:$m/include:$m/include/mfc:$m/include/atl:$XB_INCLUDE
@@ -61,13 +58,13 @@ __make="cygwrun nmake"
 __perl="cygwrun perlw"
 __java="cygwrun java"
 __javac="cygwrun javac"
-export PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME JAVA_TOOLS_PATH CMSC_VERSION ANT_HOME MAVEN_HOME
-__ccver="`cl 2>&1 | head -1`"
+export PATH LIB INCLUDE EXTRA_LIBS JAVA_HOME JAVA_TOOLS_PATH CMSC_VERSION ANT_HOME MAVEN_HOME WIX_HOME
+__ccver="Microsoft (R) C/C++ Optimizing Compiler Version 15.00.30729.207 for x64"
 _rootdir=$_xbrootdir/ROOT
 _libexec=bin
 
 ccversion()
 {
-     echo "`cl 2>&1 | head -1`"
+     echo "$__ccver"
 }
 
