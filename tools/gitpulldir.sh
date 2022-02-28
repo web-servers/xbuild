@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright(c) 2021 Red Hat, Inc.
+# Copyright(c) 2022 Red Hat, Inc.
 #
 # This is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@ do
   if [ -f "$i/.git/config" ]
   then
     pushd $i >/dev/null
-    repo="`cat .git/config | grep "$LOGNAME[@/]" | sed 's;.*/;;'`"
+    repo="`basename $i`"
     if [ -n "$repo" ]
     then
       echo "Pulling $repo ..."
@@ -43,3 +43,4 @@ do
   fi
 done
 echo "Done"
+
