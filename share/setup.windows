@@ -63,6 +63,14 @@ __ccver="Microsoft (R) C/C++ Optimizing Compiler Version 15.00.30729.207 for x64
 _rootdir=$_xbrootdir/ROOT
 _libexec=bin
 
+cat > /bin/clamscan <<EOH
+#!/bin/sh
+echo --- clamscan disabled ---
+
+EOH
+
+chmod 755 /bin/clamscan
+
 ccversion()
 {
      echo "$__ccver"
