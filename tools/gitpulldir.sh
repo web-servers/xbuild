@@ -26,21 +26,40 @@
 #
 set +e +x
 
-for i in `ls -1`
-do
-  if [ -f "$i/.git/config" ]
-  then
-    pushd $i >/dev/null
-    repo="`basename $i`"
-    if [ -n "$repo" ]
-    then
-      echo "Pulling $repo ..."
-      git pull
-      test $? -ne 0 && exit 1
-      echo
-    fi
+dogitpull()
+{
+
+    for i in `ls -1`
+    do
+      if [ -f "$i/.git/config" ]
+      then
+        pushd $i >/dev/null
+        repo="`basename $i`"
+        if [ -n "$repo" ]
+        then
+          echo "Pulling '$repo' ..."
+          git pull
+          test $? -ne 0 && exit 1
+          echo
+        fi
+        popd  >/dev/null
+      fi
+    done
+
+}
+
+if [ "x$1" = "x" ]; then
+  dogitpull
+else
+  for o
+  do
+    pushd $o >/dev/null
+    echo "Pulling from '$o'"
+    dogitpull
     popd  >/dev/null
-  fi
-done
+
+  done
+fi
+
 echo "Done"
 
