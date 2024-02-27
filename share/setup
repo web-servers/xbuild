@@ -77,7 +77,7 @@ case "$_arch" in
     *64        )
         b=64
     ;;
-    i?86|ppc   )
+    *          )
         b=32
     ;;
 esac
@@ -119,4 +119,3 @@ _buildreqsdir=$_buildbrewdir/buildreqs
 _buildsrcsdir=$_buildbrewdir/buildsrcs
 _outputdir="$__cwd"
 _rootdir=/tmp/xbroot/ROOT
-
