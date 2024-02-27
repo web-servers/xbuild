@@ -53,36 +53,6 @@ case "$s" in
         p=windows
         d=win
     ;;
-    sunos   )
-        r="`echo $r | sed 's/5.//'`"
-        _os_r="$r"
-        p=solaris
-        d=sun
-    ;;
-    darwin  )
-        r="`echo $r | sed 's/\.//g'`"
-        _os_r="$r"
-        p=darwin
-        d=osx
-    ;;
-    hp-ux   )
-        r="`echo $r | sed 's/[a-z]*\.//'`"
-        case "$r" in
-            11.23   )
-                r="2"
-            ;;
-            11.31   )
-                r="3"
-            ;;
-            *       )
-                r="0"
-            ;;
-        esac
-        _os_r="$r"
-        p=hpux
-        d=hpux
-        n=ia64
-    ;;
     *       )
         p=$s
         d=gnu
@@ -102,23 +72,8 @@ case "$_arch" in
     i86pc|ia32 )
         _arch=i386
     ;;
-    sun4*      )
-        _arch=`/bin/isainfo -n`
-        n=sparc
-    ;;
-    ppc*       )
-        n=sparc
-    ;;
 esac
 case "$_arch" in
-    sparc32|sparc    )
-        b=32
-        n=sparc
-    ;;
-    sparc64|sparcv9  )
-        b=64
-        n=sparc
-    ;;
     *64        )
         b=64
     ;;
@@ -126,6 +81,7 @@ case "$_arch" in
         b=32
     ;;
 esac
+
 test ".$__isa_bits" = . && __isa_bits=$b
 test ".$__isa_name" = . && __isa_name=$n
 test ".$__isa" = . && __isa=$__isa_name-$__isa_bits

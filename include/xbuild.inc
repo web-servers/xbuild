@@ -24,7 +24,6 @@
 #                 CPU       Compile for specified CPU. Supported CPU's are:
 #                           X86 (Common x86 architecture)
 #                           X64 (AMD64/EMT64 architecture)
-#                           I64 (Intel IA64 architecture)
 #                           If not specified it will default to the
 #                           PROCESSOR_ARCHITECTURE environment variable
 #                           or to the X86 if not specified.
@@ -80,15 +79,10 @@ CPU=X86
 !IF "$(RPM_ARCH)" == "amd64" || "$(RPM_ARCH)" == "x86_64" || "$(RPM_ARCH)" == "x64"
 CPU=X64
 !ENDIF
-!IF "$(RPM_ARCH)" == "ia64" || "$(RPM_ARCH)" == "i64"
-CPU=I64
-!ENDIF
 
 !IF "$(CPU)" != "X86"
 !IF "$(CPU)" != "X64"
-!IF "$(CPU)" != "I64"
 !ERROR Must specify CPU environment variable (X86, X64, I64) $(CPU)
-!ENDIF
 !ENDIF
 !ENDIF
 
@@ -107,24 +101,12 @@ TARGET=EXE
 !ENDIF
 
 !IF !DEFINED(WINVER) || "$(WINVER)" == ""
-WINVER=WIN7
+WINVER=0x0601
 !ENDIF
 
-!IF "$(WINVER)" == "WVISTA"
-NMAKE_WINVER = 0x0600
-_WIN32_IE = 0x0700
-!ELSEIF "$(WINVER)" == "WIN7"
-NMAKE_WINVER = 0x0601
-_WIN32_IE = 0x0800
-!ELSEIF "$(WINVER)" == "WIN8"
-NMAKE_WINVER = 0x0602
-_WIN32_IE = 0x0900
-!ELSE
 NMAKE_WINVER = $(WINVER)
-_WIN32_IE = 0x0800
-!ENDIF
 
-NMAKE_WINNT = -D_WINNT -DWINNT -D_WIN32_WINNT=$(NMAKE_WINVER) -DWINVER=$(NMAKE_WINVER) -D_WIN32_IE=$(_WIN32_IE)
+NMAKE_WINNT = -D_WINNT -DWINNT -D_WIN32_WINNT=$(NMAKE_WINVER) -DWINVER=$(NMAKE_WINVER)
 
 !IF !DEFINED(BUILD) || "$(BUILD)" == ""
 BUILD=RELEASE
@@ -161,10 +143,6 @@ _LIB=lib64
 !IF "$(CPU)" == "X64"
 CPU_CFLAGS = -D_AMD64_=1 -D_X64_=1 $(CPU_FLAGS)
 MACHINE=AMD64
-!ELSEIF "$(CPU)" == "I64"
-CPU_CFLAGS = -D_IA64_=1  $(CPU_FLAGS)
-MACHINE=IA64
-!ENDIF
 !ENDIF
 
 !IF "$(BUILD)" == "RELEASE"
@@ -204,18 +182,14 @@ CPPFLAGS = $(CPPFLAGS) $(EXTRA_CPPFLAGS)
 !ENDIF
 
 # Linker section
-LIBS = kernel32.lib advapi32.lib ws2_32.lib mswsock.lib ole32.lib shell32.lib rpcrt4.lib
-
-!IF DEFINED(EXTRA_LIBS)
-LIBS = $(LIBS) $(EXTRA_LIBS)
-!ENDIF
+LIBS = kernel32.lib advapi32.lib
 
 COMMON_LFLAGS = /NOLOGO
 
 # Always add debugging to the linker
-OPT_LFLAGS = /INCREMENTAL:NO /DEBUG
-!IF "$(BUILD)" == "RELEASE"
-OPT_LFLAGS = $(OPT_LFLAGS) /OPT:REF
+OPT_LFLAGS = /INCREMENTAL:NO /OPT:REF
+!IF "$(BUILD)" == "DEBUG"
+OPT_LFLAGS = $(OPT_LFLAGS) /DEBUG
 !ENDIF
 
 !IF "$(TARGET)" == "EXE"
@@ -238,7 +212,7 @@ LFLAGS = $(LFLAGS) $(OPT_LFLAGS)
 
 # Resource compiler flags
 
-BASE_RCFLAGS=/l 0x409
+BASE_RCFLAGS=/l 0x409 /n
 !IF "$(BUILD)" == "RELEASE"
 BASE_RCFLAGS = $(BASE_RCFLAGS) /d "NDEBUG"
 !ELSE
@@ -277,9 +251,6 @@ AFLAGS = /coff /Zi /c
 !ELSEIF "$(CPU)" == "X64"
 ML = ml64.exe
 AFLAGS = /Zi /c
-!ELSEIF "$(CPU)" == "I64"
-ML = ml64.exe
-AFLAGS = /coff /Zi /c
 !ENDIF
 !ENDIF
 
